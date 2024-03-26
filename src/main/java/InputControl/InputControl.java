@@ -82,7 +82,7 @@ public class InputControl {
         while (true) {
             System.out.println(mensaje);
             try {
-                return scanner.nextLine();
+                return scanner.nextLine().toLowerCase();
             } catch (Exception e) {
                 exception(e);
             }
