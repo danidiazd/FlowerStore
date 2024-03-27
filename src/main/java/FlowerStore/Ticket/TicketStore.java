@@ -21,6 +21,7 @@ public class TicketStore {
         }
         return instance;
     }
+    
 
     public void addProductToTicket(Product product, int quantity) {
         product.setQuantity(product.getQuantity() - quantity);
