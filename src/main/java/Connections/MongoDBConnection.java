@@ -1,0 +1,43 @@
+package Connections;
+
+import FlowerStore.FlowerStore;
+import FlowerStore.Products.Decoration;
+import FlowerStore.Products.Flower;
+import FlowerStore.Products.Product;
+import FlowerStore.Products.Tree;
+import com.mongodb.MongoException;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class MongoDBConnection {
+
+    public final MongoClient mongoClient;
+    public MongoDatabase mongoDatabase;
+
+    public MongoDBConnection(String databaseName, MongoClient mongoClient) {
+        this.mongoClient = mongoClient;
+        try {
+            this.mongoDatabase = mongoClient.getDatabase(databaseName);
+        } catch (MongoException e) {
+            System.out.println("Error al conectar con la base de datos.");
+        }
+    }
+
+    private void disconnectMongo() {
+        try {
+            if (mongoClient != null) {
+                mongoClient.close();
+            }
+        } catch (MongoException e) {
+            System.out.println("Error al desconectar con la base de datos.");
+        }
+    }
+
+}

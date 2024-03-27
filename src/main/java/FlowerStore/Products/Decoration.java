@@ -1,13 +1,13 @@
 package FlowerStore.Products;
 
-public class Decoration extends Product{
-    private String material;
-    public Decoration(String name, int quantity, double price, String material) {
-        super(name, quantity, price);
+public class Decoration<T> extends Product{
+    private T material;
+    public Decoration(String name, int quantity, double price, T material) {
+        super(name, quantity, price, ProductType.DECORATION, material);
         this.material = material;
     }
 
-    public String getMaterial() {
+    public T getMaterial() {
         return material;
     }
 
