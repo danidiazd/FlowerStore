@@ -6,8 +6,11 @@ import FlowerStore.Products.Infrastructure.MongoDB.ProductRepositoryMongoDB;
 import FlowerStore.Products.Product;
 import FlowerStore.Products.Tree;
 import FlowerStore.Ticket.TicketStore;
+import FlowerStore.Utils.Utils;
 import InputControl.InputControl;
 import com.mongodb.client.MongoClients;
+
+import java.util.List;
 
 public class Demo implements Runnable {
 
@@ -15,6 +18,7 @@ public class Demo implements Runnable {
     private MongoDBConnection mongoDBConnection;
     private ProductRepositoryMongoDB productRepositoryMongoDB;
 
+    private Utils utils;
     public Demo(MongoDBConnection mongoDBConnection) {
         this.mongoDBConnection = mongoDBConnection;
         this.productRepositoryMongoDB = new ProductRepositoryMongoDB(mongoDBConnection);
@@ -27,6 +31,57 @@ public class Demo implements Runnable {
 
 
     public void menu() {
+
+        System.out.println("¿Que acción desea realizar?");
+        do {
+            int selectAction = InputControl.readInt("Type of action \n" +
+                    "1. Insert a product. \n" +
+                    "2. Show all products. \n" +
+                    "3. Remove all products. \n" +
+                    "4. Show all stock. \n" +
+                    "5. Show flower shop value. \n" +
+                    "6. Create ticket. \n" +
+                    "7. Show all tickets. \n" +
+                    "8. Show flower shop benefits. \n" +
+                    "9. Exit flower shop.");
+
+            switch(selectAction) {
+                case 1:
+                    insertProduct();
+                    break;
+                case 2:
+                    showAllProducts();
+                    break;
+                case 3:
+                    // TODO: deleteProduct
+                    break;
+                case 4:
+                    // TODO: showAllStock
+                    break;
+                case 5:
+                    // TODO: showFlowerShopValue
+                    break;
+                case 6:
+                    // TODO: createTicket;
+                    break;
+                case 7:
+                    // TODO: showAllTickets;
+                    break;
+                case 8:
+                    // TODO: showFlowerShopBenefits
+                    break;
+                case 9:
+                    System.exit(0); // to exit the program
+                    break;
+                default:
+                    System.out.println("Please, introduce a valid option");
+                    break;
+            }
+        } while(true);
+    }
+
+    private void insertProduct() {
+
         boolean addMore;
         String decoration = new String();
 
@@ -64,8 +119,8 @@ public class Demo implements Runnable {
             createProduct(chooseProduct, nameProduct, quantityProduct, priceProduct, decoration);
             addMore = InputControl.readBoolean("¿Desea añadir más?");
         } while (addMore);
-    }
 
+    }
 
     private <T> void createProduct(int type, String name, int quantity, double price, T attribute) {
         Product<T> product;
@@ -85,5 +140,43 @@ public class Demo implements Runnable {
 
         FlowerStore.addToStock(product);
         productRepositoryMongoDB.addProduct(product);
+    }
+
+    private void showAllProducts() {
+
+        List<Product> products = productRepositoryMongoDB.getAllProducts();
+        if(products.isEmpty()) {
+            System.out.println("No products found");
+            //utils.waitForKeyPress();
+        } else {
+
+            int idWidth = 5;
+            int nameWidth = 15;
+            int quantityWidth = 10;
+            int priceWidth = 10;
+            int typeWidth = 15;
+            int attributeWidth = 15;
+
+            // Print table headers
+            System.out.printf("%-" + idWidth + "s %-" + nameWidth + "s %-" + quantityWidth + "s %-" + priceWidth + "s %-" + typeWidth + "s %-" + attributeWidth + "s%n",
+                    "ID", "Name", "Quantity", "Price", "Type", "Attributes");
+
+            // Print a line under the header
+            System.out.printf("%-" + (idWidth + nameWidth + quantityWidth + priceWidth + typeWidth + attributeWidth + 10) + "s%n", "");
+
+            // Print each product as a row in the table
+            for (Product product : products) {
+                System.out.printf("%-" + idWidth + "d %-" + nameWidth + "s %-" + quantityWidth + "d %-" + priceWidth + ".2f %-" + typeWidth + "s %-" + attributeWidth + "s%n",
+                        product.getProductId(),
+                        product.getName(),
+                        product.getQuantity(),
+                        product.getPrice(),
+                        product.getType().toString(),
+                        product.getAttributes().toString());
+            }
+
+            //utils.waitForKeypress();
+
+        }
     }
 }
