@@ -1,23 +1,25 @@
 package FlowerStore.Products.Infrastructure.MongoDB;
 
 import Connections.MongoDBConnection;
-import FlowerStore.Products.Product;
-import FlowerStore.Products.ProductType;
-import FlowerStore.Products.ProductsRepository;
+import FlowerStore.Products.*;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
-public class ProductRepositoryMongoDB implements ProductsRepository {
+import static com.mongodb.client.model.Filters.eq;
+
+public class ProductRepositoryMongoDB<T> implements ProductsRepository {
 
     private MongoCollection<Document> collection;
+    private MongoCollection<Document> ticketCollection;
 
     public ProductRepositoryMongoDB(MongoDBConnection mongoDBConnection) {
         this.collection = mongoDBConnection.mongoDatabase.getCollection("products");
+        this.ticketCollection = mongoDBConnection.mongoDatabase.getCollection("tickets");
     }
 
     @Override
@@ -30,54 +32,156 @@ public class ProductRepositoryMongoDB implements ProductsRepository {
         }
         return products;
     }
+    public List<Product> getFlowers() {
+        List<Product> allProducts = getAllProducts();
+        return allProducts.stream()
+                .filter(product -> product.getType() == ProductType.FLOWER)
+                .collect(Collectors.toList());
+    }
+
+    public List<Product> getTrees() {
+        List<Product> allProducts = getAllProducts();
+        return allProducts.stream()
+                .filter(product -> product.getType() == ProductType.TREE)
+                .collect(Collectors.toList());
+    }
+
+    public List<Product> getDecorations() {
+        List<Product> allProducts = getAllProducts();
+        return allProducts.stream()
+                .filter(product -> product.getType() == ProductType.DECORATION)
+                .collect(Collectors.toList());
+    }
 
     @Override
-    public void addProduct(Product product) {
-        //TODO: ME SIGUE CREANDO 2 DOCUMENTOS CON MISMO NOMBRE Y ATRIBUTO
-        Document query = new Document("name", product.getName())
-                .append("attribute", product.getAttributes().toString())
-                .append("type", product.getType().toString());
+    public void addPrimaryStock() {
 
-        Document existingProduct = collection.find(query).first();
-        if (existingProduct != null) {
-            int actualQuantity = existingProduct.getInteger("quantity");
-            int newQuantity = actualQuantity + product.getQuantity();
-            double newPrice = product.getPrice();
+        List<Document> stock = new ArrayList<>();
 
-            Document updateObject = new Document();
-            updateObject.append("quantity", newQuantity);
-            updateObject.append("price", newPrice);
+        stock.add(new Document("type", ProductType.TREE.toString())
+                .append("name", "Manzano")
+                .append("quantity", 0)
+                .append("price", 0.0)
+                .append("attribute", 1.5));
 
-            collection.updateOne(query, new Document("$set", updateObject));
-        } else {
-            Map<String, Object> productMap = Map.of(
-                    "id", product.getProductId(),
-                    "name", product.getName(),
-                    "price", product.getPrice(),
-                    "quantity", product.getQuantity(),
-                    "type", product.getType().toString(),
-                    "attribute", product.getAttributes().toString());
+        stock.add(new Document("type", ProductType.TREE.toString())
+                .append("name", "Olivo")
+                .append("quantity", 0)
+                .append("price", 0.0)
+                .append("attribute", 2.0 ));
 
-            Document productDocument = new Document(productMap);
-            collection.insertOne(productDocument);
-        }
+        stock.add(new Document("type", ProductType.TREE.toString())
+                .append("name", "Pino")
+                .append("quantity", 0)
+                .append("price", 0.0)
+                .append("attribute", 3.0));
+
+        stock.add(new Document("type", ProductType.TREE.toString())
+                .append("name", "Rosal")
+                .append("quantity", 0)
+                .append("price", 0.0)
+                .append("attribute", 0.5));
+
+        stock.add(new Document("type", ProductType.FLOWER.toString())
+                .append("name", "Rosa")
+                .append("quantity", 0)
+                .append("price", 0.0)
+                .append("attribute", "Roja"));
+
+        stock.add(new Document("type", ProductType.FLOWER.toString())
+                .append("name", "Girasol")
+                .append("quantity", 0)
+                .append("price", 0.0)
+                .append("attribute", "Blanca"));
+
+        stock.add(new Document("type", ProductType.FLOWER.toString())
+                .append("name", "Amapola")
+                .append("quantity", 0)
+                .append("price", 0.0)
+                .append("attribute", "Roja"));
+
+        stock.add(new Document("type", ProductType.FLOWER.toString())
+                .append("name", "Lirio")
+                .append("quantity", 0)
+                .append("price", 0.0)
+                .append("attribute", "Naranja"));
+
+        stock.add(new Document("type", ProductType.FLOWER.toString())
+                .append("name", "Clavel")
+                .append("quantity", 0)
+                .append("price", 0.0)
+                .append("attribute", "Amarillo"));
+
+
+        stock.add(new Document("type", ProductType.DECORATION.toString())
+                .append("name", "Jarron")
+                .append("quantity", 0)
+                .append("price", 0.0)
+                .append("attribute", "Madera"));
+
+        stock.add(new Document("type", ProductType.DECORATION.toString())
+                .append("name", "Tiesto")
+                .append("quantity", 0)
+                .append("price", 0.0)
+                .append("attribute", "Plastico"));
+
+        stock.add(new Document("type", ProductType.DECORATION.toString())
+                .append("name", "Jarron")
+                .append("quantity", 0)
+                .append("price", 0.0)
+                .append("attribute", "Plastico"));
+
+        stock.add(new Document("type", ProductType.DECORATION.toString())
+                .append("name", "Tiesto")
+                .append("quantity", 0)
+                .append("price", 0.0)
+                .append("attribute", "Madera"));
+
+
+        collection.insertMany(stock);
+
     }
 
     @Override
     public void updateProduct(Product product) {
-        // Implementar la actualización del producto si es necesario
+
     }
 
-    private Product documentToProduct(Document document) {
-        int id = document.getInteger("id");
+    @Override
+    public void newTicket() {
+
+    }
+
+    public Document findProduct(Document query) {
+        return collection.find(query).first();
+    }
+
+
+    public Product documentToProduct(Document document) {
         String name = document.getString("name");
         int quantity = document.getInteger("quantity");
         double price = document.getDouble("price");
-        ProductType type = ProductType.valueOf(document.getString("type"));
-        String attribute = document.getString("attribute");
+        ProductType type = ProductType.valueOf(document.getString("type").toUpperCase());
+        Object attribute = document.get("attribute");
 
-        Product product = new Product(name, quantity, price, type, attribute);
-        product.setProductId(id);
+        Product product;
+
+        if (type == ProductType.FLOWER) {
+            product = new Flower<>(name, quantity, price, attribute);
+        } else if (type == ProductType.DECORATION) {
+            product = new Decoration<>(name, quantity, price, attribute);
+        } else if (type == ProductType.TREE) {
+            if (attribute instanceof Integer) {
+                product = new Tree<>(name, quantity, price, ((Integer) attribute).doubleValue());
+            } else if (attribute instanceof Double) {
+                product = new Tree<>(name, quantity, price, (Double) attribute);
+            } else {
+                throw new IllegalArgumentException("Tipo de atributo no válido para un producto tipo TREE");
+            }
+        } else {
+            throw new IllegalArgumentException("Tipo de producto no válido");
+        }
+
         return product;
     }
 }

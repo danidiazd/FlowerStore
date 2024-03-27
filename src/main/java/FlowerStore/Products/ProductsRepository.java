@@ -4,6 +4,7 @@ import java.util.List;
 
 public interface ProductsRepository {
     List<Product> getAllProducts();
-    void addProduct(Product product);
+    void addPrimaryStock();
     void updateProduct(Product product);
+    void newTicket();
 }
