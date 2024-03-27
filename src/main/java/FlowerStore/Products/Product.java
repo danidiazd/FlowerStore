@@ -4,19 +4,13 @@ import FlowerStore.FlowerStore;
 
 public class Product<T> {
 
-
-
     private int productId;
     private static int productIdNext = 1;
     private String name;
     private int quantity;
     private double price;
-
     private ProductType type;
-
     private T attributes;
-
-
 
     public Product(String name, int quantity, double price, ProductType type, T attributes) {
         this.productId = productIdNext++;
