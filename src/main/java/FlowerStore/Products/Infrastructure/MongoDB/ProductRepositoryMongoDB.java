@@ -175,9 +175,6 @@ public class ProductRepositoryMongoDB<T> implements ProductsRepository {
                 product = new Tree<>(name, quantity, price, ((Integer) attribute).doubleValue());
             } else if (attribute instanceof Double) {
                 product = new Tree<>(name, quantity, price, (Double) attribute);
-            } else {
-                throw new IllegalArgumentException("Tipo de atributo no válido para un producto tipo TREE");
-            }
         } else {
             throw new IllegalArgumentException("Tipo de producto no válido");
         }
