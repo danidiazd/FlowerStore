@@ -1,20 +1,8 @@
 package Connections;
 
-import FlowerStore.FlowerStore;
-import FlowerStore.Products.Decoration;
-import FlowerStore.Products.Flower;
-import FlowerStore.Products.Product;
-import FlowerStore.Products.Tree;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import org.bson.Document;
-import org.bson.types.ObjectId;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MongoDBConnection {
 

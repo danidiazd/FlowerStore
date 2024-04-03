@@ -1,6 +1,6 @@
 package FlowerStore;
 
-import FlowerStore.Products.Product;
+import Products.Product;
 
 import java.util.ArrayList;
 

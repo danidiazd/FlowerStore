@@ -1,6 +1,6 @@
 package FlowerStore.Ticket;
 
-import FlowerStore.Products.Product;
+import Products.Product;
 
 import java.util.HashMap;
 import java.util.Map;
