@@ -1,4 +1,4 @@
-package FlowerStore.Products;
+package Products;
 
 public enum ProductType {
     FLOWER,

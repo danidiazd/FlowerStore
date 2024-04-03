@@ -1,8 +1,4 @@
-package FlowerStore.Products;
-
-import FlowerStore.FlowerStore;
-
-import java.util.Objects;
+package Products;
 
 public class Product<T> {
 
@@ -54,12 +50,17 @@ public class Product<T> {
         this.price = price;
     }
 
-    public void setProductId(int productId) {
-        this.productId = productId;
+    public static void setProductId(int productId) {
+         productId = productId;
+    }
+    public static void resetIdProduct(){
+        productIdNext = 1;
+        setProductId(1);
+
     }
 
     @Override
     public String toString() {
-        return getName() + " with ID : " + getProductId() + " with a price " + getPrice();
+        return getName() + " with stock : " + getQuantity() + " with a price " + getPrice();
     }
 }

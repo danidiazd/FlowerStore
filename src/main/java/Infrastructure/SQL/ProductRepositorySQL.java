@@ -1,7 +1,7 @@
-package FlowerStore.Products.Infrastructure.SQL;
+package Infrastructure.SQL;
 
-import FlowerStore.Products.Product;
-import FlowerStore.Products.ProductsRepository;
+import Products.Product;
+import Products.ProductsRepository;
 
 import java.util.List;
 
@@ -18,6 +18,11 @@ public class ProductRepositorySQL implements ProductsRepository {
 
     @Override
     public void updateProduct(Product product) {
+
+    }
+
+    @Override
+    public void deleteProduct(Product product) {
 
     }
 
