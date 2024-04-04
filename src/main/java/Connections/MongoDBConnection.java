@@ -14,7 +14,7 @@ public class MongoDBConnection {
         try {
             this.mongoDatabase = mongoClient.getDatabase(databaseName);
         } catch (MongoException e) {
-            System.out.println("Error al conectar con la base de datos.");
+            System.err.println("Error establishing the database connection.");
         }
     }
 
@@ -24,7 +24,7 @@ public class MongoDBConnection {
                 mongoClient.close();
             }
         } catch (MongoException e) {
-            System.out.println("Error al desconectar con la base de datos.");
+            System.err.println("An error occurred when disconnecting from the database");
         }
     }
 
