@@ -5,19 +5,24 @@ import FlowerStore.Products.ProductsRepository;
 
 import java.util.List;
 
-public class ProductRespositorySQL implements ProductsRepository {
+public class ProductRepositorySQL implements ProductsRepository {
     @Override
     public List<Product> getAllProducts() {
         return null;
     }
 
     @Override
-    public void addProduct(Product product) {
+    public void addPrimaryStock() {
 
     }
 
     @Override
     public void updateProduct(Product product) {
+
+    }
+
+    @Override
+    public void newTicket() {
 
     }
 }

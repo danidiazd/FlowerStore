@@ -2,21 +2,17 @@ package FlowerStore.Products;
 
 import FlowerStore.FlowerStore;
 
+import java.util.Objects;
+
 public class Product<T> {
-
-
 
     private int productId;
     private static int productIdNext = 1;
     private String name;
     private int quantity;
     private double price;
-
     private ProductType type;
-
     private T attributes;
-
-
 
     public Product(String name, int quantity, double price, ProductType type, T attributes) {
         this.productId = productIdNext++;
@@ -52,6 +48,10 @@ public class Product<T> {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public void setProductId(int productId) {
