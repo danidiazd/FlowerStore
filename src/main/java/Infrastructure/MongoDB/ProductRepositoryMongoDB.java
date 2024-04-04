@@ -142,6 +142,7 @@ public class ProductRepositoryMongoDB<T> implements ProductsRepository {
         collection.insertMany(stock);
 
     }
+
     public void addProduct(Product product) {
         Document productDocument = new Document("name", product.getName())
                 .append("quantity", product.getQuantity())
@@ -150,6 +151,7 @@ public class ProductRepositoryMongoDB<T> implements ProductsRepository {
                 .append("attribute", product.getAttributes());
         collection.insertOne(productDocument);
     }
+
     @Override
     public void updateProduct(Product product) {
         Document query = new Document("name", product.getName()).append("attribute", product.getAttributes());
@@ -187,7 +189,6 @@ public class ProductRepositoryMongoDB<T> implements ProductsRepository {
         Object attribute = document.get("attribute");
 
 
-
         Product product;
 
         if (type == ProductType.FLOWER) {
@@ -200,6 +201,6 @@ public class ProductRepositoryMongoDB<T> implements ProductsRepository {
             throw new IllegalArgumentException("Tipo de atributo no válido para un producto tipo TREE");
         }
         return product;
+    }
 }
 
-}
