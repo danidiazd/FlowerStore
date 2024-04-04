@@ -1,9 +1,5 @@
 package FlowerStore.Products;
 
-import FlowerStore.FlowerStore;
-
-import java.util.Objects;
-
 public class Product<T> {
 
     private int productId;
@@ -23,8 +19,8 @@ public class Product<T> {
         this.attributes = attributes;
     }
 
-    public T getAttributes() {
-        return attributes;
+    public String getAttributes() {
+        return (String) attributes;
     }
 
     public ProductType getType() {

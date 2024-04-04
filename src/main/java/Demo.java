@@ -1,9 +1,13 @@
 import Connections.MongoDBConnection;
+import Connections.MySQLConnection;
 import FlowerStore.FlowerStore;
 import FlowerStore.Products.*;
 import FlowerStore.Products.Infrastructure.MongoDB.ProductRepositoryMongoDB;
+import FlowerStore.Products.Infrastructure.SQL.ProductRepositorySQL;
 import FlowerStore.Utils.Utils;
 import InputControl.InputControl;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 
@@ -14,19 +18,35 @@ public class Demo implements Runnable {
 
     private static FlowerStore flowerStore;
     private MongoDBConnection mongoDBConnection;
-    private ProductRepositoryMongoDB productRepositoryMongoDB;
+    private MySQLConnection mySQLConnection;
+    private static ProductsRepository productsRepository;
 
     private Utils utils;
 
-    public Demo(MongoDBConnection mongoDBConnection) {
-        this.mongoDBConnection = mongoDBConnection;
-        this.productRepositoryMongoDB = new ProductRepositoryMongoDB(mongoDBConnection);
+    public Demo() {
     }
 
     @Override
     public void run() {
-        productRepositoryMongoDB.addPrimaryStock();
+        configureRepository();
+        productsRepository.addPrimaryStock();
         menu();
+    }
+
+    public void configureRepository() {
+        String userDatabase = InputControl.readString("Select the database you would like to work with (MySQL or MongoDB)");
+        if (userDatabase.equalsIgnoreCase("MongoDB")) {
+            MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017");
+            String nameStore = InputControl.readString("Indicate the name of the flower shop");
+            MongoDBConnection mongoDBConnection = new MongoDBConnection( nameStore, mongoClient);
+            productsRepository = new ProductRepositoryMongoDB(mongoDBConnection);
+        } else if (userDatabase.equalsIgnoreCase("MySQL")) {
+            MySQLConnection mySQLConnection = new MySQLConnection();
+            productsRepository = new ProductRepositorySQL();
+        } else {
+            System.out.println("Tipo de base de datos no válido.");
+            configureRepository();
+        }
     }
 
 
@@ -118,13 +138,13 @@ public class Demo implements Runnable {
         switch (option) {
 
             case 1:
-                products = productRepositoryMongoDB.getFlowers();
+                products = productsRepository.getFlowers();
                 break;
             case 2:
-                products = productRepositoryMongoDB.getTrees();
+                products = productsRepository.getTrees();
                 break;
             case 3:
-                products = productRepositoryMongoDB.getDecorations();
+                products = productsRepository.getDecorations();
                 break;
         }
         return products;
@@ -161,7 +181,7 @@ public class Demo implements Runnable {
 
     private void showAllProducts() {
 
-        List<Product> products = productRepositoryMongoDB.getAllProducts();
+        List<Product> products = productsRepository.getAllProducts();
         if (products.isEmpty()) {
             System.out.println("No products found");
             //utils.waitForKeyPress();
@@ -200,4 +220,6 @@ public class Demo implements Runnable {
     private void addProductsToTicket() {
         showAllProducts();
     }
+
+
 }

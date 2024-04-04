@@ -7,4 +7,10 @@ public interface ProductsRepository {
     void addPrimaryStock();
     void updateProduct(Product product);
     void newTicket();
+
+    List<Product> getFlowers();
+
+    List<Product> getTrees();
+
+    List<Product> getDecorations();
 }
