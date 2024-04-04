@@ -142,6 +142,7 @@ public class ProductRepositoryMongoDB<T> implements ProductsRepository {
         collection.insertMany(stock);
 
     }
+
     public void addProduct(Product product) {
         Document productDocument = new Document("name", product.getName())
                 .append("quantity", product.getQuantity())
@@ -150,6 +151,7 @@ public class ProductRepositoryMongoDB<T> implements ProductsRepository {
                 .append("attribute", product.getAttributes());
         collection.insertOne(productDocument);
     }
+
     @Override
     public void updateProduct(Product product) {
         Document query = new Document("name", product.getName()).append("attribute", product.getAttributes());
@@ -187,7 +189,6 @@ public class ProductRepositoryMongoDB<T> implements ProductsRepository {
         Object attribute = document.get("attribute");
 
 
-
         Product product;
 
         if (type == ProductType.FLOWER) {
@@ -195,20 +196,11 @@ public class ProductRepositoryMongoDB<T> implements ProductsRepository {
         } else if (type == ProductType.DECORATION) {
             product = new Decoration<>(name, quantity, price, attribute);
         } else if (type == ProductType.TREE) {
-<<<<<<< HEAD:src/main/java/FlowerStore/Products/Infrastructure/MongoDB/ProductRepositoryMongoDB.java
-            if (attribute instanceof Integer) {
-                product = new Tree<>(name, quantity, price, ((Integer) attribute).doubleValue());
-            } else if (attribute instanceof Double) {
-                product = new Tree<>(name, quantity, price, (Double) attribute);
-        } else {
-            throw new IllegalArgumentException("Product type invalid");
-=======
             product = new Tree<>(name, quantity, price, (Double) attribute);
         } else {
             throw new IllegalArgumentException("Tipo de atributo no válido para un producto tipo TREE");
->>>>>>> conexionMongo:src/main/java/Infrastructure/MongoDB/ProductRepositoryMongoDB.java
         }
         return product;
+    }
 }
 
-}
