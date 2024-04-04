@@ -1,7 +1,8 @@
-package FlowerStore.Products.Infrastructure.MongoDB;
+package Infrastructure.MongoDB;
 
 import Connections.MongoDBConnection;
-import FlowerStore.Products.*;
+import FlowerStore.FlowerStore;
+import Products.*;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
@@ -10,16 +11,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.mongodb.client.model.Filters.eq;
-
 public class ProductRepositoryMongoDB<T> implements ProductsRepository {
 
     private MongoCollection<Document> collection;
     private MongoCollection<Document> ticketCollection;
+    private FlowerStore flowerStore;
 
     public ProductRepositoryMongoDB(MongoDBConnection mongoDBConnection) {
         this.collection = mongoDBConnection.mongoDatabase.getCollection("products");
         this.ticketCollection = mongoDBConnection.mongoDatabase.getCollection("tickets");
+
     }
 
     @Override
@@ -32,6 +33,7 @@ public class ProductRepositoryMongoDB<T> implements ProductsRepository {
         }
         return products;
     }
+
     public List<Product> getFlowers() {
         List<Product> allProducts = getAllProducts();
         return allProducts.stream()
@@ -68,7 +70,7 @@ public class ProductRepositoryMongoDB<T> implements ProductsRepository {
                 .append("name", "Olivo")
                 .append("quantity", 0)
                 .append("price", 0.0)
-                .append("attribute", 2.0 ));
+                .append("attribute", 2.0));
 
         stock.add(new Document("type", ProductType.TREE.toString())
                 .append("name", "Pino")
@@ -112,7 +114,6 @@ public class ProductRepositoryMongoDB<T> implements ProductsRepository {
                 .append("price", 0.0)
                 .append("attribute", "Amarillo"));
 
-
         stock.add(new Document("type", ProductType.DECORATION.toString())
                 .append("name", "Jarron")
                 .append("quantity", 0)
@@ -141,10 +142,30 @@ public class ProductRepositoryMongoDB<T> implements ProductsRepository {
         collection.insertMany(stock);
 
     }
-
+    public void addProduct(Product product) {
+        Document productDocument = new Document("name", product.getName())
+                .append("quantity", product.getQuantity())
+                .append("price", product.getPrice())
+                .append("type", product.getType().toString())
+                .append("attribute", product.getAttributes());
+        collection.insertOne(productDocument);
+    }
     @Override
     public void updateProduct(Product product) {
+        Document query = new Document("name", product.getName()).append("attribute", product.getAttributes());
+        Document update = new Document("$set", new Document("quantity", product.getQuantity())
+                .append("price", product.getPrice()));
 
+        collection.updateOne(query, update);
+        System.out.println("Stock updated from " + product.getName());
+    }
+
+    @Override
+    public void deleteProduct(Product product) {
+        Document query = new Document("name", product.getName())
+                .append("attribute", product.getAttributes());
+        collection.deleteOne(query);
+        System.out.println("Product: " + product.getName() + " deleted from DataBase");
     }
 
     @Override
@@ -162,7 +183,10 @@ public class ProductRepositoryMongoDB<T> implements ProductsRepository {
         int quantity = document.getInteger("quantity");
         double price = document.getDouble("price");
         ProductType type = ProductType.valueOf(document.getString("type").toUpperCase());
+
         Object attribute = document.get("attribute");
+
+
 
         Product product;
 
@@ -171,17 +195,20 @@ public class ProductRepositoryMongoDB<T> implements ProductsRepository {
         } else if (type == ProductType.DECORATION) {
             product = new Decoration<>(name, quantity, price, attribute);
         } else if (type == ProductType.TREE) {
+<<<<<<< HEAD:src/main/java/FlowerStore/Products/Infrastructure/MongoDB/ProductRepositoryMongoDB.java
             if (attribute instanceof Integer) {
                 product = new Tree<>(name, quantity, price, ((Integer) attribute).doubleValue());
             } else if (attribute instanceof Double) {
                 product = new Tree<>(name, quantity, price, (Double) attribute);
-            } else {
-                throw new IllegalArgumentException("Tipo de atributo no válido para un producto tipo TREE");
-            }
         } else {
-            throw new IllegalArgumentException("Tipo de producto no válido");
+            throw new IllegalArgumentException("Product type invalid");
+=======
+            product = new Tree<>(name, quantity, price, (Double) attribute);
+        } else {
+            throw new IllegalArgumentException("Tipo de atributo no válido para un producto tipo TREE");
+>>>>>>> conexionMongo:src/main/java/Infrastructure/MongoDB/ProductRepositoryMongoDB.java
         }
-
         return product;
-    }
+}
+
 }
