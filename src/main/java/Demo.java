@@ -1,5 +1,4 @@
-import Connections.MongoDBConnection;
-import Connections.MySQLConnection;
+import Connections.*;
 import FlowerStore.FlowerStore;
 import FlowerStore.Utils.Utils;
 import Infrastructure.MongoDB.ProductRepositoryMongoDB;
@@ -16,9 +15,9 @@ public class Demo implements Runnable {
 
     private static FlowerStore flowerStore;
     private MongoDBConnection mongoDBConnection;
+    private MySQLConnection mySQLConnection;
     private ProductRepositoryMongoDB productRepositoryMongoDB;
     private static ProductsRepository productsRepository;
-
     private Utils utils;
 
     public Demo() {
@@ -34,9 +33,8 @@ public class Demo implements Runnable {
     public void configureRepository() {
         String userDatabase = InputControl.readString("Select the database you would like to work with (MySQL or MongoDB)");
         if (userDatabase.equalsIgnoreCase("MongoDB")) {
-            MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017");
             String nameStore = InputControl.readString("Indicate the name of the flower shop");
-            MongoDBConnection mongoDBConnection = new MongoDBConnection( nameStore, mongoClient);
+            MongoDBConnection mongoDBConnection = new MongoDBConnection(nameStore);
             productsRepository = new ProductRepositoryMongoDB(mongoDBConnection);
         } else if (userDatabase.equalsIgnoreCase("MySQL")) {
             MySQLConnection mySQLConnection = new MySQLConnection();
@@ -93,7 +91,7 @@ public class Demo implements Runnable {
                     // TODO: showFlowerShopBenefits
                     break;
                 case 10:
-                    System.exit(0); // to exit the program
+                    exit();
                     break;
                 default:
                     System.out.println("Please, introduce a valid option");
@@ -101,6 +99,7 @@ public class Demo implements Runnable {
             }
         } while (true);
     }
+
 
     private void updateStock() {
 
@@ -265,5 +264,11 @@ public class Demo implements Runnable {
 
     private void addProductsToTicket() {
         showAllProducts();
+    }
+
+    private void exit() {
+        System.exit(0);
+        mongoDBConnection.disconnectMongo();
+        mySQLConnection.disconnectMySQL();
     }
 }
