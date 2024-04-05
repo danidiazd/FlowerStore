@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `floresPaquitaSL`.`product` (
   `type` ENUM('FLOWER', 'TREE', 'DECORATION') NULL DEFAULT NULL,
   PRIMARY KEY (`idproduct`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 16
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
@@ -45,7 +45,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 DROP TABLE IF EXISTS `floresPaquitaSL`.`decoration` ;
 
 CREATE TABLE IF NOT EXISTS `floresPaquitaSL`.`decoration` (
-  `material` ENUM('plastic', 'wood') NOT NULL,
+  `material` VARCHAR(45) NOT NULL,
   `product_idproduct` INT NOT NULL,
   INDEX `fk_decoration_product1_idx` (`product_idproduct` ASC) VISIBLE,
   CONSTRAINT `fk_decoration_product1`
