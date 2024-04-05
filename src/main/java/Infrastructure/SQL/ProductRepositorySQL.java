@@ -104,22 +104,6 @@ public class ProductRepositorySQL implements ProductsRepository {
         }
     }
 
-    private void insertSpecificData(Connection connection, int productId, String columnName, Object value, ProductType productType) throws SQLException {
-        String tableName = productType.name().toLowerCase();
-        String formattedQuery = String.format("INSERT INTO %s (product_idproduct, %s) VALUES (?, ?)", tableName, columnName);
-
-        try (PreparedStatement specificDataStatement = connection.prepareStatement(formattedQuery)) {
-            specificDataStatement.setInt(1, productId);
-            if (value instanceof Double) {
-                specificDataStatement.setDouble(2, (Double) value);
-            } else {
-                specificDataStatement.setString(2, (String) value);
-            }
-            specificDataStatement.executeUpdate();
-        }
-    }
-
-
     @Override
     public void updateProduct(Product product) {
 
