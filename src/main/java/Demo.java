@@ -1,9 +1,13 @@
 import Connections.MongoDBConnection;
+import Connections.MySQLConnection;
 import FlowerStore.FlowerStore;
 import FlowerStore.Utils.Utils;
 import Infrastructure.MongoDB.ProductRepositoryMongoDB;
+import Infrastructure.SQL.ProductRepositorySQL;
 import InputControl.InputControl;
 import Products.*;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,18 +17,34 @@ public class Demo implements Runnable {
     private static FlowerStore flowerStore;
     private MongoDBConnection mongoDBConnection;
     private ProductRepositoryMongoDB productRepositoryMongoDB;
+    private static ProductsRepository productsRepository;
 
     private Utils utils;
 
-    public Demo(MongoDBConnection mongoDBConnection) {
-        this.mongoDBConnection = mongoDBConnection;
-        this.productRepositoryMongoDB = new ProductRepositoryMongoDB(mongoDBConnection);
+    public Demo() {
     }
 
     @Override
     public void run() {
-        productRepositoryMongoDB.addPrimaryStock();
+        configureRepository();
+        productsRepository.addPrimaryStock();
         menu();
+    }
+
+    public void configureRepository() {
+        String userDatabase = InputControl.readString("Select the database you would like to work with (MySQL or MongoDB)");
+        if (userDatabase.equalsIgnoreCase("MongoDB")) {
+            MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017");
+            String nameStore = InputControl.readString("Indicate the name of the flower shop");
+            MongoDBConnection mongoDBConnection = new MongoDBConnection( nameStore, mongoClient);
+            productsRepository = new ProductRepositoryMongoDB(mongoDBConnection);
+        } else if (userDatabase.equalsIgnoreCase("MySQL")) {
+            MySQLConnection mySQLConnection = new MySQLConnection();
+            productsRepository = new ProductRepositorySQL(mySQLConnection);
+        } else {
+            System.err.println("This database type is not valid");
+            configureRepository();
+        }
     }
 
 
@@ -92,13 +112,13 @@ public class Demo implements Runnable {
         double price = InputControl.readDouble("Choose a price for " + product.getName());
         product.setPrice(price);
 
-        productRepositoryMongoDB.updateProduct(product);
+        productsRepository.updateProduct(product);
 
     }
 
     private void deleteProduct() {
         Product product = getOneProduct();
-        productRepositoryMongoDB.deleteProduct(product);
+        productsRepository.deleteProduct(product);
     }
     private void addProduct() {
 
@@ -114,19 +134,19 @@ public class Demo implements Runnable {
                 typeProduct = ProductType.TREE.toString();
                 double attribute = InputControl.readDouble("Type height for the tree");
                 Tree newTree = new Tree<>(name, quantity, price, attribute);
-                productRepositoryMongoDB.addProduct(newTree);
+                productsRepository.addProduct(newTree);
                 break;
             case 2:
                 typeProduct = ProductType.FLOWER.toString();
                 String flowerAttribute = InputControl.readString("Type color for the flower");
                 Flower newFlower = new Flower<>(name, quantity, price, flowerAttribute);
-                productRepositoryMongoDB.addProduct(newFlower);
+                productsRepository.addProduct(newFlower);
                 break;
             case 3:
                 typeProduct = ProductType.DECORATION.toString();
                 String decorationAttribute = InputControl.readString("Type material for the decoration");
                 Decoration newDecoration = new Decoration<>(name, quantity, price, decorationAttribute);
-                productRepositoryMongoDB.addProduct(newDecoration);
+                productsRepository.addProduct(newDecoration);
                 break;
         }
     }
@@ -148,7 +168,7 @@ public class Demo implements Runnable {
     }
 
     private void totalValue() {
-        List<Product> products = productRepositoryMongoDB.getAllProducts();
+        List<Product> products = productsRepository.getAllProducts();
         double price = 0;
         for (Product product : products) {
             price += product.getPrice();
@@ -168,13 +188,13 @@ public class Demo implements Runnable {
         switch (option) {
 
             case 1:
-                products = productRepositoryMongoDB.getFlowers();
+                products = productsRepository.getFlowers();
                 break;
             case 2:
-                products = productRepositoryMongoDB.getTrees();
+                products = productsRepository.getTrees();
                 break;
             case 3:
-                products = productRepositoryMongoDB.getDecorations();
+                products = productsRepository.getDecorations();
                 break;
         }
         return products;
@@ -210,7 +230,7 @@ public class Demo implements Runnable {
 
     private void showAllProducts() {
 
-        List<Product> products = productRepositoryMongoDB.getAllProducts();
+        List<Product> products = productsRepository.getAllProducts();
         if (products.isEmpty()) {
             System.out.println("No products found");
             //utils.waitForKeyPress();
