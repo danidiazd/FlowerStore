@@ -10,6 +10,15 @@ public class Product<T> {
     private ProductType type;
     private T attributes;
 
+    public Product(int productId, String name, int quantity, double price, ProductType type, T attributes) {
+        this.productId = productId;
+        this.name = name;
+        this.quantity = quantity;
+        this.price = price;
+        this.type = type;
+        this.attributes = attributes;
+    }
+
     public Product(String name, int quantity, double price, ProductType type, T attributes) {
         this.productId = productIdNext++;
         this.name = name;
