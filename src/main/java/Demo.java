@@ -1,16 +1,14 @@
 import Connections.*;
 import FlowerStore.FlowerStore;
+import FlowerStore.Ticket.Ticket;
 import FlowerStore.Utils.Utils;
 import Infrastructure.MongoDB.ProductRepositoryMongoDB;
 import Infrastructure.SQL.ProductRepositorySQL;
 import Infrastructure.Scripts.SQLScriptExecutor;
 import InputControl.InputControl;
 import Products.*;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Demo implements Runnable {
 
@@ -84,7 +82,7 @@ public class Demo implements Runnable {
                     totalValue();
                     break;
                 case 7:
-                    // TODO: createTicket;
+                    addProductsToTicket();
                     break;
                 case 8:
                     // TODO: showAllTickets;
@@ -121,14 +119,16 @@ public class Demo implements Runnable {
         Product product = getOneProduct();
         productsRepository.deleteProduct(product);
     }
+
     private void addProduct() {
 
+        int type = InputControl.readInt("\nType 1 for Tree.\n" +
+                "2 for Flower.\n" +
+                "3 for Decoration");
         String name = InputControl.readString("Type a name for product.");
         int quantity = InputControl.readInt("Type a quantity stock.");
         double price = InputControl.readDouble("Type a price.");
-        int type = InputControl.readInt("Type 1 for Tree.\n" +
-                "2 for Flower.\n" +
-                "3 for Decoration");
+
         String typeProduct = "";
         switch (type) {
             case 1:
@@ -151,6 +151,34 @@ public class Demo implements Runnable {
                 break;
         }
     }
+
+
+    private void addProductsToTicket() {
+        boolean addMore;
+        Date date = new Date();
+        Ticket ticket = new Ticket(date);
+        do {
+            Product productToTicket = getOneProduct();
+            int quantity = InputControl.readInt("Type quantity to add.");
+            ticket.addProductToTicket(productToTicket, quantity);
+            productToTicket = ticket.updateStockStore(productToTicket, quantity);
+            productsRepository.updateProduct(productToTicket);
+            System.out.println(productToTicket.getName() + " added to buy.");
+            addMore = InputControl.readBoolean("Want add more? (yes or not) ");
+        } while (addMore);
+
+        Map<Product, Integer> ticketWithProducts = ticket.getProducts();
+        productsRepository.newTicket(ticketWithProducts);
+        ticket.showTicket();
+    }
+    private void showAllTickets() {
+        List<Ticket> alltickets = new ArrayList<>();
+        alltickets = productsRepository.getAllTickets();
+        for (Ticket ticket : alltickets) {
+            ticket.showTicket();
+        }
+    }
+
     private Product getOneProduct() {
         Product selectProduct;
         List<Product> products = getTypetoAdd();
@@ -262,10 +290,6 @@ public class Demo implements Runnable {
             }
             //utils.waitForKeypress();
         }
-    }
-
-    private void addProductsToTicket() {
-        showAllProducts();
     }
 
     private void exit() {

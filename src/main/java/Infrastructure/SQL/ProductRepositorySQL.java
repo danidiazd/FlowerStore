@@ -1,4 +1,5 @@
 package Infrastructure.SQL;
+import FlowerStore.Ticket.Ticket;
 import Products.Flower;
 import Products.Product;
 import Products.ProductType;
@@ -7,6 +8,7 @@ import java.util.List;
 import Connections.MySQLConnection;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class ProductRepositorySQL implements ProductsRepository {
     private MySQLConnection mySQLConnection;
@@ -115,8 +117,13 @@ public class ProductRepositorySQL implements ProductsRepository {
     }
 
     @Override
-    public void newTicket() {
+    public void newTicket(Map<Product, Integer> ticketInfo) {
 
+    }
+
+    @Override
+    public List<Ticket> getAllTickets() {
+        return null;
     }
 
     @Override

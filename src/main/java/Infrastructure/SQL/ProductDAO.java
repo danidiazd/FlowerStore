@@ -1,6 +1,7 @@
 package Infrastructure.SQL;
 
 import Connections.MySQLConnection;
+import FlowerStore.Ticket.Ticket;
 import Products.Product;
 import Products.ProductType;
 import Products.ProductsRepository;
@@ -9,6 +10,7 @@ import org.bson.Document;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static Connections.MySQLConnection.getMySQLDatabase;
@@ -218,7 +220,12 @@ public class ProductDAO implements ProductsRepository {
     }
 
     @Override
-    public void newTicket() {
+    public void newTicket(Map<Product, Integer> ticketInfo) {
 
+    }
+
+    @Override
+    public List<Ticket> getAllTickets() {
+        return null;
     }
 }

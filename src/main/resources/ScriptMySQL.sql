@@ -11,16 +11,18 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- Schema mydb
 -- -----------------------------------------------------
 -- -----------------------------------------------------
--- Schema nombre_a_cambiar
+-- Schema floristeriaPaquitaSl
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `nombre_a_cambiar` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
-USE `nombre_a_cambiar` ;
-CREATE DATABASE IF NOT EXISTS `nombre_a_cambiar` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
-USE `nombre_a_cambiar` ;
+CREATE DATABASE IF NOT EXISTS `floristeriaPaquitaSl` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `floristeriaPaquitaSl` ;
+
+CREATE SCHEMA IF NOT EXISTS `floristeriaPaquitaSl` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `floristeriaPaquitaSl` ;
+
 -- -----------------------------------------------------
--- Table `nombre_a_cambiar`.`product`
+-- Table `floristeriaPaquitaSl`.`product`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `nombre_a_cambiar`.`product` ;
+DROP TABLE IF EXISTS `floristeriaPaquitaSl`.`product` ;
 
 CREATE TABLE IF NOT EXISTS `nombre_a_cambiar`.`product` (
   `idproduct` INT NOT NULL AUTO_INCREMENT,
@@ -36,17 +38,17 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `nombre_a_cambiar`.`decoration`
+-- Table `floristeriaPaquitaSl`.`decoration`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `nombre_a_cambiar`.`decoration` ;
+DROP TABLE IF EXISTS `floristeriaPaquitaSl`.`decoration` ;
 
-CREATE TABLE IF NOT EXISTS `nombre_a_cambiar`.`decoration` (
+CREATE TABLE IF NOT EXISTS `floristeriaPaquitaSl`.`decoration` (
   `material` VARCHAR(45) NOT NULL,
   `product_idproduct` INT NOT NULL,
   INDEX `fk_decoration_product1_idx` (`product_idproduct` ASC) VISIBLE,
   CONSTRAINT `fk_decoration_product1`
     FOREIGN KEY (`product_idproduct`)
-    REFERENCES `nombre_a_cambiar`.`product` (`idproduct`))
+    REFERENCES `floristeriaPaquitaSl`.`product` (`idproduct`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
