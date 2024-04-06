@@ -9,7 +9,7 @@ import java.util.Properties;
 
 @MySQLConfig(config = "mysql.properties")
 public class MySQLConnection {
-    private Connection mySQLDatabase;
+    private static Connection mySQLDatabase;
     private String url;
     private String username;
     private String password;
@@ -25,7 +25,7 @@ public class MySQLConnection {
         username = properties.getProperty("mysql.username");
         password = properties.getProperty("mysql.password");
         try {
-            mySQLDatabase = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/floresPaquitaSL", "root", "gilipichi");
+            mySQLDatabase = DriverManager.getConnection(url, username, password);
         } catch (SQLException e) {
             System.err.println("Error establishing the database connection.");
             e.printStackTrace();
@@ -47,11 +47,11 @@ public class MySQLConnection {
     }
 
 
-    public Connection getMySQLDatabase() {
+    public static Connection getMySQLDatabase() {
         return mySQLDatabase;
     }
 
-    private void disconnectMySQL() {
+    public void disconnectMySQL() {
 
             try {
                 if (mySQLDatabase != null) {
