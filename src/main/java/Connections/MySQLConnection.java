@@ -20,6 +20,7 @@ public class MySQLConnection {
         String configFileName = annotation.config();
         Properties properties = loadProperties(configFileName);
 
+
         url = properties.getProperty("mysql.url");
         username = properties.getProperty("mysql.username");
         password = properties.getProperty("mysql.password");

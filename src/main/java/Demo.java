@@ -3,6 +3,7 @@ import FlowerStore.FlowerStore;
 import FlowerStore.Utils.Utils;
 import Infrastructure.MongoDB.ProductRepositoryMongoDB;
 import Infrastructure.SQL.ProductRepositorySQL;
+import Infrastructure.Scripts.SQLScriptExecutor;
 import InputControl.InputControl;
 import Products.*;
 import com.mongodb.client.MongoClient;
@@ -32,12 +33,13 @@ public class Demo implements Runnable {
 
     public void configureRepository() {
         String userDatabase = InputControl.readString("Select the database you would like to work with (MySQL or MongoDB)");
+        String nameStore = InputControl.readString("Indicate the name of the flower shop");
         if (userDatabase.equalsIgnoreCase("MongoDB")) {
-            String nameStore = InputControl.readString("Indicate the name of the flower shop");
             MongoDBConnection mongoDBConnection = new MongoDBConnection(nameStore);
             productsRepository = new ProductRepositoryMongoDB(mongoDBConnection);
         } else if (userDatabase.equalsIgnoreCase("MySQL")) {
             MySQLConnection mySQLConnection = new MySQLConnection();
+            SQLScriptExecutor.executeScript(nameStore);
             productsRepository = new ProductRepositorySQL(mySQLConnection);
         } else {
             System.err.println("This database type is not valid");
