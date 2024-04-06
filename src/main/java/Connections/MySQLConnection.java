@@ -24,15 +24,14 @@ public class MySQLConnection {
         url = properties.getProperty("mysql.url");
         username = properties.getProperty("mysql.username");
         password = properties.getProperty("mysql.password");
-
         try {
-            mySQLDatabase = DriverManager.getConnection(url, username, password);
+            mySQLDatabase = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/floresPaquitaSL", "root", "gilipichi");
         } catch (SQLException e) {
             System.err.println("Error establishing the database connection.");
             e.printStackTrace();
         }
-    }
 
+    }
     private Properties loadProperties(String filename) {
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(filename)) {
             if (inputStream != null) {
@@ -47,18 +46,19 @@ public class MySQLConnection {
         }
     }
 
+
     public Connection getMySQLDatabase() {
         return mySQLDatabase;
     }
 
-    public void disconnectMySQL() {
-        try {
-            if (mySQLDatabase != null) {
-                mySQLDatabase.close();
+    private void disconnectMySQL() {
+
+            try {
+                if (mySQLDatabase != null) {
+                    mySQLDatabase.close();
+                }
+            }catch(SQLException e){
+                System.err.println("An error occurred when disconnecting from the database");
+                }
             }
-        } catch (SQLException e) {
-            System.err.println("An error occurred when disconnecting from the database");
-            e.printStackTrace();
-        }
-    }
 }

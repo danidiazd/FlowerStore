@@ -20,7 +20,6 @@ public class ProductRepositoryMongoDB<T> implements ProductsRepository {
     public ProductRepositoryMongoDB(MongoDBConnection mongoDBConnection) {
         this.collection = mongoDBConnection.mongoDatabase.getCollection("products");
         this.ticketCollection = mongoDBConnection.mongoDatabase.getCollection("tickets");
-
     }
 
     @Override
