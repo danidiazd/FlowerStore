@@ -67,7 +67,8 @@ public class Demo implements Runnable {
                     addProduct();
                     break;
                 case 2:
-                    showAllProducts();
+                    showProducts();
+                   // showAllProducts();
                     break;
                 case 3:
                     updateStock();
@@ -259,6 +260,13 @@ public class Demo implements Runnable {
                         product.getAttributes());
             }
             //utils.waitForKeypress();
+        }
+    }
+
+    private void showProducts(){
+        List<Product> products = productsRepository.getAllProducts();
+        for (Product product : products){
+            System.out.println(product);
         }
     }
 

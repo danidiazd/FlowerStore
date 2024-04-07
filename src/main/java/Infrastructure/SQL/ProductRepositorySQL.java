@@ -67,8 +67,9 @@ public class ProductRepositorySQL implements ProductsRepository {
         String insertProductQuery = "INSERT INTO product (name, quantity, price, type) VALUES (?, ?, ?, ?)";
         String insertSpecificDataQuery = "INSERT INTO %s (product_idproduct, %s) VALUES (?, ?)";
 
-        try (Connection connection = mySQLConnection.getMySQLDatabase();
-             PreparedStatement productStatement = connection.prepareStatement(insertProductQuery, Statement.RETURN_GENERATED_KEYS)) {
+        try  {
+            Connection connection = mySQLConnection.getMySQLDatabase();
+            PreparedStatement productStatement = connection.prepareStatement(insertProductQuery, Statement.RETURN_GENERATED_KEYS);
 
             for (Object[] rowData : allData) {
                 String name = (String) rowData[0];
