@@ -11,22 +11,20 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- Schema mydb
 -- -----------------------------------------------------
 -- -----------------------------------------------------
--- Schema floresPaquitaSL
+-- Schema floristeriaPaquitaSl
 -- -----------------------------------------------------
-DROP SCHEMA IF EXISTS `floresPaquitaSL` ;
+CREATE DATABASE IF NOT EXISTS `floristeriaPaquitaSl` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `floristeriaPaquitaSl` ;
+
+CREATE SCHEMA IF NOT EXISTS `floristeriaPaquitaSl` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `floristeriaPaquitaSl` ;
 
 -- -----------------------------------------------------
--- Schema floresPaquitaSL
+-- Table `floristeriaPaquitaSl`.`product`
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `floresPaquitaSL` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
-USE `floresPaquitaSL` ;
+DROP TABLE IF EXISTS `floristeriaPaquitaSl`.`product` ;
 
--- -----------------------------------------------------
--- Table `floresPaquitaSL`.`product`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `floresPaquitaSL`.`product` ;
-
-CREATE TABLE IF NOT EXISTS `floresPaquitaSL`.`product` (
+CREATE TABLE IF NOT EXISTS `nombre_a_cambiar`.`product` (
   `idproduct` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   `quantity` INT NOT NULL,
@@ -40,45 +38,45 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `floresPaquitaSL`.`decoration`
+-- Table `floristeriaPaquitaSl`.`decoration`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `floresPaquitaSL`.`decoration` ;
+DROP TABLE IF EXISTS `floristeriaPaquitaSl`.`decoration` ;
 
-CREATE TABLE IF NOT EXISTS `floresPaquitaSL`.`decoration` (
+CREATE TABLE IF NOT EXISTS `floristeriaPaquitaSl`.`decoration` (
   `material` VARCHAR(45) NOT NULL,
   `product_idproduct` INT NOT NULL,
   INDEX `fk_decoration_product1_idx` (`product_idproduct` ASC) VISIBLE,
   CONSTRAINT `fk_decoration_product1`
     FOREIGN KEY (`product_idproduct`)
-    REFERENCES `floresPaquitaSL`.`product` (`idproduct`))
+    REFERENCES `floristeriaPaquitaSl`.`product` (`idproduct`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `floresPaquitaSL`.`flower`
+-- Table `nombre_a_cambiar`.`flower`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `floresPaquitaSL`.`flower` ;
+DROP TABLE IF EXISTS `nombre_a_cambiar`.`flower` ;
 
-CREATE TABLE IF NOT EXISTS `floresPaquitaSL`.`flower` (
+CREATE TABLE IF NOT EXISTS `nombre_a_cambiar`.`flower` (
   `color` VARCHAR(45) NOT NULL,
   `product_idproduct` INT NOT NULL,
   INDEX `fk_flower_product1_idx` (`product_idproduct` ASC) VISIBLE,
   CONSTRAINT `fk_flower_product1`
     FOREIGN KEY (`product_idproduct`)
-    REFERENCES `floresPaquitaSL`.`product` (`idproduct`))
+    REFERENCES `nombre_a_cambiar`.`product` (`idproduct`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `floresPaquitaSL`.`ticket`
+-- Table `nombre_a_cambiar`.`ticket`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `floresPaquitaSL`.`ticket` ;
+DROP TABLE IF EXISTS `nombre_a_cambiar`.`ticket` ;
 
-CREATE TABLE IF NOT EXISTS `floresPaquitaSL`.`ticket` (
+CREATE TABLE IF NOT EXISTS `nombre_a_cambiar`.`ticket` (
   `idticket` INT NOT NULL,
   `date` DATE NULL,
   `totalPrice` FLOAT NULL,
@@ -89,11 +87,11 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `floresPaquitaSL`.`product_ticket`
+-- Table `nombre_a_cambiar`.`product_ticket`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `floresPaquitaSL`.`product_ticket` ;
+DROP TABLE IF EXISTS `nombre_a_cambiar`.`product_ticket` ;
 
-CREATE TABLE IF NOT EXISTS `floresPaquitaSL`.`product_ticket` (
+CREATE TABLE IF NOT EXISTS `nombre_a_cambiar`.`product_ticket` (
   `idproduct_ticket` INT NOT NULL,
   `amount` SMALLINT(10) NULL,
   `product_idproduct` INT NOT NULL,
@@ -103,12 +101,12 @@ CREATE TABLE IF NOT EXISTS `floresPaquitaSL`.`product_ticket` (
   INDEX `fk_product_ticket_ticket1_idx` (`ticket_idticket` ASC) VISIBLE,
   CONSTRAINT `fk_product_ticket_product1`
     FOREIGN KEY (`product_idproduct`)
-    REFERENCES `floresPaquitaSL`.`product` (`idproduct`)
+    REFERENCES `nombre_a_cambiar`.`product` (`idproduct`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_product_ticket_ticket1`
     FOREIGN KEY (`ticket_idticket`)
-    REFERENCES `floresPaquitaSL`.`ticket` (`idticket`)
+    REFERENCES `nombre_a_cambiar`.`ticket` (`idticket`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -117,17 +115,17 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `floresPaquitaSL`.`tree`
+-- Table `nombre_a_cambiar`.`tree`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `floresPaquitaSL`.`tree` ;
+DROP TABLE IF EXISTS `nombre_a_cambiar`.`tree` ;
 
-CREATE TABLE IF NOT EXISTS `floresPaquitaSL`.`tree` (
+CREATE TABLE IF NOT EXISTS `nombre_a_cambiar`.`tree` (
   `height` DOUBLE NOT NULL,
   `product_idproduct` INT NOT NULL,
   INDEX `fk_tree_product1_idx` (`product_idproduct` ASC) VISIBLE,
   CONSTRAINT `fk_tree_product1`
     FOREIGN KEY (`product_idproduct`)
-    REFERENCES `floresPaquitaSL`.`product` (`idproduct`))
+    REFERENCES `nombre_a_cambiar`.`product` (`idproduct`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;

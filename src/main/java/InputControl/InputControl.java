@@ -97,14 +97,14 @@ public class InputControl {
             try {
                 System.out.println(mensaje);
                 response = scanner.nextLine();
-                if (response.equalsIgnoreCase("s")) {
+                if (response.equalsIgnoreCase("y")) {
                     validData = true;
                     result = true;
                 } else if (response.equalsIgnoreCase("n")) {
                     validData = true;
                 }
             } catch (Exception e) {
-                System.out.println("Format error. Type only a 's' or 'n'");
+                System.out.println("Format error. Type only a 'y' or 'n'");
             }
         } while (!validData);
         return result;

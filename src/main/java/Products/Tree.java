@@ -1,7 +1,7 @@
 package Products;
 
-public class Tree<T> extends Product{
-    private T height;
+public class Tree<T> extends Product <T>{
+    private final T height;
 
     public Tree(String name, int quantity, double price, T height) {
         super(name, quantity, price, ProductType.TREE, height);

@@ -1,7 +1,7 @@
 package Products;
 
-public class Decoration<T> extends Product{
-    private T material;
+public class Decoration<T> extends Product <T>{
+    private final T material;
 
     public Decoration(String name, int quantity, double price, T material) {
         super(name, quantity, price, ProductType.DECORATION, material);
