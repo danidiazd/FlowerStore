@@ -16,4 +16,5 @@ public interface ProductsRepository {
     void newTicket(Map<Product, Integer> ticket);
     List<Ticket> getAllTickets();
     void addProduct(Product product);
+    boolean getStock(int numStock);
 }

@@ -1,51 +1,102 @@
 package Infrastructure.SQL;
 import FlowerStore.Ticket.Ticket;
-import Products.Flower;
-import Products.Product;
-import Products.ProductType;
-import Products.ProductsRepository;
+import Products.*;
+
 import java.util.List;
 import Connections.MySQLConnection;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import static Connections.MySQLConnection.getMySQLDatabase;
 
 public class ProductRepositorySQL implements ProductsRepository {
     private MySQLConnection mySQLConnection;
+
+    private static final String SQL_CREATE =
+            "CREATE TABLE IF NOT EXISTS product (" +
+                    "idproduct INT PRIMARY KEY AUTO_INCREMENT, " +
+                    "name VARCHAR(45) NOT NULL, " +
+                    "quantity INT NOT NULL, " +
+                    "price DOUBLE NOT NULL, " +
+                    "type ENUM('FLOWER', 'TREE', 'DECORATION') NULL DEFAULT NULL" +
+                    ")";
+
+    private static final String SQL_SELECT =
+            "SELECT p.idproduct, p.name, p.quantity, p.price, p.type, " +
+                    "COALESCE(f.color, t.height, d.material) AS attribute " +
+                    "FROM product p " +
+                    "LEFT JOIN flower f ON p.idproduct = f.product_idproduct " +
+                    "LEFT JOIN decoration d ON p.idproduct = d.product_idproduct " +
+                    "LEFT JOIN tree t ON p.idproduct = t.product_idproduct";
+
+    private static final String SQL_INSERT = "INSERT INTO product(name, quantity, price, type) VALUES(?, ?, ?, ?)";
+
+    private static final String SQL_UPDATE = "UPDATE product SET name = ?, quantity = ?, price = ?, type = ? WHERE idproduct = ?";
+
+    private static final String SQL_DELETE = "DELETE FROM product WHERE idproduct = ?";
 
     public ProductRepositorySQL(MySQLConnection mySQLConnection) {
         this.mySQLConnection = mySQLConnection;
     }
 
+    public void createTable() {
+        try(Connection conn = getMySQLDatabase();
+            Statement stmt = conn.createStatement()) {
+            stmt.execute(SQL_CREATE);
+        } catch(SQLException e) {
+            e.printStackTrace(System.out);
+        }
+    }
+
     @Override
     public List<Product> getAllProducts() {
         List<Product> products = new ArrayList<>();
-        String query = "SELECT * FROM product";
-        try (PreparedStatement statement = mySQLConnection.getMySQLDatabase().prepareStatement(query);
-             ResultSet resultSet = statement.executeQuery()) {
-            while (resultSet.next()) {
-                Product product = resultSetToProduct(resultSet);
+
+        try {
+            Connection conn = getMySQLDatabase();
+            PreparedStatement stmt = conn.prepareStatement(SQL_SELECT);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()) {
+                Product product = new Product(
+                        rs.getInt("idproduct"),
+                        rs.getString("name"),
+                        rs.getInt("quantity"),
+                        rs.getDouble("price"),
+                        ProductType.valueOf(rs.getString("type")),
+                        rs.getString("attribute"));
                 products.add(product);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException e){
+            e.printStackTrace(System.out);
         }
         return products;
     }
 
+
     @Override
     public List<Product> getFlowers() {
-        return null;
+        List<Product> allProducts = getAllProducts();
+        return allProducts.stream()
+                .filter(product -> product.getType() == ProductType.FLOWER)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Product> getTrees() {
-        return null;
+        List<Product> allProducts = getAllProducts();
+        return allProducts.stream()
+                .filter(product -> product.getType() == ProductType.TREE)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Product> getDecorations() {
-        return null;
+        List<Product> allProducts = getAllProducts();
+        return allProducts.stream()
+                .filter(product -> product.getType() == ProductType.DECORATION)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -109,12 +160,30 @@ public class ProductRepositorySQL implements ProductsRepository {
 
     @Override
     public void updateProduct(Product product) {
-
+        try {
+            Connection conn = getMySQLDatabase();
+            PreparedStatement stmt = conn.prepareStatement(SQL_UPDATE);
+            stmt.setString(1, product.getName());
+            stmt.setInt(2, product.getQuantity());
+            stmt.setDouble(3, product.getPrice());
+            stmt.setString(4, product.getType().toString());
+            stmt.setInt(5, product.getProductId());
+            stmt.executeUpdate();
+        }catch(SQLException e) {
+            e.printStackTrace(System.out);
+        }
     }
 
     @Override
     public void deleteProduct(Product product) {
-
+        try {
+            Connection conn = getMySQLDatabase();
+            PreparedStatement stmt = conn.prepareStatement(SQL_DELETE);
+            stmt.setInt(1, product.getProductId());
+            stmt.executeUpdate();
+        } catch(SQLException e) {
+            e.printStackTrace(System.out);
+        }
     }
 
     @Override
@@ -129,13 +198,24 @@ public class ProductRepositorySQL implements ProductsRepository {
 
     @Override
     public void addProduct(Product product) {
+        try {
+            Connection conn = getMySQLDatabase();
+            PreparedStatement stmt = conn.prepareStatement(SQL_INSERT);
+            stmt.setString(1, product.getName());
+            stmt.setInt(2, product.getQuantity());
+            stmt.setDouble(3, product.getPrice());
+            stmt.setString(4, product.getType().toString());
+            stmt.executeUpdate();
+        }catch(SQLException e) {
+            e.printStackTrace(System.out);
+        }
 
     }
 
-    private Product resultSetToProduct(ResultSet resultSet) throws SQLException {
-
-
-        return null;
+    @Override
+    public boolean getStock(int numStock) {
+        return false;
     }
+
 
 }

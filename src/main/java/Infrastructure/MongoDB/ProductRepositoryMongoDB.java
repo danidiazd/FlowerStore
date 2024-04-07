@@ -189,6 +189,11 @@ public class ProductRepositoryMongoDB<T> implements ProductsRepository {
     }
 
     @Override
+    public boolean getStock(int numStock) {
+        return false;
+    }
+
+    @Override
     public void updateProduct(Product product) {
         Document query = new Document("name", product.getName()).append("attribute", product.getAttributes());
         Document update = new Document("$set", new Document("quantity", product.getQuantity())

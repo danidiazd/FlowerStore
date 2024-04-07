@@ -194,6 +194,11 @@ public class ProductDAO implements ProductsRepository {
     }
 
     @Override
+    public boolean getStock(int numStock) {
+        return false;
+    }
+
+    @Override
     public void updateProduct(Product product) {
         try(Connection conn = getMySQLDatabase();
             PreparedStatement stmt = conn.prepareStatement(SQL_UPDATE)) {
