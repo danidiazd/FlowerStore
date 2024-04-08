@@ -5,7 +5,5 @@ public class Main {
 
         Demo demo = new Demo();
         demo.run();
-
-
     }
 }

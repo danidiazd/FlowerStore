@@ -87,7 +87,6 @@ public class ManagerProducts {
         List<Product> products = getType();
         showTypeProducts(products);
         int lastId = productsRepository.getLastProduct().getProductId();
-
         int typeId;
         do {
             typeId = InputControl.readInt("Type the ID of product to select: ");

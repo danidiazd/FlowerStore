@@ -46,9 +46,9 @@ CREATE TABLE IF NOT EXISTS `floristeriaPaquitaSl`.`decoration` (
   `material` VARCHAR(45) NOT NULL,
   `product_idproduct` INT NOT NULL,
   INDEX `fk_decoration_product1_idx` (`product_idproduct` ASC) VISIBLE,
-  CONSTRAINT `fk_decoration_product1`
     FOREIGN KEY (`product_idproduct`)
-    REFERENCES `floristeriaPaquitaSl`.`product` (`idproduct`))
+    REFERENCES `floristeriaPaquitaSl`.`product` (`idproduct`)
+    ON DELETE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
@@ -63,9 +63,8 @@ CREATE TABLE IF NOT EXISTS `nombre_a_cambiar`.`flower` (
   `color` VARCHAR(45) NOT NULL,
   `product_idproduct` INT NOT NULL,
   INDEX `fk_flower_product1_idx` (`product_idproduct` ASC) VISIBLE,
-  CONSTRAINT `fk_flower_product1`
     FOREIGN KEY (`product_idproduct`)
-    REFERENCES `nombre_a_cambiar`.`product` (`idproduct`))
+    REFERENCES `nombre_a_cambiar`.`product` (`idproduct`) ON DELETE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
@@ -123,9 +122,8 @@ CREATE TABLE IF NOT EXISTS `nombre_a_cambiar`.`tree` (
   `height` DOUBLE NOT NULL,
   `product_idproduct` INT NOT NULL,
   INDEX `fk_tree_product1_idx` (`product_idproduct` ASC) VISIBLE,
-  CONSTRAINT `fk_tree_product1`
     FOREIGN KEY (`product_idproduct`)
-    REFERENCES `nombre_a_cambiar`.`product` (`idproduct`))
+    REFERENCES `nombre_a_cambiar`.`product` (`idproduct`)ON DELETE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
