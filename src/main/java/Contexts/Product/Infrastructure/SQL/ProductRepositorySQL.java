@@ -201,16 +201,6 @@ public class ProductRepositorySQL implements ProductsRepository {
     }
 
     @Override
-    public void newTicket(Map<Product, Integer> ticketInfo) {
-
-    }
-
-    @Override
-    public List<Ticket> getAllTickets() {
-        return null;
-    }
-
-    @Override
     public void addProduct(Product product) {
         try {
             Connection connection = mySQLConnection.getMySQLDatabase();
@@ -243,11 +233,4 @@ public class ProductRepositorySQL implements ProductsRepository {
             e.printStackTrace();
         }
     }
-
-    @Override
-    public boolean getStock(int numStock) {
-        return false;
-    }
-
-
 }

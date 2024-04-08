@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 public class ProductRepositoryMongoDB<T> implements ProductsRepository {
 
     private MongoCollection<Document> collection;
-    private FlowerStore flowerStore;
 
     public ProductRepositoryMongoDB(MongoDBConnection mongoDBConnection) {
         this.collection = mongoDBConnection.mongoDatabase.getCollection("products");

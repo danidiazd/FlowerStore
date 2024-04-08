@@ -3,6 +3,7 @@ package FlowerStore;
 import Contexts.Product.Domain.Product;
 import Contexts.Product.Domain.ProductsRepository;
 import Contexts.Ticket.Domain.Ticket;
+import Contexts.Ticket.Domain.TicketRepository;
 import Utils.InputControl.InputControl;
 
 import java.util.ArrayList;
@@ -13,15 +14,18 @@ import java.util.Map;
 public class ManagerTickets {
 
     private static ManagerTickets instance;
+    private TicketRepository ticketRepository;
     private ProductsRepository productsRepository;
 
-    private ManagerTickets(ProductsRepository productsRepository) {
+    private ManagerTickets(TicketRepository ticketRepository, ProductsRepository productsRepository) {
+        this.ticketRepository = ticketRepository;
         this.productsRepository = productsRepository;
+
     }
 
-    public static ManagerTickets getInstance(ProductsRepository productsRepository) {
+    public static ManagerTickets getInstance(TicketRepository ticketRepository, ProductsRepository productsRepository) {
         if (instance == null) {
-            instance = new ManagerTickets(productsRepository);
+            instance = new ManagerTickets(ticketRepository, productsRepository);
         }
         return instance;
     }
@@ -44,13 +48,12 @@ public class ManagerTickets {
         } while (addMore);
 
         Map<Product, Integer> ticketWithProducts = ticket.getProducts();
-        productsRepository.newTicket(ticketWithProducts);
+        ticketRepository.newTicket(ticketWithProducts);
         ticket.showTicket();
     }
 
     public void showAllTickets() {
-        List<Ticket> alltickets = new ArrayList<>();
-        alltickets = productsRepository.getAllTickets();
+        List<Ticket> alltickets = ticketRepository.getAllTickets();
         for (Ticket ticket : alltickets) {
             ticket.showTicket();
         }

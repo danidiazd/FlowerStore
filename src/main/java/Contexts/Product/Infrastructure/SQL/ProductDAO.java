@@ -202,12 +202,6 @@ public class ProductDAO implements ProductsRepository {
             e.printStackTrace(System.out);
         }
     }
-
-    @Override
-    public boolean getStock(int numStock) {
-        return false;
-    }
-
     @Override
     public void updateProduct(Product product) {
         try(Connection conn = getMySQLDatabase();
@@ -232,15 +226,5 @@ public class ProductDAO implements ProductsRepository {
         } catch(SQLException e) {
             e.printStackTrace(System.out);
         }
-    }
-
-    @Override
-    public void newTicket(Map<Product, Integer> ticketInfo) {
-
-    }
-
-    @Override
-    public List<Ticket> getAllTickets() {
-        return null;
     }
 }

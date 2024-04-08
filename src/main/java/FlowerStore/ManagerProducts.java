@@ -38,7 +38,6 @@ public class ManagerProducts {
         } else {
             System.out.println("Cant add under 0");
         }
-
     }
 
     public void deleteProduct() {
@@ -84,7 +83,7 @@ public class ManagerProducts {
     public Product getProduct() {
 
         Product selectProduct;
-        List<Product> products = getTypetoAdd();
+        List<Product> products = getType();
         showTypeProducts(products);
         int lastId = productsRepository.getLastProduct().getProductId();
 
@@ -111,11 +110,11 @@ public class ManagerProducts {
                 " tiene un valor de " + price + "€");
     }
 
-    public List<Product> getTypetoAdd() {
+    public List<Product> getType() {
 
         List<Product> products = new ArrayList<>();
 
-        int option = InputControl.readInt("What you want insert?\n" +
+        int option = InputControl.readInt("What you want?\n" +
                 "1. FLOWER.\n" +
                 "2. TREE.\n" +
                 "3. DECORATION.\n");

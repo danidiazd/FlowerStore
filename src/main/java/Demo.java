@@ -1,14 +1,18 @@
 import Contexts.Product.Domain.*;
 import Contexts.Product.Infrastructure.MongoDB.ProductRepositoryMongoDB;
 import Contexts.Product.Infrastructure.SQL.ProductRepositorySQL;
+import Contexts.Ticket.Domain.TicketRepository;
+import Contexts.Ticket.Infrastructure.MongoDB.TicketRepositoryMongoDB;
+import Contexts.Ticket.Infrastructure.SQL.TicketRepositorySQL;
 import FlowerStore.ManagerTickets;
 import FlowerStore.FlowerStore;
 import Infrastructure.Connections.MongoDBConnection;
 import Infrastructure.Connections.MySQLConnection;
-import Infrastructure.Scripts.SQLScriptExecutor;
 import Utils.InputControl.InputControl;
 import FlowerStore.*;
 import Utils.Utils;
+
+import java.util.List;
 
 public class Demo implements Runnable {
 
@@ -17,6 +21,7 @@ public class Demo implements Runnable {
     private MySQLConnection mySQLConnection;
     private ProductRepositoryMongoDB productRepositoryMongoDB;
     private static ProductsRepository productsRepository;
+    private static TicketRepository ticketRepository;
     private ManagerProducts managerProducts;
     private ManagerTickets managerTickets;
     private Utils utils;
@@ -24,7 +29,7 @@ public class Demo implements Runnable {
     public Demo() {
         ProductsRepository productsRepository = configureRepository();
         managerProducts = ManagerProducts.getInstance(productsRepository);
-        managerTickets = ManagerTickets.getInstance(productsRepository);
+        managerTickets = ManagerTickets.getInstance(ticketRepository, productsRepository);
     }
 
     @Override
@@ -39,10 +44,11 @@ public class Demo implements Runnable {
         if (userDatabase.equalsIgnoreCase("MongoDB")) {
             MongoDBConnection mongoDBConnection = new MongoDBConnection(nameStore);
             productsRepository = new ProductRepositoryMongoDB(mongoDBConnection);
+            ticketRepository = new TicketRepositoryMongoDB(mongoDBConnection);
         } else if (userDatabase.equalsIgnoreCase("MySQL")) {
             MySQLConnection mySQLConnection = new MySQLConnection();
-            SQLScriptExecutor.executeScript(nameStore);
             productsRepository = new ProductRepositorySQL(mySQLConnection);
+            ticketRepository = new TicketRepositorySQL(mySQLConnection);
         } else {
             System.err.println("This database type is not valid");
             configureRepository();
@@ -81,7 +87,8 @@ public class Demo implements Runnable {
                     managerProducts.deleteProduct();
                     break;
                 case 5:
-                    managerProducts.showAllProducts();
+                    List<Product> typeProduct = managerProducts.getType();
+                    managerProducts.showTypeProducts(typeProduct);
                     break;
                 case 6:
                     managerProducts.totalValue();
@@ -104,7 +111,6 @@ public class Demo implements Runnable {
             }
         } while (true);
     }
-
 
     private void exit() {
         System.exit(0);
