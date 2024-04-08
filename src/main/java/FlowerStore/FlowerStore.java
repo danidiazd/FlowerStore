@@ -7,7 +7,7 @@ import Contexts.Ticket.Domain.TicketRepository;
 import java.util.List;
 
 public class FlowerStore {
-    private String nameStore;
+    private static String nameStore;
     private static FlowerStore instance;
     private ManagerProducts managerProducts;
     private ManagerTickets managerTickets;
@@ -27,7 +27,7 @@ public class FlowerStore {
         return instance;
     }
 
-    public String getNameStore() {
+    public static String getNameStore() {
         return nameStore;
     }
 
@@ -42,7 +42,9 @@ public class FlowerStore {
     public void showAllTickets() {
         managerTickets.showAllTickets();
     }
-
+    public void shopBenefits() {
+        managerTickets.shopBenefits();
+    }
     public void updateStock() {
         managerProducts.updateStock();
     }

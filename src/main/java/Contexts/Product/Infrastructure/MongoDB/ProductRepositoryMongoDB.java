@@ -87,85 +87,85 @@ public class ProductRepositoryMongoDB<T> implements ProductsRepository {
         stock.add(new Document("type", ProductType.TREE.toString())
                 .append("productId", 1)
                 .append("name", "Manzano")
-                .append("quantity", 0)
-                .append("price", 0.0)
+                .append("quantity", 50)
+                .append("price", 20.5)
                 .append("attribute", 1.5));
 
         stock.add(new Document("type", ProductType.TREE.toString())
                 .append("productId", 2)
                 .append("name", "Olivo")
-                .append("quantity", 0)
-                .append("price", 0.0)
+                .append("quantity", 50)
+                .append("price", 11.99)
                 .append("attribute", 2.0));
 
         stock.add(new Document("type", ProductType.TREE.toString())
                 .append("productId", 3)
                 .append("name", "Pino")
-                .append("quantity", 0)
-                .append("price", 0.0)
+                .append("quantity", 50)
+                .append("price", 8.50)
                 .append("attribute", 3.0));
 
         stock.add(new Document("type", ProductType.TREE.toString())
                 .append("productId", 4)
                 .append("name", "Rosal")
-                .append("quantity", 0)
-                .append("price", 0.0)
+                .append("quantity", 50)
+                .append("price", 6.50)
                 .append("attribute", 0.5));
 
         stock.add(new Document("type", ProductType.FLOWER.toString())
                 .append("productId", 5)
                 .append("name", "Rosa")
-                .append("quantity", 0)
-                .append("price", 0.0)
+                .append("quantity", 50)
+                .append("price", 4.0)
                 .append("attribute", "Roja"));
 
         stock.add(new Document("type", ProductType.FLOWER.toString())
                 .append("productId", 6)
                 .append("name", "Girasol")
-                .append("quantity", 0)
-                .append("price", 0.0)
+                .append("quantity", 50)
+                .append("price", 3.50)
                 .append("attribute", "Blanca"));
 
         stock.add(new Document("type", ProductType.FLOWER.toString())
                 .append("productId", 7)
                 .append("name", "Amapola")
-                .append("quantity", 0)
-                .append("price", 0.0)
+                .append("quantity", 50)
+                .append("price", 2.75)
                 .append("attribute", "Roja"));
 
         stock.add(new Document("type", ProductType.FLOWER.toString())
                 .append("productId", 8)
                 .append("name", "Lirio")
-                .append("quantity", 0)
-                .append("price", 0.0)
+                .append("quantity", 50)
+                .append("price", 1.5)
                 .append("attribute", "Naranja"));
 
         stock.add(new Document("type", ProductType.FLOWER.toString())
                 .append("productId", 9)
                 .append("name", "Clavel")
-                .append("quantity", 0)
-                .append("price", 0.0)
+                .append("quantity", 50)
+                .append("price", 9.50)
                 .append("attribute", "Amarillo"));
 
         stock.add(new Document("type", ProductType.DECORATION.toString())
                 .append("productId", 10)
                 .append("name", "Jarron")
-                .append("quantity", 0)
-                .append("price", 0.0)
+                .append("quantity", 50)
+                .append("price", 20.50)
                 .append("attribute", "Madera"));
 
         stock.add(new Document("type", ProductType.DECORATION.toString())
                 .append("productId", 11)
                 .append("name", "Tiesto")
-                .append("quantity", 0)
-                .append("price", 0.0)
+                .append("quantity", 50)
+                .append("price", 13.50)
                 .append("attribute", "Plastico"));
 
         stock.add(new Document("type", ProductType.DECORATION.toString())
                 .append("productId", 12)
                 .append("name", "Jarron")
-                .append("quantity", 0)
-                .append("price", 0.0)
+                .append("quantity", 50)
+                .append("price", 9.99)
                 .append("attribute", "Plastico"));
 
         stock.add(new Document("type", ProductType.DECORATION.toString())

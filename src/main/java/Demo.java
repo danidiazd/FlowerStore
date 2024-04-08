@@ -52,7 +52,7 @@ public class Demo implements Runnable {
         if (userDatabase.equalsIgnoreCase("MongoDB")) {
             MongoDBConnection mongoDBConnection = new MongoDBConnection(nameStore);
             productsRepository = new ProductRepositoryMongoDB(mongoDBConnection);
-            ticketRepository = new TicketRepositoryMongoDB(mongoDBConnection);
+            ticketRepository = new TicketRepositoryMongoDB(mongoDBConnection, flowerStore);
             repositories = Pair.of(productsRepository, ticketRepository);
         } else if (userDatabase.equalsIgnoreCase("MySQL")) {
             MySQLConnection mySQLConnection = new MySQLConnection();
@@ -110,7 +110,7 @@ public class Demo implements Runnable {
                     flowerStore.showAllTickets();
                     break;
                 case 9:
-                    // TODO: showFlowerShopBenefits
+                    flowerStore.shopBenefits();
                     break;
                 case 10:
                     exit();

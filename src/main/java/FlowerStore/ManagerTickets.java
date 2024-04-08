@@ -58,4 +58,10 @@ public class ManagerTickets {
             ticket.showTicket();
         }
     }
+    public void shopBenefits() {
+        ticketRepository.getAllSales();
+    }
+
+
+
 }

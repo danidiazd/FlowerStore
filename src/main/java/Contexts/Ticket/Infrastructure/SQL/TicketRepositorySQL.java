@@ -24,4 +24,9 @@ public class TicketRepositorySQL implements TicketRepository {
     public List<Ticket> getAllTickets() {
         return null;
     }
+
+    @Override
+    public void getAllSales() {
+
+    }
 }

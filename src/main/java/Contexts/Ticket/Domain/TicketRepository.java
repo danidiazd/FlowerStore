@@ -8,4 +8,5 @@ import java.util.Map;
 public interface TicketRepository {
     void newTicket(Map<Product, Integer> ticket);
     List<Ticket> getAllTickets();
+    void getAllSales();
 }
