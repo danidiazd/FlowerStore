@@ -1,7 +1,7 @@
 import Contexts.Products.Domain.*;
 import Contexts.Products.Infrastructure.MongoDB.ProductRepositoryMongoDB;
 import Contexts.Products.Infrastructure.SQL.ProductRepositorySQL;
-import Contexts.Ticket.Domain.Ticket;
+import Contexts.Ticket.Domain.ManagerTickets;
 import FlowerStore.FlowerStore;
 import Infrastructure.Connections.MongoDBConnection;
 import Infrastructure.Connections.MySQLConnection;
@@ -9,11 +9,6 @@ import Infrastructure.Scripts.SQLScriptExecutor;
 import Utils.InputControl.InputControl;
 import FlowerStore.*;
 import Utils.Utils;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 public class Demo implements Runnable {
 
