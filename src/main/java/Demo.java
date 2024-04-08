@@ -1,14 +1,19 @@
-import Connections.*;
+import Contexts.Products.Domain.*;
+import Contexts.Products.Infrastructure.MongoDB.ProductRepositoryMongoDB;
+import Contexts.Products.Infrastructure.SQL.ProductRepositorySQL;
+import Contexts.Ticket.Domain.Ticket;
 import FlowerStore.FlowerStore;
-import FlowerStore.Ticket.Ticket;
-import FlowerStore.Utils.Utils;
-import Infrastructure.MongoDB.ProductRepositoryMongoDB;
-import Infrastructure.SQL.ProductRepositorySQL;
+import Infrastructure.Connections.MongoDBConnection;
+import Infrastructure.Connections.MySQLConnection;
 import Infrastructure.Scripts.SQLScriptExecutor;
-import InputControl.InputControl;
-import Products.*;
+import Utils.InputControl.InputControl;
+import FlowerStore.*;
+import Utils.Utils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 public class Demo implements Runnable {
 
@@ -17,19 +22,23 @@ public class Demo implements Runnable {
     private MySQLConnection mySQLConnection;
     private ProductRepositoryMongoDB productRepositoryMongoDB;
     private static ProductsRepository productsRepository;
+    private ManagerProducts managerProducts;
+    private ManagerTickets managerTickets;
     private Utils utils;
 
     public Demo() {
+        ProductsRepository productsRepository = configureRepository();
+        managerProducts = ManagerProducts.getInstance(productsRepository);
+        managerTickets = ManagerTickets.getInstance(productsRepository);
     }
 
     @Override
     public void run() {
-        configureRepository();
         productsRepository.addPrimaryStock();
         menu();
     }
 
-    public void configureRepository() {
+    public ProductsRepository configureRepository() {
         String userDatabase = InputControl.readString("Select the database you would like to work with (MySQL or MongoDB)");
         String nameStore = InputControl.readString("Indicate the name of the flower shop");
         if (userDatabase.equalsIgnoreCase("MongoDB")) {
@@ -43,6 +52,7 @@ public class Demo implements Runnable {
             System.err.println("This database type is not valid");
             configureRepository();
         }
+        return productsRepository;
     }
 
 
@@ -64,28 +74,28 @@ public class Demo implements Runnable {
 
             switch (selectAction) {
                 case 1:
-                    addProduct();
+                    managerProducts.addProduct();
                     break;
                 case 2:
-                    showAllProducts();
+                    managerProducts.showAllProducts();
                     break;
                 case 3:
-                    updateStock();
+                    managerProducts.updateStock();
                     break;
                 case 4:
-                    deleteProduct();
+                    managerProducts.deleteProduct();
                     break;
                 case 5:
-                    showAllProducts();
+                    managerProducts.showAllProducts();
                     break;
                 case 6:
-                    totalValue();
+                    managerProducts.totalValue();
                     break;
                 case 7:
-                    addProductsToTicket();
+                    managerTickets.addProductsToTicket();
                     break;
                 case 8:
-                    // TODO: showAllTickets;
+                    managerTickets.showAllTickets();
                     break;
                 case 9:
                     // TODO: showFlowerShopBenefits
@@ -100,197 +110,6 @@ public class Demo implements Runnable {
         } while (true);
     }
 
-
-    private void updateStock() {
-
-        Product product = getOneProduct();
-
-        int stockToAdd = InputControl.readInt("You selected " + product.getName() + "\n" +
-                "How many stock do you want to add?");
-        product.setQuantity(stockToAdd);
-        double price = InputControl.readDouble("Choose a price for " + product.getName());
-        product.setPrice(price);
-
-        productsRepository.updateProduct(product);
-
-    }
-
-    private void deleteProduct() {
-        Product product = getOneProduct();
-        productsRepository.deleteProduct(product);
-    }
-
-    private void addProduct() {
-
-        int type = InputControl.readInt("\nType 1 for Tree.\n" +
-                "2 for Flower.\n" +
-                "3 for Decoration");
-        String name = InputControl.readString("Type a name for product.");
-        int quantity = InputControl.readInt("Type a quantity stock.");
-        double price = InputControl.readDouble("Type a price.");
-
-        String typeProduct = "";
-        switch (type) {
-            case 1:
-                typeProduct = ProductType.TREE.toString();
-                double attribute = InputControl.readDouble("Type height for the tree");
-                Tree newTree = new Tree<>(name, quantity, price, attribute);
-                productsRepository.addProduct(newTree);
-                break;
-            case 2:
-                typeProduct = ProductType.FLOWER.toString();
-                String flowerAttribute = InputControl.readString("Type color for the flower");
-                Flower newFlower = new Flower<>(name, quantity, price, flowerAttribute);
-                productsRepository.addProduct(newFlower);
-                break;
-            case 3:
-                typeProduct = ProductType.DECORATION.toString();
-                String decorationAttribute = InputControl.readString("Type material for the decoration");
-                Decoration newDecoration = new Decoration<>(name, quantity, price, decorationAttribute);
-                productsRepository.addProduct(newDecoration);
-                break;
-        }
-    }
-
-
-    private void addProductsToTicket() {
-        boolean addMore;
-        Date date = new Date();
-        Ticket ticket = new Ticket(date);
-        do {
-            Product productToTicket = getOneProduct();
-            int quantity = InputControl.readInt("Type quantity to add.");
-            ticket.addProductToTicket(productToTicket, quantity);
-            productToTicket = ticket.updateStockStore(productToTicket, quantity);
-            productsRepository.updateProduct(productToTicket);
-            System.out.println(productToTicket.getName() + " added to buy.");
-            addMore = InputControl.readBoolean("Want add more? (yes or not) ");
-        } while (addMore);
-
-        Map<Product, Integer> ticketWithProducts = ticket.getProducts();
-        productsRepository.newTicket(ticketWithProducts);
-        ticket.showTicket();
-    }
-    private void showAllTickets() {
-        List<Ticket> alltickets = new ArrayList<>();
-        alltickets = productsRepository.getAllTickets();
-        for (Ticket ticket : alltickets) {
-            ticket.showTicket();
-        }
-    }
-
-    private Product getOneProduct() {
-        Product selectProduct;
-        List<Product> products = getTypetoAdd();
-        showTypeProducts(products);
-
-        int typeId;
-        do {
-            typeId = InputControl.readInt("Type the ID of product to select: ");
-            if (typeId < 1 || typeId > products.size()) {
-                System.out.println("Invalid ID. Please enter a valid ID.");
-            }
-        } while (typeId < 1 || typeId > products.size());
-
-        selectProduct = products.get(typeId - 1);
-        return selectProduct;
-    }
-
-    private void totalValue() {
-        List<Product> products = productsRepository.getAllProducts();
-        double price = 0;
-        for (Product product : products) {
-            price += product.getPrice();
-        }
-        System.out.println("La floristeria " + flowerStore.getNameStore() +
-                " tiene un valor de " + price + "€");
-    }
-
-    private List<Product> getTypetoAdd() {
-
-        List<Product> products = new ArrayList<>();
-
-        int option = InputControl.readInt("What you want insert?\n" +
-                "1. FLOWER.\n" +
-                "2. TREE.\n" +
-                "3. DECORATION.\n");
-        switch (option) {
-
-            case 1:
-                products = productsRepository.getFlowers();
-                break;
-            case 2:
-                products = productsRepository.getTrees();
-                break;
-            case 3:
-                products = productsRepository.getDecorations();
-                break;
-        }
-        return products;
-    }
-
-    private void showTypeProducts(List<Product> products) {
-        Product.resetIdProduct();
-        int idWidth = 5, nameWidth = 15, quantityWidth = 10, priceWidth = 10,
-                typeWidth = 15, attributeWidth = 15;
-
-        // Print table headers
-        System.out.printf("%-" + idWidth + "s %-" + nameWidth + "s %-" + quantityWidth
-                        + "s %-" + priceWidth + "s %-" + typeWidth + "s %-" + attributeWidth + "s%n",
-                "ID", "Name", "Quantity", "Price", "Type", "Attributes");
-
-        // Print a line under the header
-        System.out.printf("%-" + (idWidth + nameWidth + quantityWidth + priceWidth + typeWidth
-                + attributeWidth + 10) + "s%n", "");
-
-        // Print each product as a row in the table
-        for (int i = 0; i < products.size(); i++) {
-            Product product = products.get(i);
-            System.out.printf("%-" + idWidth + "d %-" + nameWidth + "s %-" + quantityWidth
-                            + "d %-" + priceWidth + ".2f %-" + typeWidth + "s %-" + attributeWidth + "s%n",
-                    i + 1,
-                    product.getName(),
-                    product.getQuantity(),
-                    product.getPrice(),
-                    product.getType().toString(),
-                    product.getAttributes());
-        }
-    }
-
-    private void showAllProducts() {
-
-        List<Product> products = productsRepository.getAllProducts();
-        if (products.isEmpty()) {
-            System.out.println("No products found");
-            //utils.waitForKeyPress();
-        } else {
-            int idWidth = 5, nameWidth = 15, quantityWidth = 10, priceWidth = 10,
-                    typeWidth = 15, attributeWidth = 15;
-
-            // Print table headers
-            System.out.printf("%-" + idWidth + "s %-" + nameWidth + "s %-" + quantityWidth
-                            + "s %-" + priceWidth + "s %-" + typeWidth + "s %-" + attributeWidth + "s%n",
-                    "ID", "Name", "Quantity", "Price", "Type", "Attributes");
-
-            // Print a line under the header
-            System.out.printf("%-" + (idWidth + nameWidth + quantityWidth + priceWidth
-                    + typeWidth + attributeWidth + 10) + "s%n", "");
-
-            // Print each product as a row in the table
-            for (int i = 0; i < products.size(); i++) {
-                Product product = products.get(i);
-                System.out.printf("%-" + idWidth + "d %-" + nameWidth + "s %-" + quantityWidth
-                                + "d %-" + priceWidth + ".2f %-" + typeWidth + "s %-" + attributeWidth + "s%n",
-                        i + 1,
-                        product.getName(),
-                        product.getQuantity(),
-                        product.getPrice(),
-                        product.getType().toString(),
-                        product.getAttributes());
-            }
-            //utils.waitForKeypress();
-        }
-    }
 
     private void exit() {
         System.exit(0);

@@ -1,10 +1,14 @@
-package Products;
+package Contexts.Products.Domain;
 
-public class Tree<T> extends Product <T>{
+public class Tree<T> extends Product<T> {
     private final T height;
 
     public Tree(String name, int quantity, double price, T height) {
         super(name, quantity, price, ProductType.TREE, height);
+        this.height = height;
+    }
+    public Tree(int productId, String name, int quantity, double price, T height) {
+        super(productId, name, quantity, price, ProductType.TREE, height);
         this.height = height;
     }
 

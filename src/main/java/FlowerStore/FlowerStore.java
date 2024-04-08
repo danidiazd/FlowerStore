@@ -1,39 +1,46 @@
 package FlowerStore;
 
-import Products.Product;
+import Contexts.Products.Domain.Product;
+import Contexts.Products.Domain.ProductsRepository;
+import Contexts.Products.Infrastructure.MongoDB.ProductRepositoryMongoDB;
+import Contexts.Products.Infrastructure.SQL.ProductRepositorySQL;
+import Infrastructure.Connections.MongoDBConnection;
+import Infrastructure.Connections.MySQLConnection;
+import Infrastructure.Scripts.SQLScriptExecutor;
+import Utils.InputControl.InputControl;
 
 import java.util.ArrayList;
 
 public class FlowerStore {
-    private int idStore;
-    private static int idStoreNext = 1;
-    private String nameStore;
-    private static ArrayList<Product> stockStore = new ArrayList<>();
+     private String nameStore;
+    private static FlowerStore instance;
+    private static ProductsRepository productsRepository;
 
 
-    public FlowerStore(String nameStore) {
+    private FlowerStore() {
         this.nameStore = nameStore;
-        this.idStore = idStoreNext;
+    }
+
+    public static FlowerStore getInstance() {
+        if (instance == null) {
+            instance = new FlowerStore();
+        }
+        return instance;
     }
 
     public String getNameStore() {
         return nameStore;
     }
 
-    public int getIdStore() {
-        return idStore;
+    public void setNameStore(String nameStore) {
+        this.nameStore = nameStore;
     }
 
-    public static ArrayList<Product> getStockStore() {
-        return stockStore;
-    }
-
-    public static void addToStock(Product product) {
-        stockStore.add(product);
-    }
 
     @Override
     public String toString() {
-        return getNameStore() + " flowerStore with ID: " + getIdStore();
+        return "FlowerStore with name: " + getNameStore();
     }
+
+
 }

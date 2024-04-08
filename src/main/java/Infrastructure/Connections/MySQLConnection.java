@@ -1,4 +1,4 @@
-package Connections;
+package Infrastructure.Connections;
 
 import java.io.IOException;
 import java.io.InputStream;

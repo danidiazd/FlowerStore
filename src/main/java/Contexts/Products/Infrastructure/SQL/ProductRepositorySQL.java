@@ -1,16 +1,18 @@
-package Infrastructure.SQL;
-import FlowerStore.Ticket.Ticket;
-import Products.*;
+package Contexts.Products.Infrastructure.SQL;
+import Contexts.Products.Domain.Product;
+import Contexts.Products.Domain.ProductType;
+import Contexts.Products.Domain.ProductsRepository;
+import Contexts.Ticket.Domain.Ticket;
 
 import java.util.List;
-import Connections.MySQLConnection;
+import Infrastructure.Connections.MySQLConnection;
+
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static Connections.MySQLConnection.getMySQLDatabase;
+import static Infrastructure.Connections.MySQLConnection.getMySQLDatabase;
 
 public class ProductRepositorySQL implements ProductsRepository {
     private MySQLConnection mySQLConnection;
@@ -50,6 +52,19 @@ public class ProductRepositorySQL implements ProductsRepository {
         } catch (SQLException e) {
             e.printStackTrace(System.out);
         }
+    }
+
+
+
+
+    @Override
+    public Product getProduct(int id) {
+        return null;
+    }
+
+    @Override
+    public Product getLastProduct() {
+        return null;
     }
 
     @Override

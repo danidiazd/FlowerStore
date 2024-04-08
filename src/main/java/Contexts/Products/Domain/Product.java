@@ -1,9 +1,8 @@
-package Products;
+package Contexts.Products.Domain;
 
 public class Product<T> {
 
     private int productId;
-    private static int productIdNext = 1;
     private String name;
     private int quantity;
     private double price;
@@ -20,7 +19,6 @@ public class Product<T> {
     }
 
     public Product(String name, int quantity, double price, ProductType type, T attributes) {
-        this.productId = productIdNext++;
         this.name = name;
         this.quantity = quantity;
         this.price = price;
@@ -57,15 +55,6 @@ public class Product<T> {
 
     public void setPrice(double price) {
         this.price = price;
-    }
-
-    public static void setProductId(int productId) {
-         productId = productId;
-    }
-    public static void resetIdProduct(){
-        productIdNext = 1;
-        setProductId(1);
-
     }
 
     @Override

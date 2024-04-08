@@ -1,6 +1,6 @@
 package Infrastructure.Scripts;
 
-import Connections.MySQLConfig;
+import Infrastructure.Connections.MySQLConfig;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;

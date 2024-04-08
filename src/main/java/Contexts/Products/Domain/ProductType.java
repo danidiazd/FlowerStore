@@ -1,4 +1,4 @@
-package Products;
+package Contexts.Products.Domain;
 
 public enum ProductType {
     FLOWER,

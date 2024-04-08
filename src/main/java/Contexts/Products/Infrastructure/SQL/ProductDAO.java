@@ -1,11 +1,9 @@
-package Infrastructure.SQL;
+package Contexts.Products.Infrastructure.SQL;
 
-import Connections.MySQLConnection;
-import FlowerStore.Ticket.Ticket;
-import Products.Product;
-import Products.ProductType;
-import Products.ProductsRepository;
-import org.bson.Document;
+import Contexts.Products.Domain.Product;
+import Contexts.Products.Domain.ProductType;
+import Contexts.Products.Domain.ProductsRepository;
+import Contexts.Ticket.Domain.Ticket;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -13,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static Connections.MySQLConnection.getMySQLDatabase;
+import static Infrastructure.Connections.MySQLConnection.getMySQLDatabase;
 
 public class ProductDAO implements ProductsRepository {
 
@@ -41,6 +39,18 @@ public class ProductDAO implements ProductsRepository {
         } catch(SQLException e) {
             e.printStackTrace(System.out);
         }
+    }
+
+
+
+    @Override
+    public Product getProduct(int id) {
+        return null;
+    }
+
+    @Override
+    public Product getLastProduct() {
+        return null;
     }
 
     @Override

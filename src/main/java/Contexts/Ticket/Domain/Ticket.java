@@ -1,6 +1,6 @@
-package FlowerStore.Ticket;
+package Contexts.Ticket.Domain;
 
-import Products.Product;
+import Contexts.Products.Domain.Product;
 
 import java.util.Date;
 import java.util.HashMap;

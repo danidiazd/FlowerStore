@@ -1,4 +1,4 @@
-package Connections;
+package Infrastructure.Connections;
 
 
 import com.mongodb.MongoException;

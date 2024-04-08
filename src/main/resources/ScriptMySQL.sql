@@ -24,7 +24,7 @@ USE `floristeriaPaquitaSl` ;
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `floristeriaPaquitaSl`.`product` ;
 
-CREATE TABLE IF NOT EXISTS `nombre_a_cambiar`.`product` (
+CREATE TABLE IF NOT EXISTS `floristeriaPaquitaSl`.`product` (
   `idproduct` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   `quantity` INT NOT NULL,

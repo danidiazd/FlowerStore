@@ -1,4 +1,4 @@
-package FlowerStore.Utils;
+package Utils;
 
 
 // TODO: Fix method

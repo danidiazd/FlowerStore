@@ -1,4 +1,4 @@
-package InputControl;
+package Utils.InputControl;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
