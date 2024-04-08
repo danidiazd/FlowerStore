@@ -11,6 +11,7 @@ import Infrastructure.Connections.MySQLConnection;
 import Utils.InputControl.InputControl;
 import FlowerStore.*;
 import Utils.Utils;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
 
@@ -27,10 +28,13 @@ public class Demo implements Runnable {
     private Utils utils;
 
     public Demo() {
-        ProductsRepository productsRepository = configureRepository();
-        managerProducts = ManagerProducts.getInstance(productsRepository);
-        managerTickets = ManagerTickets.getInstance(ticketRepository, productsRepository);
+        Pair<ProductsRepository, TicketRepository> repositories = configureRepository();
+        productsRepository = repositories.getLeft();
+        ticketRepository = repositories.getRight();
+        String flowerName = nameStore();
+        flowerStore = FlowerStore.getInstance(productsRepository, ticketRepository, flowerName);
     }
+
 
     @Override
     public void run() {
@@ -38,22 +42,29 @@ public class Demo implements Runnable {
         menu();
     }
 
-    public ProductsRepository configureRepository() {
+    public String nameStore() {
+        return InputControl.readString("Name FlowerShop: ");
+    }
+
+    public Pair<ProductsRepository, TicketRepository> configureRepository() {
         String userDatabase = InputControl.readString("Select the database you would like to work with (MySQL or MongoDB)");
         String nameStore = InputControl.readString("Indicate the name of the flower shop");
+        Pair<ProductsRepository, TicketRepository> repositories;
         if (userDatabase.equalsIgnoreCase("MongoDB")) {
             MongoDBConnection mongoDBConnection = new MongoDBConnection(nameStore);
             productsRepository = new ProductRepositoryMongoDB(mongoDBConnection);
             ticketRepository = new TicketRepositoryMongoDB(mongoDBConnection);
+            repositories = Pair.of(productsRepository, ticketRepository);
         } else if (userDatabase.equalsIgnoreCase("MySQL")) {
             MySQLConnection mySQLConnection = new MySQLConnection();
             productsRepository = new ProductRepositorySQL(mySQLConnection);
             ticketRepository = new TicketRepositorySQL(mySQLConnection);
+            repositories = Pair.of(productsRepository, ticketRepository);
         } else {
             System.err.println("This database type is not valid");
-            configureRepository();
+            repositories = configureRepository();
         }
-        return productsRepository;
+        return repositories;
     }
 
 
@@ -75,29 +86,29 @@ public class Demo implements Runnable {
 
             switch (selectAction) {
                 case 1:
-                    managerProducts.addProduct();
+                    flowerStore.addProduct();
                     break;
                 case 2:
-                    managerProducts.showAllProducts();
+                    flowerStore.showAllProducts();
                     break;
                 case 3:
-                    managerProducts.updateStock();
+                    flowerStore.updateStock();
                     break;
                 case 4:
-                    managerProducts.deleteProduct();
+                    flowerStore.deleteProduct();
                     break;
                 case 5:
-                    List<Product> typeProduct = managerProducts.getType();
-                    managerProducts.showTypeProducts(typeProduct);
+                    List<Product> typeProduct = flowerStore.getType();
+                    flowerStore.showTypeProducts(typeProduct);
                     break;
                 case 6:
-                    managerProducts.totalValue();
+                    flowerStore.totalValue();
                     break;
                 case 7:
-                    managerTickets.addProductsToTicket();
+                    flowerStore.addProductsToTicket();
                     break;
                 case 8:
-                    managerTickets.showAllTickets();
+                    flowerStore.showAllTickets();
                     break;
                 case 9:
                     // TODO: showFlowerShopBenefits
@@ -118,3 +129,4 @@ public class Demo implements Runnable {
         mySQLConnection.disconnectMySQL();
     }
 }
+

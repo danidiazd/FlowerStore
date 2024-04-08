@@ -16,6 +16,7 @@ dependencies {
     implementation ("org.mongodb:mongodb-driver-sync:4.11.1")
     implementation ("org.slf4j:slf4j-api:1.7.32")
     implementation ("ch.qos.logback:logback-classic:1.2.6")
+    implementation ("org.apache.commons:commons-lang3:3.12.0")
 }
 
 tasks.test {

@@ -10,6 +10,7 @@ public class ManagerProducts {
 
     private static ManagerProducts instance;
     private ProductsRepository productsRepository;
+    private FlowerStore flowerStore;
 
 
     private ManagerProducts(ProductsRepository productsRepository) {
@@ -105,7 +106,8 @@ public class ManagerProducts {
         for (Product product : products) {
             price += product.getPrice();
         }
-        FlowerStore flowerStore = FlowerStore.getInstance();
+
+
         System.out.println("La floristeria " + flowerStore.getNameStore() +
                 " tiene un valor de " + price + "€");
     }
