@@ -1,8 +1,8 @@
-package Contexts.Products.Infrastructure.SQL;
+package Contexts.Product.Infrastructure.SQL;
 
-import Contexts.Products.Domain.Product;
-import Contexts.Products.Domain.ProductType;
-import Contexts.Products.Domain.ProductsRepository;
+import Contexts.Product.Domain.Product;
+import Contexts.Product.Domain.ProductType;
+import Contexts.Product.Domain.ProductsRepository;
 import Contexts.Ticket.Domain.Ticket;
 
 import java.sql.*;

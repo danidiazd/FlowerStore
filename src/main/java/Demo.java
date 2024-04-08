@@ -1,7 +1,7 @@
-import Contexts.Products.Domain.*;
-import Contexts.Products.Infrastructure.MongoDB.ProductRepositoryMongoDB;
-import Contexts.Products.Infrastructure.SQL.ProductRepositorySQL;
-import Contexts.Ticket.Domain.ManagerTickets;
+import Contexts.Product.Domain.*;
+import Contexts.Product.Infrastructure.MongoDB.ProductRepositoryMongoDB;
+import Contexts.Product.Infrastructure.SQL.ProductRepositorySQL;
+import FlowerStore.ManagerTickets;
 import FlowerStore.FlowerStore;
 import Infrastructure.Connections.MongoDBConnection;
 import Infrastructure.Connections.MySQLConnection;

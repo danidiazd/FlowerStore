@@ -1,4 +1,4 @@
-package Contexts.Products.Domain;
+package Contexts.Product.Domain;
 
 public class Tree<T> extends Product<T> {
     private final T height;

@@ -1,6 +1,6 @@
-package Contexts.Products.Infrastructure.MongoDB;
+package Contexts.Product.Infrastructure.MongoDB;
 
-import Contexts.Products.Domain.*;
+import Contexts.Product.Domain.*;
 import Contexts.Ticket.Domain.Ticket;
 import FlowerStore.FlowerStore;
 import Infrastructure.Connections.MongoDBConnection;
@@ -17,54 +17,17 @@ import java.util.stream.Collectors;
 public class ProductRepositoryMongoDB<T> implements ProductsRepository {
 
     private MongoCollection<Document> collection;
-    private MongoCollection<Document> ticketCollection;
     private FlowerStore flowerStore;
+
+    public ProductRepositoryMongoDB(MongoDBConnection mongoDBConnection) {
+        this.collection = mongoDBConnection.mongoDatabase.getCollection("products");
+    }
+
 
     private int nextProductId() {
         Product lastProduct = getLastProduct();
         if (lastProduct == null) return 1;
         return lastProduct.getProductId() + 1;
-    }
-
-    public ProductRepositoryMongoDB(MongoDBConnection mongoDBConnection) {
-        this.collection = mongoDBConnection.mongoDatabase.getCollection("products");
-        this.ticketCollection = mongoDBConnection.mongoDatabase.getCollection("tickets");
-    }
-
-    @Override
-    public List<Ticket> getAllTickets() {
-        List<Ticket> tickets = new ArrayList<>();
-        FindIterable<Document> cursor = ticketCollection.find();
-        for (Document document : cursor) {
-            Ticket ticket = documentToTicket(document);
-            tickets.add(ticket);
-        }
-        return tickets;
-    }
-
-    private Ticket documentToTicket(Document document) {
-        Ticket ticket = new Ticket(document.getDate("date"));
-        List<Document> productsInfo = (List<Document>) document.get("products");
-        for (Document productInfo : productsInfo) {
-            String type = productInfo.getString("Type");
-            String features = productInfo.getString("Features");
-            int quantity = productInfo.getInteger("Quantity");
-            double price = productInfo.getDouble("Price");
-
-            Product product;
-            if (type.equals(ProductType.FLOWER.toString())) {
-                product = new Flower<>(features, 0, price, features);
-            } else if (type.equals(ProductType.DECORATION.toString())) {
-                product = new Decoration<>(features, 0, price, features);
-            } else if (type.equals(ProductType.TREE.toString())) {
-                product = new Tree<>(features, 0, price, Double.parseDouble(features));
-            } else {
-                throw new IllegalArgumentException("Tipo de producto no válido: " + type);
-            }
-
-            ticket.addProductToTicket(product, quantity);
-        }
-        return ticket;
     }
 
     @Override
@@ -231,11 +194,6 @@ public class ProductRepositoryMongoDB<T> implements ProductsRepository {
     }
 
     @Override
-    public boolean getStock(int numStock) {
-        return false;
-    }
-
-    @Override
     public void updateProduct(Product product) {
         Document query = new Document("name", product.getName()).append("attribute", product.getAttributes());
         Document update = new Document("$set", new Document("quantity", product.getQuantity())
@@ -251,29 +209,6 @@ public class ProductRepositoryMongoDB<T> implements ProductsRepository {
                 .append("attribute", product.getAttributes());
         collection.deleteOne(query);
         System.out.println("Product: " + product.getName() + " deleted from DataBase");
-    }
-
-    @Override
-    public void newTicket(Map<Product, Integer> ticketInfo) {
-
-        List<Document> newTicketInfo = new ArrayList<>();
-
-        double totalPrice = 0.0;
-        for (Map.Entry<Product, Integer> entry : ticketInfo.entrySet()) {
-            Product product = entry.getKey();
-            int quantity = entry.getValue();
-            newTicketInfo.add(new Document("Type", product.getType().toString())
-                    .append("Features", product.getAttributes().toString())
-                    .append("Quantity", quantity)
-                    .append("Price", product.getPrice()));
-            totalPrice += product.getPrice() * quantity;
-        }
-
-        Document newTicket = new Document("date", new Date())
-                .append("products", newTicketInfo)
-                .append("totalPrice", totalPrice);
-
-        ticketCollection.insertOne(newTicket);
     }
 
 

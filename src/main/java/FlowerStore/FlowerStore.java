@@ -1,15 +1,6 @@
 package FlowerStore;
 
-import Contexts.Products.Domain.Product;
-import Contexts.Products.Domain.ProductsRepository;
-import Contexts.Products.Infrastructure.MongoDB.ProductRepositoryMongoDB;
-import Contexts.Products.Infrastructure.SQL.ProductRepositorySQL;
-import Infrastructure.Connections.MongoDBConnection;
-import Infrastructure.Connections.MySQLConnection;
-import Infrastructure.Scripts.SQLScriptExecutor;
-import Utils.InputControl.InputControl;
-
-import java.util.ArrayList;
+import Contexts.Product.Domain.ProductsRepository;
 
 public class FlowerStore {
      private String nameStore;

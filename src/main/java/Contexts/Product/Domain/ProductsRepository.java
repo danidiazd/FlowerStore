@@ -1,4 +1,4 @@
-package Contexts.Products.Domain;
+package Contexts.Product.Domain;
 
 import Contexts.Ticket.Domain.Ticket;
 
@@ -16,8 +16,6 @@ public interface ProductsRepository {
     void addPrimaryStock();
     void updateProduct(Product product);
     void deleteProduct(Product product);
-    void newTicket(Map<Product, Integer> ticket);
-    List<Ticket> getAllTickets();
     void addProduct(Product product);
-    boolean getStock(int numStock);
+
 }

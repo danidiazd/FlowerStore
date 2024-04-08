@@ -1,13 +1,10 @@
 package FlowerStore;
 
-import Contexts.Products.Domain.*;
-import Contexts.Ticket.Domain.Ticket;
+import Contexts.Product.Domain.*;
 import Utils.InputControl.InputControl;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public class ManagerProducts {
 

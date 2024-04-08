@@ -1,8 +1,8 @@
-package Contexts.Ticket.Domain;
+package FlowerStore;
 
-import Contexts.Products.Domain.Product;
-import Contexts.Products.Domain.ProductsRepository;
-import FlowerStore.ManagerProducts;
+import Contexts.Product.Domain.Product;
+import Contexts.Product.Domain.ProductsRepository;
+import Contexts.Ticket.Domain.Ticket;
 import Utils.InputControl.InputControl;
 
 import java.util.ArrayList;

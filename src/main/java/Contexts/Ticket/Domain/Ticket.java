@@ -1,6 +1,6 @@
 package Contexts.Ticket.Domain;
 
-import Contexts.Products.Domain.Product;
+import Contexts.Product.Domain.Product;
 
 import java.util.Date;
 import java.util.HashMap;
