@@ -23,12 +23,47 @@ public class ProductRepositorySQL implements ProductsRepository {
 
     @Override
     public Product getProduct(int id) {
-        return null;
+        Product product = null;
+        try{
+            Connection conn = getMySQLDatabase();
+            PreparedStatement statement = conn.prepareStatement(QueriesSQL.SQL_SELECT_PRODUCT);
+            statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                product = new Product(
+                        rs.getInt("idproduct"),
+                        rs.getString("name"),
+                        rs.getInt("quantity"),
+                        rs.getDouble("price"),
+                        ProductType.valueOf(rs.getString("type")),
+                        rs.getString("attribute"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(System.out);
+        }
+        return product;
     }
 
     @Override
     public Product getLastProduct() {
-        return null;
+        Product lastProduct = null;
+        try {
+            Connection conn = getMySQLDatabase();
+            PreparedStatement statement = conn.prepareStatement(QueriesSQL.SQL_SELECT_LAST_PRODUCT);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                lastProduct = new Product(rs.getInt("idproduct"),
+                        rs.getString("name"),
+                        rs.getInt("quantity"),
+                        rs.getDouble("price"),
+                        ProductType.valueOf(rs.getString("type")),
+                        rs.getString("attribute"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(System.out);
+        }
+        //TODO Añadir excepcion personalizada si el producto es null
+        return lastProduct;
     }
 
     @Override
