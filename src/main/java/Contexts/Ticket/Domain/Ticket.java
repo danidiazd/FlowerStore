@@ -49,8 +49,9 @@ public class Ticket {
     }
 
     public void showTicket() {
+
         int nameWidth = 20, quantityWidth = 10;
-        System.out.println("\n\t TICKET  #" + getId());
+        System.out.println("\n\t TICKET  #" + getId()); //NO SE INCREMENTA
         double price = 0;
         System.out.println(getDate() + "\n");
         System.out.printf("%-" + nameWidth + "s %-" + quantityWidth + "s%n",
