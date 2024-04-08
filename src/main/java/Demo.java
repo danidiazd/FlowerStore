@@ -28,10 +28,10 @@ public class Demo implements Runnable {
     private Utils utils;
 
     public Demo() {
-        Pair<ProductsRepository, TicketRepository> repositories = configureRepository();
+        String flowerName = nameStore();
+        Pair<ProductsRepository, TicketRepository> repositories = configureRepository(flowerName);
         productsRepository = repositories.getLeft();
         ticketRepository = repositories.getRight();
-        String flowerName = nameStore();
         flowerStore = FlowerStore.getInstance(productsRepository, ticketRepository, flowerName);
     }
 
@@ -46,9 +46,8 @@ public class Demo implements Runnable {
         return InputControl.readString("Name FlowerShop: ");
     }
 
-    public Pair<ProductsRepository, TicketRepository> configureRepository() {
+    public Pair<ProductsRepository, TicketRepository> configureRepository(String nameStore) {
         String userDatabase = InputControl.readString("Select the database you would like to work with (MySQL or MongoDB)");
-        String nameStore = InputControl.readString("Indicate the name of the flower shop");
         Pair<ProductsRepository, TicketRepository> repositories;
         if (userDatabase.equalsIgnoreCase("MongoDB")) {
             MongoDBConnection mongoDBConnection = new MongoDBConnection(nameStore);
@@ -62,7 +61,7 @@ public class Demo implements Runnable {
             repositories = Pair.of(productsRepository, ticketRepository);
         } else {
             System.err.println("This database type is not valid");
-            repositories = configureRepository();
+            repositories = configureRepository(nameStore);
         }
         return repositories;
     }

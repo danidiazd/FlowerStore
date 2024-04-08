@@ -91,7 +91,7 @@ public class ManagerProducts {
         int typeId;
         do {
             typeId = InputControl.readInt("Type the ID of product to select: ");
-            if (typeId < 1 || typeId > products.size()) {
+            if (typeId < 1 || typeId > lastId) {
                 System.out.println("Invalid ID. Please enter a valid ID.");
             }
         } while (typeId < 1 || typeId > lastId);
@@ -106,7 +106,6 @@ public class ManagerProducts {
         for (Product product : products) {
             price += product.getPrice();
         }
-
 
         System.out.println("La floristeria " + flowerStore.getNameStore() +
                 " tiene un valor de " + price + "€");
