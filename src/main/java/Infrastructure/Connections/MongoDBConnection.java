@@ -16,6 +16,7 @@ public class MongoDBConnection {
     public final MongoClient mongoClient;
     public MongoDatabase mongoDatabase;
 
+
     public MongoDBConnection(String databaseName) {
         Properties properties = loadProperties();
         String host = properties.getProperty("mongodb.host");
