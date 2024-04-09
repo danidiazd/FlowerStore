@@ -9,10 +9,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TicketRepositoryMongoDB implements TicketRepository {
     private MongoCollection<Document> ticketCollection;
@@ -23,25 +20,48 @@ public class TicketRepositoryMongoDB implements TicketRepository {
         this.flowerStore = flowerStore;
     }
 
-    private int getNextTicketId() {
-        Document query = new Document("_id", "id");
+    public int getNextTicketId() {
+        Document query = new Document("_id", "ticketID");
         Document update = new Document("$inc", new Document("sequence", 1));
         Document result = ticketCollection.findOneAndUpdate(query, update);
 
         if (result == null) {
-            ticketCollection.insertOne(new Document("_id", "id").append("sequence", 1));
+            // Si no hay un documento existente para el contador, lo creamos
+            ticketCollection.insertOne(new Document("_id", "ticketID").append("sequence", 1));
             return 1;
         } else {
             return result.getInteger("sequence");
         }
     }
+    @Override
+    public Ticket getLastTicket() {
+        Document document = ticketCollection.find().sort(new Document("ticketID", -1 )).first();
+
+        if (document == null) {
+            System.out.println("Not found last ticket");
+            return null;
+        } else {
+            return documentToTicket(document);
+        }
+    }
+
+
+    public int nextTicketID() {
+
+            Ticket lastTicket = getLastTicket();
+            if (lastTicket == null) {
+                return 1;
+            } else {
+                return lastTicket.getTicketID() + 1;
+            }
+    }
 
     private Ticket documentToTicket(Document document) {
-
-        int id = document.getInteger("id");
+        int ticketID = document.getInteger("ticketID");
         Date date = document.getDate("date");
-        Ticket ticket = new Ticket(id, date);
+        double totalPrice = document.getDouble("totalPrice");
 
+        Map<Product, Integer> products = new HashMap<>();
         List<Document> productsInfo = (List<Document>) document.get("products");
         for (Document productInfo : productsInfo) {
             String name = productInfo.getString("Name");
@@ -61,32 +81,34 @@ public class TicketRepositoryMongoDB implements TicketRepository {
                 throw new IllegalArgumentException("Invalid product type : " + type);
             }
 
-            ticket.addProductToTicket(product, quantity);
+            products.put(product, quantity);
         }
-        return ticket;
+
+        return new Ticket(ticketID, date, products, totalPrice);
     }
 
     @Override
-    public void newTicket(Map<Product, Integer> ticketInfo) {
-        List<Document> newTicketInfo = new ArrayList<>();
-        double totalPrice = 0.0;
-        Date date = new Date();
+    public void newTicket(Ticket ticket) {
+
+        List<Document> productList = new ArrayList<>();
+        Map<Product, Integer> ticketInfo = ticket.getProducts();
 
         for (Map.Entry<Product, Integer> entry : ticketInfo.entrySet()) {
             Product product = entry.getKey();
             int quantity = entry.getValue();
-            newTicketInfo.add(new Document("Name", product.getName())
+
+            productList.add(new Document("Name", product.getName())
                     .append("Type", product.getType().toString())
                     .append("Features", product.getAttributes().toString())
                     .append("Quantity", quantity)
                     .append("Price", product.getPrice()));
-            totalPrice += product.getPrice() * quantity;
         }
 
-        Document newTicket = new Document("id", getNextTicketId())
-                .append("date", date)
-                .append("products", newTicketInfo)
-                .append("totalPrice", totalPrice);
+        Document newTicket = new Document("ticketID", nextTicketID())
+                .append("date", ticket.getDate())
+                .append("products", productList)
+                .append("totalPrice", ticket.getTotal());
+
 
         ticketCollection.insertOne(newTicket);
     }
@@ -105,16 +127,11 @@ public class TicketRepositoryMongoDB implements TicketRepository {
     }
 
     @Override
-    public void getAllSales() {
-        List<Ticket> tickets = new ArrayList<>();
-        FindIterable<Document> cursor = ticketCollection.find();
-        double totalSales = 0;
+    public void getAllSales(List<Ticket> tickets) {
 
-        for (Document document : cursor) {
-            Ticket ticket = documentToTicket(document);
-            tickets.add(ticket);
-            double totalTicket = document.getDouble("totalPrice");
-            totalSales += totalTicket;
+        double totalSales = 0;
+        for (Ticket ticket : tickets) {
+            totalSales += ticket.getTotal();
         }
 
         System.out.println("The total sales of the FlowerShop "

@@ -8,75 +8,80 @@ import java.util.Map;
 
 public class Ticket {
 
+
     private int ticketID;
-    private int id;
     private Date date;
     private Map<Product, Integer> products;
+    private double total;
 
-    public Ticket(Date date) {
+
+    public Ticket(Date date){
+        this.date = new Date();
+    }
+    public Ticket(Date date, Map<Product, Integer> products, double total) {
         this.date = new Date();
         products = new HashMap<>();
+        this.total = total;
     }
 
-    public Ticket(int ticketID, Date date) {
+    public Ticket(int ticketID, Date date, Map<Product, Integer> products, double total) {
         this.ticketID = ticketID;
         this.date = date;
         products = new HashMap<>();
+        this.total = total;
     }
 
     public int getTicketID() {
         return ticketID;
     }
-
-    public void setTicketID(int ticketID) {
-        this.ticketID = ticketID;
-    }
-
     public Date getDate() {
         return date;
     }
-        public int getId () {
-            return id;
-        }
-
-        public void setId ( int id){
-            this.id = id;
-        }
-
-        public void addProductToTicket (Product product,int quantity){
-            products.put(product, quantity);
-        }
-
-        public Product updateStockStore (Product product,int quantity){
-            product.setQuantity(product.getQuantity() - quantity);
-            return product;
-        }
-
-        public Map<Product, Integer> getProducts () {
-            return this.products;
-        }
-
-        public void showTicket () {
-
-            int nameWidth = 20, quantityWidth = 10;
-            System.out.println("\n\t TICKET  #" + getTicketID()); //NO SE INCREMENTA
-            double price = 0;
-            System.out.println(getDate() + "\n");
-            System.out.printf("%-" + nameWidth + "s %-" + quantityWidth + "s%n",
-                    "PRODUCT", "QUANTITY");
-            for (int i = 0; i < nameWidth + quantityWidth + 4; i++) {
-                System.out.print("-");
-            }
-            System.out.println();
-
-            for (Map.Entry<Product, Integer> entry : products.entrySet()) {
-                Product product = entry.getKey();
-                int quantity = entry.getValue();
-                System.out.printf("%-" + nameWidth + "s %-" + quantityWidth + "d%n",
-                        product.getName(), quantity);
-                price += product.getPrice() * quantity;
-            }
-            System.out.printf("%-" + nameWidth + "s %-" + quantityWidth + ".2f€%n",
-                    "TOTAL:", price);
-        }
+    public Map<Product, Integer> getProducts() {
+        return this.products;
     }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTicketID(int id) {
+        this.ticketID = id;
+    }
+
+
+    public void addProductToTicket(Product product, int quantity) {
+        products.put(product, quantity);
+    }
+
+    public static Product updateStockStore(Product product, int quantity) {
+        product.setQuantity(product.getQuantity() - quantity);
+        return product;
+    }
+
+
+
+    public void showTicket() {
+
+        int nameWidth = 20, quantityWidth = 10;
+        System.out.println("\n\t TICKET  #" + getTicketID()); //NO SE INCREMENTA
+        double price = 0;
+        System.out.println(getDate() + "\n");
+        System.out.printf("%-" + nameWidth + "s %-" + quantityWidth + "s%n",
+                "PRODUCT", "QUANTITY");
+        for (int i = 0; i < nameWidth + quantityWidth + 4; i++) {
+            System.out.print("-");
+        }
+        System.out.println();
+
+        for (Map.Entry<Product, Integer> entry : products.entrySet()) {
+            Product product = entry.getKey();
+            int quantity = entry.getValue();
+            System.out.printf("%-" + nameWidth + "s %-" + quantityWidth + "d%n",
+                    product.getName(), quantity);
+            price += product.getPrice() * quantity;
+        }
+        System.out.printf("%-" + nameWidth + "s %-" + quantityWidth + ".2f€%n",
+                "TOTAL:", price);
+    }
+}
