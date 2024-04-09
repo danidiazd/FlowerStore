@@ -36,7 +36,7 @@ public class FlowerStore {
     }
 
     public void addProductsToTicket() {
-        managerTickets.addProductsToTicket();
+        managerTickets.createNewTicket();
     }
 
     public void showAllTickets() {

@@ -37,4 +37,15 @@ public class QueriesSQL {
             "LEFT JOIN tree ON product.idproduct = tree.product_idproduct " +
             "WHERE product.idproduct = ?";
 
+    public static final String SQL_RESET = "USE floresPaquitaSL;" +
+            "DELETE FROM product;" +
+            "DELETE FROM ticket;" +
+            "DELETE FROM tree;" +
+            "DELETE FROM flower;" +
+            "DELETE FROM decoration;" +
+            "DELETE FROM product_ticket;" +
+            "ALTER TABLE product AUTO_INCREMENT = 1;" +
+            "ALTER TABLE ticket AUTO_INCREMENT = 1;" +
+            "ALTER TABLE product_ticket AUTO_INCREMENT = 1;";
+
 }

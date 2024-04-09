@@ -23,7 +23,18 @@ public class ProductRepositorySQL implements ProductsRepository {
 
     @Override
     public void initialize() {
-
+        try{
+            Connection conn = getMySQLDatabase();
+            PreparedStatement statement = conn.prepareStatement(QueriesSQL.SQL_RESET);
+            String[] queries = QueriesSQL.SQL_RESET.split(";");
+            for (String query : queries) {
+                statement.addBatch(query.trim());
+            }
+            statement.executeBatch();
+            addPrimaryStock();
+        } catch (SQLException e) {
+            e.printStackTrace(System.out);
+        }
     }
 
     @Override
