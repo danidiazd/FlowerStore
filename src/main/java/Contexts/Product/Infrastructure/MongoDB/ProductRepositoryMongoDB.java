@@ -1,40 +1,31 @@
 package Contexts.Product.Infrastructure.MongoDB;
 
 import Contexts.Product.Domain.*;
+import Contexts.Ticket.Domain.Ticket;
+import FlowerStore.FlowerStore;
 import Infrastructure.Connections.MongoDBConnection;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ProductRepositoryMongoDB<T> implements ProductsRepository {
 
-    private MongoDBConnection mongoDBConnection;
     private MongoCollection<Document> collection;
 
     public ProductRepositoryMongoDB(MongoDBConnection mongoDBConnection) {
-        this.mongoDBConnection = mongoDBConnection;
-        initialize();
-    }
-
-    public void initialize() {
-        String collectionName = "products";
-        if (!mongoDBConnection.mongoDatabase.listCollectionNames().into(new ArrayList<>()).contains(collectionName)) {
-            addPrimaryStock();
-        }
-        this.collection = mongoDBConnection.mongoDatabase.getCollection(collectionName);
+        this.collection = mongoDBConnection.mongoDatabase.getCollection("products");
     }
 
     private int nextProductId() {
         Product lastProduct = getLastProduct();
-        if (lastProduct == null) {
-            return 1;
-        } else {
-            return lastProduct.getProductId() + 1;
-        }
+        if (lastProduct == null) return 1;
+        return lastProduct.getProductId() + 1;
     }
 
     @Override
@@ -61,11 +52,9 @@ public class ProductRepositoryMongoDB<T> implements ProductsRepository {
     public Product getLastProduct() {
         Document document = collection.find().sort(new Document("productId", -1)).first();
 
-        if (document == null) {
-            return null;
-        } else {
-            return documentToProduct(document);
-        }
+        if (document == null) return null;
+
+        return documentToProduct(document);
     }
 
     public List<Product> getFlowers() {
@@ -88,7 +77,6 @@ public class ProductRepositoryMongoDB<T> implements ProductsRepository {
                 .filter(product -> product.getType() == ProductType.DECORATION)
                 .collect(Collectors.toList());
     }
-
 
     @Override
     public void addPrimaryStock() {
@@ -182,15 +170,14 @@ public class ProductRepositoryMongoDB<T> implements ProductsRepository {
         stock.add(new Document("type", ProductType.DECORATION.toString())
                 .append("productId", 13)
                 .append("name", "Tiesto")
-                .append("quantity", 50)
-                .append("price", 10.0)
+                .append("quantity", 0)
+                .append("price", 0.0)
                 .append("attribute", "Madera"));
 
 
         collection.insertMany(stock);
 
     }
-
 
 
     @Override
@@ -223,7 +210,7 @@ public class ProductRepositoryMongoDB<T> implements ProductsRepository {
     }
 
 
-    private Product documentToProduct(Document document) {
+    public Product documentToProduct(Document document) {
         int productId = document.getInteger("productId");
         String name = document.getString("name");
         int quantity = document.getInteger("quantity");

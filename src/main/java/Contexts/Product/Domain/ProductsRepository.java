@@ -1,9 +1,11 @@
 package Contexts.Product.Domain;
 
+import Contexts.Ticket.Domain.Ticket;
+
 import java.util.List;
+import java.util.Map;
 
 public interface ProductsRepository {
-    void initialize();
 
     Product getProduct(int id);
     Product getLastProduct();

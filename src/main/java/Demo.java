@@ -37,7 +37,7 @@ public class Demo implements Runnable {
 
     @Override
     public void run() {
-        productsRepository.initialize();
+        productsRepository.addPrimaryStock();
         menu();
     }
 

@@ -1,11 +1,12 @@
 package Contexts.Ticket.Domain;
 
+import Contexts.Product.Domain.Product;
+
 import java.util.List;
+import java.util.Map;
 
 public interface TicketRepository {
-    void newTicket(Ticket ticket);
+    void newTicket(Map<Product, Integer> ticket);
     List<Ticket> getAllTickets();
-    Ticket getLastTicket();
-    int nextTicketID();
-    void getAllSales(List<Ticket> tickets);
+    void getAllSales();
 }

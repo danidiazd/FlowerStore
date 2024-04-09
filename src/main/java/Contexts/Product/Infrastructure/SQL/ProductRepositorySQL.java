@@ -22,11 +22,6 @@ public class ProductRepositorySQL implements ProductsRepository {
     }
 
     @Override
-    public void initialize() {
-
-    }
-
-    @Override
     public Product getProduct(int id) {
         Product product = null;
         try{
