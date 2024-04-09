@@ -106,8 +106,8 @@ public class ManagerProducts {
             price += product.getPrice() * product.getQuantity();
         }
 
-        System.out.println("La floristeria " + flowerStore.getNameStore() +
-                " tiene un valor de " + price + "€");
+        System.out.println("The flower store " + FloserStore.getNameStore() +
+                " had a total value " + price + "€");
     }
 
     public List<Product> getType() {
