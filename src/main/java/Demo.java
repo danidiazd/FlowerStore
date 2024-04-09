@@ -35,7 +35,6 @@ public class Demo implements Runnable {
         flowerStore = FlowerStore.getInstance(productsRepository, ticketRepository, flowerName);
     }
 
-
     @Override
     public void run() {
         productsRepository.addPrimaryStock();
@@ -71,17 +70,8 @@ public class Demo implements Runnable {
 
         System.out.println("¿Que acción desea realizar?");
         do {
-            int selectAction = InputControl.readInt("\nType of action \n" +
-                    "1. Create a product. \n" +
-                    "2. Show all products.\n" +
-                    "3. Update stock. \n" +
-                    "4. Remove a product.\n" +
-                    "5. Show all stock. \n" +
-                    "6. Show flower shop value. \n" +
-                    "7. Create ticket. \n" +
-                    "8. Show all tickets. \n" +
-                    "9. Show flower shop benefits. \n" +
-                    "10. Exit flower shop.");
+
+            int selectAction = showMenu();
 
             switch (selectAction) {
                 case 1:
@@ -120,6 +110,23 @@ public class Demo implements Runnable {
                     break;
             }
         } while (true);
+    }
+
+    private int showMenu() {
+        int selectAction = InputControl.readInt(
+                "\nType of action \n" +
+                "1. Create a product. \n" +
+                "2. Show all products.\n" +
+                "3. Update stock. \n" +
+                "4. Remove a product.\n" +
+                "5. Show all stock. \n" +
+                "6. Show flower shop value. \n" +
+                "7. Create ticket. \n" +
+                "8. Show all tickets. \n" +
+                "9. Show flower shop benefits. \n" +
+                "10. Exit flower shop.");
+
+        return selectAction;
     }
 
     private void exit() {

@@ -24,12 +24,12 @@ public class TicketRepositoryMongoDB implements TicketRepository {
     }
 
     private int getNextTicketId() {
-        Document query = new Document("_id", "ticket_id");
+        Document query = new Document("_id", "id");
         Document update = new Document("$inc", new Document("sequence", 1));
         Document result = ticketCollection.findOneAndUpdate(query, update);
 
         if (result == null) {
-            ticketCollection.insertOne(new Document("_id", "ticket_id").append("sequence", 1));
+            ticketCollection.insertOne(new Document("_id", "id").append("sequence", 1));
             return 1;
         } else {
             return result.getInteger("sequence");
@@ -37,6 +37,7 @@ public class TicketRepositoryMongoDB implements TicketRepository {
     }
 
     private Ticket documentToTicket(Document document) {
+
         int id = document.getInteger("id");
         Date date = document.getDate("date");
         Ticket ticket = new Ticket(id, date);
@@ -99,8 +100,6 @@ public class TicketRepositoryMongoDB implements TicketRepository {
         for (Document document : cursor) {
             Ticket ticket = documentToTicket(document);
             tickets.add(ticket);
-            double totalTicket = document.getDouble("totalPrice");
-            totalSales += totalTicket;
         }
         return tickets;
     }

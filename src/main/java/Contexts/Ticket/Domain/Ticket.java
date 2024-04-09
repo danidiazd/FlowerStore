@@ -2,13 +2,12 @@ package Contexts.Ticket.Domain;
 
 import Contexts.Product.Domain.Product;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Ticket {
-    private int id;
+    private int ticketID;
     private Date date;
     private Map<Product, Integer> products;
 
@@ -17,18 +16,18 @@ public class Ticket {
         products = new HashMap<>();
     }
 
-    public Ticket(int id, Date date) {
-        this.id = id;
+    public Ticket(int ticketID, Date date) {
+        this.ticketID = ticketID;
         this.date = date;
         products = new HashMap<>();
     }
 
-    public int getId() {
-        return id;
+    public int getTicketID() {
+        return ticketID;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setTicketID(int ticketID) {
+        this.ticketID = ticketID;
     }
 
     public Date getDate() {
@@ -51,7 +50,7 @@ public class Ticket {
     public void showTicket() {
 
         int nameWidth = 20, quantityWidth = 10;
-        System.out.println("\n\t TICKET  #" + getId()); //NO SE INCREMENTA
+        System.out.println("\n\t TICKET  #" + getTicketID()); //NO SE INCREMENTA
         double price = 0;
         System.out.println(getDate() + "\n");
         System.out.printf("%-" + nameWidth + "s %-" + quantityWidth + "s%n",

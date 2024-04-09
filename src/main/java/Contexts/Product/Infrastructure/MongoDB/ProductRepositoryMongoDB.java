@@ -22,7 +22,6 @@ public class ProductRepositoryMongoDB<T> implements ProductsRepository {
         this.collection = mongoDBConnection.mongoDatabase.getCollection("products");
     }
 
-
     private int nextProductId() {
         Product lastProduct = getLastProduct();
         if (lastProduct == null) return 1;
