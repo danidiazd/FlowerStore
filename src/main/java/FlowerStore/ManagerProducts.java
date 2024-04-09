@@ -103,7 +103,7 @@ public class ManagerProducts {
         List<Product> products = productsRepository.getAllProducts();
         double price = 0;
         for (Product product : products) {
-            price += product.getPrice();
+            price += product.getPrice() * product.getQuantity();
         }
 
         System.out.println("La floristeria " + flowerStore.getNameStore() +
