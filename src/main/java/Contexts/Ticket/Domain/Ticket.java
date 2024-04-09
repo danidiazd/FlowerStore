@@ -7,7 +7,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Ticket {
+<<<<<<< Updated upstream
     private int ticketID;
+=======
+    private int id;
+>>>>>>> Stashed changes
     private Date date;
     private Map<Product, Integer> products;
 
@@ -16,6 +20,7 @@ public class Ticket {
         products = new HashMap<>();
     }
 
+<<<<<<< Updated upstream
     public Ticket(int ticketID, Date date) {
         this.ticketID = ticketID;
         this.date = date;
@@ -32,6 +37,14 @@ public class Ticket {
 
     public Date getDate() {
         return date;
+=======
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+>>>>>>> Stashed changes
     }
 
     public void addProductToTicket(Product product, int quantity) {
