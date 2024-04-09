@@ -40,7 +40,7 @@ public class TicketRepositorySQL implements TicketRepository {
     }
 
     @Override
-    public void newTicket(Map<Product, Integer> ticket) {
+    public void newTicket(Ticket newTicket) {
         try(Connection conn = getMySQLDatabase();
             PreparedStatement stmt = conn.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS)) {
             conn.setAutoCommit(false);
@@ -51,7 +51,7 @@ public class TicketRepositorySQL implements TicketRepository {
             if (generateKey.next()) {
                 int ticketId = generateKey.getInt(1);
                 PreparedStatement stmtProductTicket = conn.prepareStatement(SQL_INSERT_PRODUCT_TICKET);
-
+                Map<Product, Integer> ticket = newTicket.getProducts();
                 for (Map.Entry<Product, Integer> entry : ticket.entrySet()) {
                     Product product = entry.getKey();
                     Integer quantity = entry.getValue();
@@ -90,7 +90,7 @@ public class TicketRepositorySQL implements TicketRepository {
                 double totalPrice = productPrice * amount; // A falta de saber como implementarlo
 
                 Ticket ticket = ticketMap.getOrDefault(ticketId, new Ticket(date));
-                ticket.setId(ticketId);
+                ticket.setTicketID(ticketId);
                 if(!ticketMap.containsKey(ticketId)) {
                     ticketMap.put(ticketId, ticket);
                 }
@@ -111,8 +111,19 @@ public class TicketRepositorySQL implements TicketRepository {
     }
 
     @Override
-    public void getAllSales() {
+    public Ticket getLastTicket() {
+        return null;
+    }
+
+    @Override
+    public int nextTicketID() {
+        return 0;
+    }
+
+    @Override
+    public void getAllSales(List<Ticket> tickets) {
 
     }
+
 }
 
