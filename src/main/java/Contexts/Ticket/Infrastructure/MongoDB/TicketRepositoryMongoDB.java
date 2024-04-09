@@ -23,8 +23,20 @@ public class TicketRepositoryMongoDB implements TicketRepository {
         this.flowerStore = flowerStore;
     }
 
-    private Ticket documentToTicket(Document document) {
+    private int getNextTicketId() {
+        Document query = new Document("_id", "ticket_id");
+        Document update = new Document("$inc", new Document("sequence", 1));
+        Document result = ticketCollection.findOneAndUpdate(query, update);
 
+        if (result == null) {
+            ticketCollection.insertOne(new Document("_id", "ticket_id").append("sequence", 1));
+            return 1;
+        } else {
+            return result.getInteger("sequence");
+        }
+    }
+
+    private Ticket documentToTicket(Document document) {
         int id = document.getInteger("id");
         Date date = document.getDate("date");
         Ticket ticket = new Ticket(id, date);
@@ -52,34 +64,17 @@ public class TicketRepositoryMongoDB implements TicketRepository {
         }
         return ticket;
     }
-    public Ticket getLastTicketId() {
-        Document document = ticketCollection.find().sort(new Document("id", -1)).first();
-
-        if (document == null) return null;
-        Ticket ticket = documentToTicket(document);
-        return ticket;
-    }
-    private int nextTicketID() {
-        Ticket lastTicket = getLastTicketId();
-        if (lastTicket == null) return 1;
-        return lastTicket.getId();
-    }
 
     @Override
     public void newTicket(Map<Product, Integer> ticketInfo) {
         List<Document> newTicketInfo = new ArrayList<>();
-
-
         double totalPrice = 0.0;
-
         Date date = new Date();
 
         for (Map.Entry<Product, Integer> entry : ticketInfo.entrySet()) {
             Product product = entry.getKey();
             int quantity = entry.getValue();
-            newTicketInfo.add(new Document("id", nextTicketID())
-                    .append("Date", date)
-                    .append("Name", product.getName())
+            newTicketInfo.add(new Document("Name", product.getName())
                     .append("Type", product.getType().toString())
                     .append("Features", product.getAttributes().toString())
                     .append("Quantity", quantity)
@@ -87,13 +82,12 @@ public class TicketRepositoryMongoDB implements TicketRepository {
             totalPrice += product.getPrice() * quantity;
         }
 
-        Document newTicket = new Document("id", nextTicketID())
+        Document newTicket = new Document("id", getNextTicketId())
                 .append("date", date)
                 .append("products", newTicketInfo)
                 .append("totalPrice", totalPrice);
 
         ticketCollection.insertOne(newTicket);
-
     }
 
     @Override
@@ -126,6 +120,5 @@ public class TicketRepositoryMongoDB implements TicketRepository {
 
         System.out.println("The total sales of the FlowerShop "
                 + FlowerStore.getNameStore() + " is the: " + totalSales + "€.");
-
     }
 }
