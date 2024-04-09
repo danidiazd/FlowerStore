@@ -49,7 +49,7 @@ public class ManagerProducts {
 
     public void addProduct() {
 
-        int type = InputControl.readInt("\nType\n " +
+        int type = InputControl.readInt("\nType\n" +
                 "1 for Tree.\n" +
                 "2 for Flower.\n" +
                 "3 for Decoration");
@@ -86,15 +86,37 @@ public class ManagerProducts {
         Product selectProduct;
         List<Product> products = getType();
         showTypeProducts(products);
-        int lastId = productsRepository.getLastProduct().getProductId();
+        int firstID = products.get(0).getProductId();
+        int lastID = 0;
+
+        for (int i = 0; i < products.size(); i++) {
+            if (firstID > products.get(i).getProductId()){
+                firstID = products.get(i).getProductId();
+            }
+            if (lastID < products.get(i).getProductId()){
+                lastID = products.get(i).getProductId();
+            }
+        }
+        boolean correctID = false;
         int typeId;
         do {
-            typeId = InputControl.readInt("Type the ID of product to select: ");
-            if (typeId < 1 || typeId > lastId) {
-                System.out.println("Invalid ID. Please enter a valid ID.");
+            correctID = false; // Reiniciar la variable correctID en cada iteración
+            typeId = InputControl.readInt("Type the ID of the product to select: ");
+            if (typeId < firstID || typeId > lastID) {
+                System.err.println("Invalid ID. Please enter a valid ID.");
+            } else {
+                int i = 0;
+                while (i < products.size() && !correctID) {
+                    if (typeId == products.get(i).getProductId()) {
+                        correctID = true;
+                    }
+                    i++;
+                }
+                if (!correctID) {
+                    System.err.println("Invalid ID. Please enter a valid ID.");
+                }
             }
-        } while (typeId < 1 || typeId > lastId);
-
+        } while (!correctID);
         selectProduct = productsRepository.getProduct(typeId);
         return selectProduct;
     }
@@ -106,7 +128,7 @@ public class ManagerProducts {
             price += product.getPrice() * product.getQuantity();
         }
 
-        System.out.println("The flower store " + FloserStore.getNameStore() +
+        System.out.println("The flower store " + FlowerStore.getNameStore() +
                 " had a total value " + price + "€");
     }
 
