@@ -46,7 +46,6 @@ public class ManagerProducts {
 
         Product product = getProduct();
         productsRepository.deleteProduct(product);
-        System.out.println(product.getName() + " deleted");
     }
 
     public void addProduct() {
