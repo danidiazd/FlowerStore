@@ -100,12 +100,10 @@ CREATE TABLE IF NOT EXISTS `floresPaquitaSL`.`product_ticket` (
   INDEX `fk_product_ticket_ticket1_idx` (`ticket_idticket` ASC) VISIBLE,
     FOREIGN KEY (`product_idproduct`)
     REFERENCES `floresPaquitaSL`.`product` (`idproduct`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE,
     FOREIGN KEY (`ticket_idticket`)
     REFERENCES `floresPaquitaSL`.`ticket` (`idticket`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
@@ -130,4 +128,3 @@ COLLATE = utf8mb4_0900_ai_ci;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
-

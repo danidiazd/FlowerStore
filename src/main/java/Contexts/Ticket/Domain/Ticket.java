@@ -14,9 +14,9 @@ public class Ticket {
     private Map<Product, Integer> products;
     private double total;
 
-
     public Ticket(Date date){
         this.date = new Date();
+        this.products = new HashMap<>();
     }
     public Ticket(Date date, Map<Product, Integer> products, double total) {
         this.date = new Date();
@@ -45,9 +45,14 @@ public class Ticket {
         return total;
     }
 
+    public void setTotal(double total) {
+        this.total = total;
+    }
+
     public void setTicketID(int id) {
         this.ticketID = id;
     }
+
 
 
     public void addProductToTicket(Product product, int quantity) {
@@ -58,8 +63,6 @@ public class Ticket {
         product.setQuantity(product.getQuantity() - quantity);
         return product;
     }
-
-
 
     public void showTicket() {
 
@@ -84,4 +87,7 @@ public class Ticket {
         System.out.printf("%-" + nameWidth + "s %-" + quantityWidth + ".2f€%n",
                 "TOTAL:", price);
     }
+
+
+
 }
