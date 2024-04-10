@@ -20,7 +20,7 @@ public class Ticket {
     }
     public Ticket(Date date, Map<Product, Integer> products, double total) {
         this.date = new Date();
-        this.products = new HashMap<>();
+        this.products = products;
         this.total = total;
     }
 

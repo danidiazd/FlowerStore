@@ -66,7 +66,7 @@ public class TicketRepositorySQL implements TicketRepository {
             Map<Integer, Ticket> ticketMap = new HashMap<>();
 
             while (rs.next()) {
-                int ticketId = rs.getInt("ticketid");
+                int ticketId = rs.getInt("idticket");
                 Date date = rs.getDate("date");
                 double productPrice = rs.getDouble("price");
                 double amount = rs.getInt("amount");
