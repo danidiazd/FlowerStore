@@ -38,7 +38,7 @@ public class ManagerProducts {
             product.setPrice(price);
             productsRepository.updateProduct(product);
         } else {
-            System.out.println("Cant add under 0");
+            System.err.println("Cant add under 0");
         }
     }
 
@@ -46,14 +46,15 @@ public class ManagerProducts {
 
         Product product = getProduct();
         productsRepository.deleteProduct(product);
+        System.out.println(product.getName() + " deleted");
     }
 
     public void addProduct() {
-
-        int type = InputControl.readInt("\nType\n" +
+        final int MAX_OPTION = 3;
+        int type = InputControl.readIntinRange("\nType\n" +
                 "1 for Tree.\n" +
                 "2 for Flower.\n" +
-                "3 for Decoration");
+                "3 for Decoration",MAX_OPTION);
         String name = InputControl.readString("Type a name for product.");
         int quantity = InputControl.readInt("Type a quantity stock.");
         double price = InputControl.readDouble("Type a price.");
@@ -74,11 +75,24 @@ public class ManagerProducts {
                 break;
             case 3:
                 typeProduct = ProductType.DECORATION.toString();
-                String decorationAttribute = InputControl.readString("Type material for the decoration");
-                Decoration newDecoration = new Decoration<>(name, quantity, price, decorationAttribute);
+                String decorationAttribute;
+                Decoration newDecoration;
+                boolean validMaterial;
+
+                do {
+                    decorationAttribute = InputControl.readString("Type material for the decoration\n" +
+                            "Only \"madera\" or \"plastico\"");
+                    validMaterial = decorationAttribute.equalsIgnoreCase("madera")
+                            || decorationAttribute.equalsIgnoreCase("plastico");
+                    if (!validMaterial) {
+                        System.out.println("Invalid material. Please enter either \"madera\" or \"plastico\".");
+                    }
+                } while (!validMaterial);
+                newDecoration = new Decoration<>(name, quantity, price, decorationAttribute);
                 productsRepository.addProduct(newDecoration);
                 break;
         }
+        System.out.println(name + " was added");
     }
 
     public Product getProduct() {
@@ -101,7 +115,7 @@ public class ManagerProducts {
         int typeId;
 
         do {
-            correctID = false; // Reiniciar la variable correctID en cada iteración
+            correctID = false;
             typeId = InputControl.readInt("Type the ID of the product to select: ");
             if (typeId < firstID || typeId > lastID) {
                 System.err.println("Invalid ID. Please enter a valid ID.");
@@ -139,16 +153,16 @@ public class ManagerProducts {
 
         final int  MAX_OPTION = 3;
         int option = InputControl.readIntinRange("What you want?\n" +
-                "1. FLOWER.\n" +
-                "2. TREE.\n" +
+                "1. TREE.\n" +
+                "2. FLOWER.\n" +
                 "3. DECORATION.\n",MAX_OPTION);
         switch (option) {
 
             case 1:
-                products = productsRepository.getFlowers();
+                products = productsRepository.getTrees();
                 break;
             case 2:
-                products = productsRepository.getTrees();
+                products = productsRepository.getFlowers();
                 break;
             case 3:
                 products = productsRepository.getDecorations();

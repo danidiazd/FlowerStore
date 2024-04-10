@@ -82,12 +82,13 @@ public class FlowerStore {
         managerProducts.totalValue();
     }
 
+
     public List<Product> getType() {
         return managerProducts.getType();
     }
 
     public void showTypeProducts(List<Product> products) {
-        managerProducts.showAllProducts();
+        managerProducts.showProducts(products);
     }
     public void showAllProducts() {
         managerProducts.showAllProducts();

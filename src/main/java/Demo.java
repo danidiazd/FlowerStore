@@ -62,6 +62,22 @@ public class Demo implements Runnable {
     }
 
 
+    private int showMenu() {
+        int selectAction = InputControl.readInt(
+                "\nType of action \n" +
+                        "1. Create a product. \n" +
+                        "2. Show all products.\n" +
+                        "3. Update stock. \n" +
+                        "4. Remove a product.\n" +
+                        "5. Show for product stock. \n" +
+                        "6. Show flower shop value. \n" +
+                        "7. Create ticket. \n" +
+                        "8. Show all tickets. \n" +
+                        "9. Show flower shop benefits. \n" +
+                        "10. Exit flower shop.");
+
+        return selectAction;
+    }
     public void menu() {
 
         System.out.println("¿Que acción desea realizar?");
@@ -108,22 +124,7 @@ public class Demo implements Runnable {
         } while (true);
     }
 
-    private int showMenu() {
-        int selectAction = InputControl.readInt(
-                "\nType of action \n" +
-                "1. Create a product. \n" +
-                "2. Show all products.\n" +
-                "3. Update stock. \n" +
-                "4. Remove a product.\n" +
-                "5. Show all stock. \n" +
-                "6. Show flower shop value. \n" +
-                "7. Create ticket. \n" +
-                "8. Show all tickets. \n" +
-                "9. Show flower shop benefits. \n" +
-                "10. Exit flower shop.");
 
-        return selectAction;
-    }
 
     private void exit() {
         System.exit(0);

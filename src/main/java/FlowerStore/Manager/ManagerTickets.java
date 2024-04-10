@@ -30,22 +30,26 @@ public class ManagerTickets {
         return instance;
     }
 
-    public Map<Product, Integer> addProductsToTicket() throws InsufficientStockException {
+    public Map<Product, Integer> addProductsToTicket() {
         ManagerProducts managerProducts = ManagerProducts.getInstance(productsRepository);
         Map<Product, Integer> ticketWithProducts = new HashMap<>();
-        boolean addMore;
+        boolean addMore = false;
 
         do {
-            Product productToTicket = managerProducts.getProduct();
-            int quantity = InputControl.readInt("Type quantity to add.");
-            // Verifica el stock
-            if (productToTicket.getQuantity() < quantity) {
-                throw new InsufficientStockException("Insufficient stock for product: " + productToTicket.getName());
+            try {
+                Product productToTicket = managerProducts.getProduct();
+                int quantity = InputControl.readInt("Type quantity to add.");
+                if (productToTicket.getQuantity() < quantity) {
+                    throw new InsufficientStockException("Insufficient stock for product: " + productToTicket.getName());
+                }
+                ticketWithProducts.put(productToTicket, quantity);
+                productToTicket = Ticket.updateStockStore(productToTicket, quantity);
+                productsRepository.updateProduct(productToTicket);
+                System.out.println(productToTicket.getName() + " added to buy.");
+            } catch (InsufficientStockException e) {
+                System.out.println("Error: " + e.getMessage());
+                continue;
             }
-            ticketWithProducts.put(productToTicket, quantity);
-            productToTicket = Ticket.updateStockStore(productToTicket, quantity);
-            productsRepository.updateProduct(productToTicket);
-            System.out.println(productToTicket.getName() + " added to buy.");
             addMore = InputControl.readBoolean("Want add more? (yes or not) ");
         } while (addMore);
 
