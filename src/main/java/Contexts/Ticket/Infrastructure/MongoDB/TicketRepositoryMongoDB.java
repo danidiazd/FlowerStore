@@ -40,22 +40,27 @@ public class TicketRepositoryMongoDB implements TicketRepository {
         Document document = ticketCollection.find().sort(new Document("ticketID", -1)).first();
 
         return documentToTicket(document);
-
     }
 
-
     public int nextTicketID() {
-
+        Document document = ticketCollection.find().sort(new Document("ticketID", -1)).first();
         Ticket lastTicket = getLastTicket();
-        if (lastTicket == null) {
+        if (document == null) {
             return 1;
         } else {
-            return lastTicket.getTicketID() + 1;
+            return document.getInteger("ticketID") + 1;
         }
     }
 
     private Ticket documentToTicket(Document document) {
-        int ticketID = document.getInteger("ticketID");
+        if (document == null) {
+
+            return new Ticket(0, new Date(), new HashMap<>(), 0.0);
+        }
+        Integer ticketID = document.getInteger("ticketID");
+        if (ticketID == null) {
+            ticketID = 1;
+        }
         Date date = document.getDate("date");
         double totalPrice = document.getDouble("totalPrice");
 
