@@ -30,13 +30,13 @@ public class ManagerTickets {
         return instance;
     }
 
-    public Map<Product, Integer> addProductsToTicket() {
+    public Map<Product, Integer> addProductsToTicket() throws InsufficientStockException {
         ManagerProducts managerProducts = ManagerProducts.getInstance(productsRepository);
         Map<Product, Integer> ticketWithProducts = new HashMap<>();
         boolean addMore = false;
 
         do {
-            try {
+
                 Product productToTicket = managerProducts.getProduct();
                 int quantity = InputControl.readInt("Type quantity to add.");
                 if (productToTicket.getQuantity() < quantity) {
@@ -46,10 +46,8 @@ public class ManagerTickets {
                 productToTicket = Ticket.updateStockStore(productToTicket, quantity);
                 productsRepository.updateProduct(productToTicket);
                 System.out.println(productToTicket.getName() + " added to buy.");
-            } catch (InsufficientStockException e) {
-                System.out.println("Error: " + e.getMessage());
-                continue;
-            }
+
+
             addMore = InputControl.readBoolean("Want add more? (yes or not) ");
         } while (addMore);
 
