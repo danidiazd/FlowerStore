@@ -27,25 +27,25 @@ public class PrimaryStock {
     }
 
     private void addTreeStock(List<Document> stock) {
-        stock.add(createProductDocument(ProductType.TREE, 1, "Manzano", 50, 20.5, 1.5));
-        stock.add(createProductDocument(ProductType.TREE, 2, "Olivo", 50, 11.99, 2.0));
-        stock.add(createProductDocument(ProductType.TREE, 3, "Pino", 50, 8.50, 3.0));
-        stock.add(createProductDocument(ProductType.TREE, 4, "Rosal", 50, 6.50, 0.5));
+        stock.add(createProductDocument(ProductType.TREE, 1, "manzano", 50, 20.5, 1.5));
+        stock.add(createProductDocument(ProductType.TREE, 2, "olivo", 50, 11.99, 2.0));
+        stock.add(createProductDocument(ProductType.TREE, 3, "pino", 50, 8.50, 3.0));
+        stock.add(createProductDocument(ProductType.TREE, 4, "rosal", 50, 6.50, 0.5));
     }
 
     private void addFlowerStock(List<Document> stock) {
-        stock.add(createProductDocument(ProductType.FLOWER, 5, "Rosa", 50, 4.0, "Roja"));
-        stock.add(createProductDocument(ProductType.FLOWER, 6, "Girasol", 50, 3.50, "Blanca"));
-        stock.add(createProductDocument(ProductType.FLOWER, 7, "Amapola", 50, 2.75, "Roja"));
-        stock.add(createProductDocument(ProductType.FLOWER, 8, "Lirio", 50, 1.5, "Naranja"));
-        stock.add(createProductDocument(ProductType.FLOWER, 9, "Clavel", 50, 9.50, "Amarillo"));
+        stock.add(createProductDocument(ProductType.FLOWER, 5, "rosa", 50, 4.0, "roja"));
+        stock.add(createProductDocument(ProductType.FLOWER, 6, "girasol", 50, 3.50, "blanca"));
+        stock.add(createProductDocument(ProductType.FLOWER, 7, "amapola", 50, 2.75, "roja"));
+        stock.add(createProductDocument(ProductType.FLOWER, 8, "lirio", 50, 1.5, "naranja"));
+        stock.add(createProductDocument(ProductType.FLOWER, 9, "clavel", 50, 9.50, "amarillo"));
     }
 
     private void addDecorationStock(List<Document> stock) {
-        stock.add(createProductDocument(ProductType.DECORATION, 10, "Jarron", 50, 20.50, "Madera"));
-        stock.add(createProductDocument(ProductType.DECORATION, 11, "Tiesto", 50, 13.50, "Plastico"));
-        stock.add(createProductDocument(ProductType.DECORATION, 12, "Jarron", 50, 9.99, "Plastico"));
-        stock.add(createProductDocument(ProductType.DECORATION, 13, "Tiesto", 50, 10.0, "Madera"));
+        stock.add(createProductDocument(ProductType.DECORATION, 10, "jarron", 50, 20.50, "madera"));
+        stock.add(createProductDocument(ProductType.DECORATION, 11, "tiesto", 50, 13.50, "plastico"));
+        stock.add(createProductDocument(ProductType.DECORATION, 12, "jarron", 50, 9.99, "plastico"));
+        stock.add(createProductDocument(ProductType.DECORATION, 13, "tiesto", 50, 10.0, "madera"));
     }
 
     private Document createProductDocument(ProductType type, int productId, String name, int quantity, double price, Object attribute) {

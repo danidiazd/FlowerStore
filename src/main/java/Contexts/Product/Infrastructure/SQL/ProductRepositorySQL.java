@@ -133,19 +133,19 @@ public class ProductRepositorySQL implements ProductsRepository {
     @Override
     public void addPrimaryStock() {
         Object[][] allData = {
-                {"Rosa", "Roja", 50, 4.0, ProductType.FLOWER},
-                {"Girasol", "Blanca", 50, 3.50, ProductType.FLOWER},
-                {"Amapola", "Roja", 50, 2.75, ProductType.FLOWER},
-                {"Lirio", "Naranja", 50, 1.5, ProductType.FLOWER},
-                {"Clavel", "Amarillo", 50, 9.50, ProductType.FLOWER},
-                {"Manzano", 1.5, 50, 20.5, ProductType.TREE},
-                {"Olivo", 2.0, 50, 11.99, ProductType.TREE},
-                {"Pino", 3.0, 50, 8.50, ProductType.TREE},
-                {"Rosal", 0.5, 50, 6.50, ProductType.TREE},
-                {"Jarron", "Madera", 50, 20.50, ProductType.DECORATION},
-                {"Tiesto", "Plastico", 50, 13.50, ProductType.DECORATION},
-                {"Jarron", "Plastico", 50, 9.99, ProductType.DECORATION},
-                {"Tiesto", "Madera", 50, 10.0, ProductType.DECORATION}
+                {"rosa", "roja", 50, 4.0, ProductType.FLOWER},
+                {"girasol", "blanca", 50, 3.50, ProductType.FLOWER},
+                {"amapola", "roja", 50, 2.75, ProductType.FLOWER},
+                {"lirio", "aaranja", 50, 1.5, ProductType.FLOWER},
+                {"clavel", "amarillo", 50, 9.50, ProductType.FLOWER},
+                {"manzano", 1.5, 50, 20.5, ProductType.TREE},
+                {"olivo", 2.0, 50, 11.99, ProductType.TREE},
+                {"pino", 3.0, 50, 8.50, ProductType.TREE},
+                {"rosal", 0.5, 50, 6.50, ProductType.TREE},
+                {"jarron", "madera", 50, 20.50, ProductType.DECORATION},
+                {"tiesto", "plastico", 50, 13.50, ProductType.DECORATION},
+                {"jarron", "plastico", 50, 9.99, ProductType.DECORATION},
+                {"tiesto", "madera", 50, 10.0, ProductType.DECORATION}
         };
 
         try {
