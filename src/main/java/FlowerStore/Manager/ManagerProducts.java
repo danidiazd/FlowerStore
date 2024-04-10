@@ -156,10 +156,10 @@ public class ManagerProducts {
             stock += product.getQuantity();
         }
         showProducts(products);
-        System.out.println("The flower store " + FlowerStore.getNameStore()
+        System.out.println("\nThe flower store " + FlowerStore.getNameStore()
         + " had a stock value: \n" +
                 "TOTAL TYPE STOCK: " + stock +
-                "\nPRICE STOCK TYPE: " + priceStock + "€.");
+                "\nPRICE STOCK TYPE: " + priceStock + "€.\n");
     }
 
     public List<Product> getType() {
