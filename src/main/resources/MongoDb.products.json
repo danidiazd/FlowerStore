@@ -1,0 +1,143 @@
+[{
+  "_id": {
+    "$oid": "6616f9b3a4c49027a7f437ad"
+  },
+  "type": "TREE",
+  "productId": 1,
+  "name": "manzano",
+  "quantity": 50,
+  "price": 20.5,
+  "attribute": 1.5
+},
+{
+  "_id": {
+    "$oid": "6616f9b3a4c49027a7f437ae"
+  },
+  "type": "TREE",
+  "productId": 2,
+  "name": "olivo",
+  "quantity": 50,
+  "price": 11.99,
+  "attribute": 2
+},
+{
+  "_id": {
+    "$oid": "6616f9b3a4c49027a7f437af"
+  },
+  "type": "TREE",
+  "productId": 3,
+  "name": "pino",
+  "quantity": 50,
+  "price": 8.5,
+  "attribute": 3
+},
+{
+  "_id": {
+    "$oid": "6616f9b3a4c49027a7f437b0"
+  },
+  "type": "TREE",
+  "productId": 4,
+  "name": "rosal",
+  "quantity": 50,
+  "price": 6.5,
+  "attribute": 0.5
+},
+{
+  "_id": {
+    "$oid": "6616f9b3a4c49027a7f437b1"
+  },
+  "type": "FLOWER",
+  "productId": 5,
+  "name": "rosa",
+  "quantity": 50,
+  "price": 4,
+  "attribute": "roja"
+},
+{
+  "_id": {
+    "$oid": "6616f9b3a4c49027a7f437b2"
+  },
+  "type": "FLOWER",
+  "productId": 6,
+  "name": "girasol",
+  "quantity": 50,
+  "price": 3.5,
+  "attribute": "blanca"
+},
+{
+  "_id": {
+    "$oid": "6616f9b3a4c49027a7f437b3"
+  },
+  "type": "FLOWER",
+  "productId": 7,
+  "name": "amapola",
+  "quantity": 50,
+  "price": 2.75,
+  "attribute": "roja"
+},
+{
+  "_id": {
+    "$oid": "6616f9b3a4c49027a7f437b4"
+  },
+  "type": "FLOWER",
+  "productId": 8,
+  "name": "lirio",
+  "quantity": 50,
+  "price": 1.5,
+  "attribute": "naranja"
+},
+{
+  "_id": {
+    "$oid": "6616f9b3a4c49027a7f437b5"
+  },
+  "type": "FLOWER",
+  "productId": 9,
+  "name": "clavel",
+  "quantity": 50,
+  "price": 9.5,
+  "attribute": "amarillo"
+},
+{
+  "_id": {
+    "$oid": "6616f9b3a4c49027a7f437b6"
+  },
+  "type": "DECORATION",
+  "productId": 10,
+  "name": "jarron",
+  "quantity": 50,
+  "price": 20.5,
+  "attribute": "madera"
+},
+{
+  "_id": {
+    "$oid": "6616f9b3a4c49027a7f437b7"
+  },
+  "type": "DECORATION",
+  "productId": 11,
+  "name": "tiesto",
+  "quantity": 50,
+  "price": 13.5,
+  "attribute": "plastico"
+},
+{
+  "_id": {
+    "$oid": "6616f9b3a4c49027a7f437b8"
+  },
+  "type": "DECORATION",
+  "productId": 12,
+  "name": "jarron",
+  "quantity": 50,
+  "price": 9.99,
+  "attribute": "plastico"
+},
+{
+  "_id": {
+    "$oid": "6616f9b3a4c49027a7f437b9"
+  },
+  "type": "DECORATION",
+  "productId": 13,
+  "name": "tiesto",
+  "quantity": 50,
+  "price": 10,
+  "attribute": "madera"
+}]
