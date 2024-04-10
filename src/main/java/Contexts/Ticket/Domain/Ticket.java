@@ -27,7 +27,7 @@ public class Ticket {
     public Ticket(int ticketID, Date date, Map<Product, Integer> products, double total) {
         this.ticketID = ticketID;
         this.date = date;
-        this.products = new HashMap<>();
+        this.products = products;
         this.total = total;
     }
 
@@ -64,7 +64,7 @@ public class Ticket {
     public void showTicket() {
 
         int nameWidth = 20, quantityWidth = 10;
-        System.out.println("\n\t TICKET  #" + getTicketID()); //NO SE INCREMENTA
+        System.out.println("\n\t TICKET  #" + getTicketID());
         double price = 0;
         System.out.println(getDate() + "\n");
         System.out.printf("%-" + nameWidth + "s %-" + quantityWidth + "s%n",

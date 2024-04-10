@@ -3,6 +3,10 @@ package FlowerStore;
 import Contexts.Product.Domain.Product;
 import Contexts.Product.Domain.ProductsRepository;
 import Contexts.Ticket.Domain.TicketRepository;
+import Contexts.Ticket.Infrastructure.Exceptions.NoTicketsFoundException;
+import FlowerStore.Manager.Exceptions.InsufficientStockException;
+import FlowerStore.Manager.ManagerProducts;
+import FlowerStore.Manager.ManagerTickets;
 
 import java.util.List;
 
@@ -36,14 +40,27 @@ public class FlowerStore {
     }
 
     public void addProductsToTicket() {
-        managerTickets.createNewTicket();
+        try {
+            managerTickets.createNewTicket();
+        } catch (InsufficientStockException e) {
+            System.err.println(e);;
+        }
     }
 
     public void showAllTickets() {
-        managerTickets.showAllTickets();
+
+        try {
+            managerTickets.showAllTickets();
+        } catch (NoTicketsFoundException e) {
+            System.err.println(e);
+        }
     }
     public void shopBenefits() {
-        managerTickets.shopBenefits();
+        try {
+            managerTickets.shopBenefits();
+        } catch (NoTicketsFoundException e) {
+            System.out.println(e);
+        }
     }
     public void updateStock() {
         managerProducts.updateStock();

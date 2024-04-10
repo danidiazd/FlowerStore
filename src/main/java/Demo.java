@@ -1,16 +1,14 @@
-import Contexts.Product.Domain.*;
+import Contexts.Product.Domain.Product;
+import Contexts.Product.Domain.ProductsRepository;
 import Contexts.Product.Infrastructure.MongoDB.ProductRepositoryMongoDB;
 import Contexts.Product.Infrastructure.SQL.ProductRepositorySQL;
 import Contexts.Ticket.Domain.TicketRepository;
 import Contexts.Ticket.Infrastructure.MongoDB.TicketRepositoryMongoDB;
 import Contexts.Ticket.Infrastructure.SQL.TicketRepositorySQL;
-import FlowerStore.ManagerTickets;
 import FlowerStore.FlowerStore;
 import Infrastructure.Connections.MongoDBConnection;
 import Infrastructure.Connections.MySQLConnection;
 import Utils.InputControl.InputControl;
-import FlowerStore.*;
-import Utils.Utils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
@@ -20,12 +18,10 @@ public class Demo implements Runnable {
     private static FlowerStore flowerStore;
     private MongoDBConnection mongoDBConnection;
     private MySQLConnection mySQLConnection;
-    private ProductRepositoryMongoDB productRepositoryMongoDB;
     private static ProductsRepository productsRepository;
     private static TicketRepository ticketRepository;
-    private ManagerProducts managerProducts;
-    private ManagerTickets managerTickets;
-    private Utils utils;
+
+
 
     public Demo() {
         String flowerName = nameStore();

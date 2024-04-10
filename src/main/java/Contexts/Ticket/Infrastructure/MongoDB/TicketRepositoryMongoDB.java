@@ -3,6 +3,7 @@ package Contexts.Ticket.Infrastructure.MongoDB;
 import Contexts.Product.Domain.*;
 import Contexts.Ticket.Domain.Ticket;
 import Contexts.Ticket.Domain.TicketRepository;
+import Contexts.Ticket.Infrastructure.Exceptions.NoTicketsFoundException;
 import FlowerStore.FlowerStore;
 import Infrastructure.Connections.MongoDBConnection;
 import com.mongodb.client.FindIterable;
@@ -33,27 +34,24 @@ public class TicketRepositoryMongoDB implements TicketRepository {
             return result.getInteger("sequence");
         }
     }
+
     @Override
     public Ticket getLastTicket() {
-        Document document = ticketCollection.find().sort(new Document("ticketID", -1 )).first();
+        Document document = ticketCollection.find().sort(new Document("ticketID", -1)).first();
 
-        if (document == null) {
-            System.out.println("Not found last ticket");
-            return null;
-        } else {
-            return documentToTicket(document);
-        }
+        return documentToTicket(document);
+
     }
 
 
     public int nextTicketID() {
 
-            Ticket lastTicket = getLastTicket();
-            if (lastTicket == null) {
-                return 1;
-            } else {
-                return lastTicket.getTicketID() + 1;
-            }
+        Ticket lastTicket = getLastTicket();
+        if (lastTicket == null) {
+            return 1;
+        } else {
+            return lastTicket.getTicketID() + 1;
+        }
     }
 
     private Ticket documentToTicket(Document document) {
@@ -111,30 +109,37 @@ public class TicketRepositoryMongoDB implements TicketRepository {
 
 
         ticketCollection.insertOne(newTicket);
+
     }
 
     @Override
-    public List<Ticket> getAllTickets() {
+    public List<Ticket> getAllTickets() throws NoTicketsFoundException {
         List<Ticket> tickets = new ArrayList<>();
         FindIterable<Document> cursor = ticketCollection.find();
         double totalSales = 0;
+        boolean flagTickets = false;
 
         for (Document document : cursor) {
             Ticket ticket = documentToTicket(document);
             tickets.add(ticket);
+            flagTickets = true;
+        }
+
+        if (!flagTickets) {
+            throw new NoTicketsFoundException();
         }
         return tickets;
+}
+
+@Override
+public void getAllSales(List<Ticket> tickets) {
+
+    double totalSales = 0;
+    for (Ticket ticket : tickets) {
+        totalSales += ticket.getTotal();
     }
 
-    @Override
-    public void getAllSales(List<Ticket> tickets) {
-
-        double totalSales = 0;
-        for (Ticket ticket : tickets) {
-            totalSales += ticket.getTotal();
-        }
-
-        System.out.println("The total sales of the FlowerShop "
-                + FlowerStore.getNameStore() + " is the: " + totalSales + "€.");
-    }
+    System.out.println("The total sales of the FlowerShop "
+            + FlowerStore.getNameStore() + " is the: " + totalSales + "€.");
+}
 }

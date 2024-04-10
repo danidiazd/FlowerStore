@@ -40,6 +40,22 @@ public class InputControl {
             }
         }
     }
+    public static int readIntinRange(String mensaje, int max) {
+        while (true) {
+            System.out.println(mensaje);
+            try {
+                int input = scanner.nextInt();
+                scanner.nextLine();
+                if (input >= 1 && input <= max) {
+                    return input;
+                } else {
+                    System.out.println("Type a numer in range 1 to " + max + ".");
+                }
+            } catch (InputMismatchException e) {
+                inputMismatchException(e);
+            }
+        }
+    }
     public static float readFloat(String mensaje) {
 
         while (true) {

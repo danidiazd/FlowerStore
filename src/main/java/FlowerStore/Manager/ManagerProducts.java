@@ -1,6 +1,7 @@
-package FlowerStore;
+package FlowerStore.Manager;
 
 import Contexts.Product.Domain.*;
+import FlowerStore.FlowerStore;
 import Utils.InputControl.InputControl;
 
 import java.util.ArrayList;
@@ -80,7 +81,6 @@ public class ManagerProducts {
         }
     }
 
-
     public Product getProduct() {
 
         Product selectProduct;
@@ -99,6 +99,7 @@ public class ManagerProducts {
         }
         boolean correctID = false;
         int typeId;
+
         do {
             correctID = false; // Reiniciar la variable correctID en cada iteración
             typeId = InputControl.readInt("Type the ID of the product to select: ");
@@ -136,10 +137,11 @@ public class ManagerProducts {
 
         List<Product> products = new ArrayList<>();
 
-        int option = InputControl.readInt("What you want?\n" +
+        final int  MAX_OPTION = 3;
+        int option = InputControl.readIntinRange("What you want?\n" +
                 "1. FLOWER.\n" +
                 "2. TREE.\n" +
-                "3. DECORATION.\n");
+                "3. DECORATION.\n",MAX_OPTION);
         switch (option) {
 
             case 1:

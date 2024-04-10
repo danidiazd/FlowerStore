@@ -1,11 +1,13 @@
-package FlowerStore;
+package FlowerStore.Manager;
 
 import Contexts.Product.Domain.Product;
 import Contexts.Product.Domain.ProductsRepository;
 import Contexts.Ticket.Domain.Ticket;
 import Contexts.Ticket.Domain.TicketRepository;
+import Contexts.Ticket.Infrastructure.Exceptions.NoTicketsFoundException;
+import FlowerStore.Manager.Exceptions.InsufficientStockException;
+import FlowerStore.Manager.ManagerProducts;
 import Utils.InputControl.InputControl;
-import org.bson.Document;
 
 import java.util.*;
 
@@ -28,7 +30,7 @@ public class ManagerTickets {
         return instance;
     }
 
-    public Map<Product, Integer> addProductsToTicket() {
+    public Map<Product, Integer> addProductsToTicket() throws InsufficientStockException {
         ManagerProducts managerProducts = ManagerProducts.getInstance(productsRepository);
         Map<Product, Integer> ticketWithProducts = new HashMap<>();
         boolean addMore;
@@ -36,8 +38,10 @@ public class ManagerTickets {
         do {
             Product productToTicket = managerProducts.getProduct();
             int quantity = InputControl.readInt("Type quantity to add.");
-            // CHECK STOCK
-            if (productToTicket.getQuantity() < quantity) throw new RuntimeException(""); //falta excepcion personalizada
+            // Verifica el stock
+            if (productToTicket.getQuantity() < quantity) {
+                throw new InsufficientStockException("Insufficient stock for product: " + productToTicket.getName());
+            }
             ticketWithProducts.put(productToTicket, quantity);
             productToTicket = Ticket.updateStockStore(productToTicket, quantity);
             productsRepository.updateProduct(productToTicket);
@@ -45,24 +49,27 @@ public class ManagerTickets {
             addMore = InputControl.readBoolean("Want add more? (yes or not) ");
         } while (addMore);
 
-
         return ticketWithProducts;
     }
-    public void createNewTicket() {
+
+    public void createNewTicket() throws InsufficientStockException {
         Date date = new Date();
         Map<Product, Integer> mapProduct = addProductsToTicket();
         double total = getTotalTicket(mapProduct);
         Ticket newTicket = new Ticket(date, mapProduct, total);
         ticketRepository.newTicket(newTicket);
+        newTicket = ticketRepository.getLastTicket();
+        newTicket.showTicket();
+
     }
 
-    public void showAllTickets() {
+    public void showAllTickets() throws NoTicketsFoundException {
         List<Ticket> alltickets = ticketRepository.getAllTickets();
         for (Ticket ticket : alltickets) {
             ticket.showTicket();
         }
     }
-    public void shopBenefits() {
+    public void shopBenefits() throws NoTicketsFoundException {
         ticketRepository.getAllSales(ticketRepository.getAllTickets());
     }
 
