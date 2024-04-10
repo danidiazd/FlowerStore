@@ -7,6 +7,7 @@ import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,11 +50,13 @@ public class ProductRepositoryMongoDB<T> implements ProductsRepository {
     @Override
     public List<Product> getAllProducts() {
         List<Product> products = new ArrayList<>();
-        FindIterable<Document> cursor = collection.find();
+        FindIterable<Document> cursor = collection.find().sort(new Document("type", -1).append("productId", 1));
         for (Document document : cursor) {
             Product product = documentToProduct(document);
             products.add(product);
         }
+
+
         return products;
     }
 

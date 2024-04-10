@@ -16,6 +16,10 @@ public class InputControl {
         scanner.nextLine();
     }
 
+    public static void cleanBufer(){
+        scanner.nextLine();
+    }
+
     public static byte readByte(String mensaje) {
 
         while (true) {
@@ -32,11 +36,11 @@ public class InputControl {
         while(true){
             System.out.println(mensaje);
             try {
-                return scanner.nextInt();
+                int input = scanner.nextInt();
+                scanner.nextLine();
+                return input;
             } catch (InputMismatchException e) {
                 inputMismatchException(e);
-            } finally {
-                scanner.nextLine();
             }
         }
     }

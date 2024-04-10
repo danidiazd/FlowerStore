@@ -7,6 +7,8 @@ import Contexts.Ticket.Infrastructure.Exceptions.NoTicketsFoundException;
 import FlowerStore.Manager.Exceptions.InsufficientStockException;
 import FlowerStore.Manager.ManagerProducts;
 import FlowerStore.Manager.ManagerTickets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -15,18 +17,18 @@ public class FlowerStore {
     private static FlowerStore instance;
     private ManagerProducts managerProducts;
     private ManagerTickets managerTickets;
+    private static final Logger logger = LoggerFactory.getLogger(FlowerStore.class);
 
 
-
-    private FlowerStore(ProductsRepository productsRepository,TicketRepository ticketRepository, String nameStore) {
+    private FlowerStore(ProductsRepository productsRepository, TicketRepository ticketRepository, String nameStore) {
         this.nameStore = nameStore;
         this.managerProducts = ManagerProducts.getInstance(productsRepository);
         this.managerTickets = ManagerTickets.getInstance(ticketRepository, productsRepository);
     }
 
-    public static FlowerStore getInstance(ProductsRepository productsRepository, TicketRepository ticketRepository,String nameStore) {
+    public static FlowerStore getInstance(ProductsRepository productsRepository, TicketRepository ticketRepository, String nameStore) {
         if (instance == null) {
-            instance = new FlowerStore(productsRepository , ticketRepository, nameStore);
+            instance = new FlowerStore(productsRepository, ticketRepository, nameStore);
         }
         return instance;
     }
@@ -39,12 +41,15 @@ public class FlowerStore {
         this.nameStore = nameStore;
     }
 
-    public void addProductsToTicket() {
+    public void addProductsToTicket()     {
+
         try {
             managerTickets.createNewTicket();
         } catch (InsufficientStockException e) {
-            System.err.println(e);;
+            System.out.println(e);
+            logger.error("A error in addProdcutsToTicket" + e);
         }
+
     }
 
     public void showAllTickets() {
@@ -55,6 +60,7 @@ public class FlowerStore {
             System.err.println(e);
         }
     }
+
     public void shopBenefits() {
         try {
             managerTickets.shopBenefits();
@@ -62,6 +68,7 @@ public class FlowerStore {
             System.out.println(e);
         }
     }
+
     public void updateStock() {
         managerProducts.updateStock();
     }
@@ -82,13 +89,15 @@ public class FlowerStore {
         managerProducts.totalValue();
     }
 
+
     public List<Product> getType() {
         return managerProducts.getType();
     }
 
     public void showTypeProducts(List<Product> products) {
-        managerProducts.showAllProducts();
+        managerProducts.showProducts(products);
     }
+
     public void showAllProducts() {
         managerProducts.showAllProducts();
     }
