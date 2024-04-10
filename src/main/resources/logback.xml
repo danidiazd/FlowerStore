@@ -14,11 +14,11 @@
         </encoder>
     </appender>
     <root level="INFO">
-        <appender-ref ref="FILE" />
+        <appender-ref ref="FILE"/>
     </root>
     <logger name="FlowerStore" level="ERROR" additivity="false">
-        <appender-ref ref="STDOUT" />
-        <appender-ref ref="FILE" />
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
     </logger>
 
 </configuration>

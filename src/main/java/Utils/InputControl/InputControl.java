@@ -11,12 +11,13 @@ public class InputControl {
         System.out.println("Format Error.");
         scanner.nextLine();
     }
+
     private static void exception(Exception e) {
         System.out.println("Format Error.");
         scanner.nextLine();
     }
 
-    public static void cleanBufer(){
+    public static void cleanBufer() {
         scanner.nextLine();
     }
 
@@ -33,7 +34,7 @@ public class InputControl {
     }
 
     public static int readInt(String mensaje) {
-        while(true){
+        while (true) {
             System.out.println(mensaje);
             try {
                 int input = scanner.nextInt();
@@ -44,6 +45,7 @@ public class InputControl {
             }
         }
     }
+
     public static int readIntinRange(String mensaje, int max) {
         while (true) {
             System.out.println(mensaje);
@@ -60,6 +62,7 @@ public class InputControl {
             }
         }
     }
+
     public static float readFloat(String mensaje) {
 
         while (true) {
@@ -73,6 +76,7 @@ public class InputControl {
             }
         }
     }
+
     public static double readDouble(String mensaje) {
 
         while (true) {
@@ -86,6 +90,7 @@ public class InputControl {
             }
         }
     }
+
     public static char readChar(String mensaje) {
 
         while (true) {
@@ -97,6 +102,7 @@ public class InputControl {
             }
         }
     }
+
     public static String readString(String mensaje) {
 
         while (true) {
@@ -108,6 +114,7 @@ public class InputControl {
             }
         }
     }
+
     public static boolean readBoolean(String mensaje) {
         boolean result = false;
         boolean validData = false;

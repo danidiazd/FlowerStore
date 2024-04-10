@@ -33,6 +33,7 @@ public class Product<T> {
     public ProductType getType() {
         return type;
     }
+
     public int getProductId() {
         return productId;
     }

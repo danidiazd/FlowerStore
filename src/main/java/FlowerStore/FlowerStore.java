@@ -41,7 +41,7 @@ public class FlowerStore {
         this.nameStore = nameStore;
     }
 
-    public void addProductsToTicket()     {
+    public void addProductsToTicket() {
 
         try {
             managerTickets.createNewTicket();
@@ -94,8 +94,8 @@ public class FlowerStore {
         return managerProducts.getType();
     }
 
-    public void showTypeProducts(List<Product> products) {
-        managerProducts.showProducts(products);
+    public void showTypeProducts() {
+        managerProducts.stockValue( );
     }
 
     public void showAllProducts() {

@@ -7,6 +7,7 @@ public class Decoration<T> extends Product<T> {
         super(productId, name, quantity, price, ProductType.DECORATION, material);
         this.material = material;
     }
+
     public Decoration(String name, int quantity, double price, T material) {
         super(name, quantity, price, ProductType.DECORATION, material);
         this.material = material;

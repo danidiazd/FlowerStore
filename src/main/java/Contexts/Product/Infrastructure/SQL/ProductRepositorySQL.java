@@ -1,10 +1,12 @@
 package Contexts.Product.Infrastructure.SQL;
+
 import Contexts.Product.Domain.Product;
 import Contexts.Product.Domain.ProductType;
 import Contexts.Product.Domain.ProductsRepository;
 import Contexts.Ticket.Domain.Ticket;
 
 import java.util.List;
+
 import Infrastructure.Connections.MySQLConnection;
 
 import java.sql.*;
@@ -23,7 +25,7 @@ public class ProductRepositorySQL implements ProductsRepository {
 
     @Override
     public void initialize() {
-        try{
+        try {
             Connection conn = getMySQLDatabase();
             PreparedStatement statement = conn.prepareStatement(QueriesSQL.SQL_RESET);
             String[] queries = QueriesSQL.SQL_RESET.split(";");
@@ -40,7 +42,7 @@ public class ProductRepositorySQL implements ProductsRepository {
     @Override
     public Product getProduct(int id) {
         Product product = null;
-        try{
+        try {
             Connection conn = getMySQLDatabase();
             PreparedStatement statement = conn.prepareStatement(QueriesSQL.SQL_SELECT_PRODUCT);
             statement.setInt(1, id);
@@ -237,12 +239,12 @@ public class ProductRepositorySQL implements ProductsRepository {
             String specificAttribute = (product.getType() == ProductType.TREE) ? "height" :
                     ((product.getType() == ProductType.FLOWER) ? "color" : "material");
 
-                String formattedQuery = String.format(QueriesSQL.SQL_INSERT_ATTRIBUTE, product.getType().name().toLowerCase(), specificAttribute);
-                try (PreparedStatement specificDataStatement = connection.prepareStatement(formattedQuery)) {
-                    specificDataStatement.setInt(1, productId);
-                    specificDataStatement.setString(2, product.getAttributes().toString());
-                    specificDataStatement.executeUpdate();
-                }
+            String formattedQuery = String.format(QueriesSQL.SQL_INSERT_ATTRIBUTE, product.getType().name().toLowerCase(), specificAttribute);
+            try (PreparedStatement specificDataStatement = connection.prepareStatement(formattedQuery)) {
+                specificDataStatement.setInt(1, productId);
+                specificDataStatement.setString(2, product.getAttributes().toString());
+                specificDataStatement.executeUpdate();
+            }
 
             System.out.println("Product was added successfully.");
         } catch (SQLException e) {

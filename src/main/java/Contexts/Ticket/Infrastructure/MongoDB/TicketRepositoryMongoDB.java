@@ -86,7 +86,6 @@ public class TicketRepositoryMongoDB implements TicketRepository {
 
             products.put(product, quantity);
         }
-
         return new Ticket(ticketID, date, products, totalPrice);
     }
 
@@ -112,7 +111,6 @@ public class TicketRepositoryMongoDB implements TicketRepository {
                 .append("products", productList)
                 .append("totalPrice", ticket.getTotal());
 
-
         ticketCollection.insertOne(newTicket);
 
     }
@@ -134,17 +132,17 @@ public class TicketRepositoryMongoDB implements TicketRepository {
             throw new NoTicketsFoundException();
         }
         return tickets;
-}
-
-@Override
-public void getAllSales(List<Ticket> tickets) {
-
-    double totalSales = 0;
-    for (Ticket ticket : tickets) {
-        totalSales += ticket.getTotal();
     }
 
-    System.out.println("The total sales of the FlowerShop "
-            + FlowerStore.getNameStore() + " is the: " + totalSales + "€.");
-}
+    @Override
+    public void getAllSales(List<Ticket> tickets) {
+
+        double totalSales = 0;
+        for (Ticket ticket : tickets) {
+            totalSales += ticket.getTotal();
+        }
+
+        System.out.println("The total sales of the FlowerShop "
+                + FlowerStore.getNameStore() + " is the: " + totalSales + "€.");
+    }
 }

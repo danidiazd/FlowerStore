@@ -53,7 +53,7 @@ public class ManagerProducts {
         int type = InputControl.readIntinRange("\nType\n" +
                 "1 for Tree.\n" +
                 "2 for Flower.\n" +
-                "3 for Decoration",MAX_OPTION);
+                "3 for Decoration", MAX_OPTION);
         String name = InputControl.readString("Type a name for product.");
         int quantity = InputControl.readInt("Type a quantity stock.");
         double price = InputControl.readDouble("Type a price.");
@@ -103,10 +103,10 @@ public class ManagerProducts {
         int lastID = 0;
 
         for (int i = 0; i < products.size(); i++) {
-            if (firstID > products.get(i).getProductId()){
+            if (firstID > products.get(i).getProductId()) {
                 firstID = products.get(i).getProductId();
             }
-            if (lastID < products.get(i).getProductId()){
+            if (lastID < products.get(i).getProductId()) {
                 lastID = products.get(i).getProductId();
             }
         }
@@ -146,15 +146,31 @@ public class ManagerProducts {
                 " had a total value " + price + "€");
     }
 
+    public void stockValue() {
+        List<Product> products = getType();
+        double priceStock = 0;
+        int stock = 0;
+
+        for (Product product : products) {
+            priceStock += product.getPrice() * product.getQuantity();
+            stock += product.getQuantity();
+        }
+        showProducts(products);
+        System.out.println("The flower store " + FlowerStore.getNameStore()
+        + " had a stock value: \n" +
+                "TOTAL TYPE STOCK: " + stock +
+                "\nPRICE STOCK TYPE: " + priceStock + "€.");
+    }
+
     public List<Product> getType() {
 
         List<Product> products = new ArrayList<>();
 
-        final int  MAX_OPTION = 3;
+        final int MAX_OPTION = 3;
         int option = InputControl.readIntinRange("What you want?\n" +
                 "1. TREE.\n" +
                 "2. FLOWER.\n" +
-                "3. DECORATION.\n",MAX_OPTION);
+                "3. DECORATION.\n", MAX_OPTION);
         switch (option) {
 
             case 1:

@@ -6,6 +6,7 @@ import com.mongodb.MongoException;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -16,6 +17,7 @@ public class MongoDBConnection {
 
     public final MongoClient mongoClient;
     public MongoDatabase mongoDatabase;
+    public String mongoClientURI;
 
 
     public MongoDBConnection(String databaseName) {
@@ -25,6 +27,7 @@ public class MongoDBConnection {
         mongoClient = MongoClients.create("mongodb://" + host + ":" + port);
         this.mongoDatabase = mongoClient.getDatabase(databaseName);
     }
+
 
     private Properties loadProperties() {
         MongoDBConfig config = MongoDBConnection.class.getAnnotation(MongoDBConfig.class);
@@ -45,6 +48,7 @@ public class MongoDBConnection {
             throw new RuntimeException("MongoDBConfig annotation not found on MongoDBConnection class.");
         }
     }
+
     public void disconnectMongo() {
         try {
             if (mongoClient != null) {

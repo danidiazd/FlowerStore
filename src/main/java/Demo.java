@@ -64,7 +64,9 @@ public class Demo implements Runnable {
 
 
     private int showMenu() {
-        int selectAction = InputControl.readInt(
+        final int MAX_OPTIONS = 10;
+
+        int selectAction = InputControl.readIntinRange(
                 "\nType of action \n" +
                         "1. Create a product. \n" +
                         "2. Show all products.\n" +
@@ -75,13 +77,13 @@ public class Demo implements Runnable {
                         "7. Create ticket. \n" +
                         "8. Show all tickets. \n" +
                         "9. Show flower shop benefits. \n" +
-                        "10. Exit flower shop.");
+                        "10. Exit flower shop.", MAX_OPTIONS);
 
         return selectAction;
     }
     public void menu() {
 
-        System.out.println("¿Que acción desea realizar?");
+        System.out.println("What action would you like to perform?");
         do {
 
             int selectAction = showMenu();
@@ -100,8 +102,7 @@ public class Demo implements Runnable {
                     flowerStore.deleteProduct();
                     break;
                 case 5:
-                    List<Product> typeProduct = flowerStore.getType();
-                    flowerStore.showTypeProducts(typeProduct);
+                    flowerStore.showTypeProducts();
                     break;
                 case 6:
                     flowerStore.totalValue();
@@ -124,9 +125,6 @@ public class Demo implements Runnable {
             }
         } while (true);
     }
-
-
-
     private void exit() {
         System.exit(0);
         mongoDBConnection.disconnectMongo();
