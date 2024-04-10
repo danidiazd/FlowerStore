@@ -7,6 +7,8 @@ import Contexts.Ticket.Infrastructure.Exceptions.NoTicketsFoundException;
 import FlowerStore.Manager.Exceptions.InsufficientStockException;
 import FlowerStore.Manager.ManagerProducts;
 import FlowerStore.Manager.ManagerTickets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -15,6 +17,7 @@ public class FlowerStore {
     private static FlowerStore instance;
     private ManagerProducts managerProducts;
     private ManagerTickets managerTickets;
+    private static final Logger logger = LoggerFactory.getLogger(FlowerStore.class);
 
 
     private FlowerStore(ProductsRepository productsRepository, TicketRepository ticketRepository, String nameStore) {
@@ -44,6 +47,7 @@ public class FlowerStore {
             managerTickets.createNewTicket();
         } catch (InsufficientStockException e) {
             System.out.println(e);
+            logger.error("A error in addProdcutsToTicket" + e);
         }
 
     }
