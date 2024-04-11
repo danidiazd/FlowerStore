@@ -8,7 +8,8 @@ public class QueriesSQL {
                     "FROM product p " +
                     "LEFT JOIN flower f ON p.idproduct = f.product_idproduct " +
                     "LEFT JOIN decoration d ON p.idproduct = d.product_idproduct " +
-                    "LEFT JOIN tree t ON p.idproduct = t.product_idproduct";
+                    "LEFT JOIN tree t ON p.idproduct = t.product_idproduct " +
+                    "ORDER BY p.type, p.idproduct";
 
     public static final String SQL_SELECT_LAST_PRODUCT = "SELECT p.idproduct, p.name, p.quantity, p.price, p.type, " +
             "COALESCE(f.color, t.height, d.material) AS attribute " +
