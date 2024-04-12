@@ -16,14 +16,14 @@ public class MySQLConnection {
     private String username;
     private String password;
 
-    public MySQLConnection() {
+    public MySQLConnection(String databaseName) {
 
         MySQLConfig annotation = MySQLConnection.class.getAnnotation(MySQLConfig.class);
         String configFileName = annotation.config();
         Properties properties = loadProperties(configFileName);
 
 
-        url = properties.getProperty("mysql.url");
+        url = properties.getProperty("mysql.url") + "/" + databaseName;
         username = properties.getProperty("mysql.username");
         password = properties.getProperty("mysql.password");
         try {

@@ -51,7 +51,7 @@ public class Demo implements Runnable {
             ticketRepository = new TicketRepositoryMongoDB(mongoDBConnection, flowerStore);
             repositories = Pair.of(productsRepository, ticketRepository);
         } else if (userDatabase.equalsIgnoreCase("MySQL")) {
-            MySQLConnection mySQLConnection = new MySQLConnection();
+            MySQLConnection mySQLConnection = new MySQLConnection(userDatabase);
             productsRepository = new ProductRepositorySQL(mySQLConnection);
             ticketRepository = new TicketRepositorySQL(mySQLConnection);
             repositories = Pair.of(productsRepository, ticketRepository);

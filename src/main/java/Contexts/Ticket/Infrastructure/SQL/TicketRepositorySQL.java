@@ -4,6 +4,7 @@ import Contexts.Product.Domain.Product;
 import Contexts.Product.Domain.ProductType;
 import Contexts.Ticket.Domain.Ticket;
 import Contexts.Ticket.Domain.TicketRepository;
+import Contexts.Ticket.Infrastructure.Exceptions.NoTicketsFoundException;
 import FlowerStore.FlowerStore;
 import Infrastructure.Connections.MySQLConnection;
 
@@ -27,11 +28,11 @@ public class TicketRepositorySQL implements TicketRepository {
     @Override
     public void newTicket(Ticket newTicket) {
         try {
-            Connection conn = getMySQLDatabase();
-            PreparedStatement stmt = conn.prepareStatement(QueriesSQL.SQL_INSERT_TICKET, Statement.RETURN_GENERATED_KEYS);
-            stmt.setDate(1, java.sql.Date.valueOf(java.time.LocalDate.now()));
-            stmt.executeUpdate();
-            ResultSet generateKey = stmt.getGeneratedKeys();
+            Connection connection = getMySQLDatabase();
+            PreparedStatement statement = connection.prepareStatement(QueriesSQL.SQL_INSERT_TICKET, Statement.RETURN_GENERATED_KEYS);
+            statement.setDate(1, java.sql.Date.valueOf(java.time.LocalDate.now()));
+            statement.executeUpdate();
+            ResultSet generateKey = statement.getGeneratedKeys();
 
             if (generateKey.next()) {
                 int ticketId = generateKey.getInt(1);
@@ -42,7 +43,7 @@ public class TicketRepositorySQL implements TicketRepository {
                     Product product = entry.getKey();
                     Integer quantity = entry.getValue();
 
-                    PreparedStatement stmtProductTicket = conn.prepareStatement(QueriesSQL.SQL_INSERT_PRODUCT_TICKET);
+                    PreparedStatement stmtProductTicket = connection.prepareStatement(QueriesSQL.SQL_INSERT_PRODUCT_TICKET);
                     stmtProductTicket.setInt(1, ticketId);
                     stmtProductTicket.setInt(2, product.getProductId());
                     stmtProductTicket.setInt(3, quantity);
@@ -57,16 +58,18 @@ public class TicketRepositorySQL implements TicketRepository {
     }
 
     @Override
-    public List<Ticket> getAllTickets() {
+    public List<Ticket> getAllTickets() throws NoTicketsFoundException {
         List<Ticket> tickets = new ArrayList<>();
 
         try {
-            Connection conn = getMySQLDatabase();
-            PreparedStatement stmt = conn.prepareStatement(QueriesSQL.SQL_SELECT_TICKET);
-            ResultSet rs = stmt.executeQuery();
+            Connection connection = getMySQLDatabase();
+            PreparedStatement statement = connection.prepareStatement(QueriesSQL.SQL_SELECT_TICKET);
+            ResultSet rs = statement.executeQuery();
             Map<Integer, Ticket> ticketMap = new HashMap<>();
+            boolean flagTickets = false;
 
             while (rs.next()) {
+                flagTickets = true;
                 int ticketId = rs.getInt("idticket");
                 Date date = rs.getDate("date");
 
@@ -85,6 +88,11 @@ public class TicketRepositorySQL implements TicketRepository {
                 ticket.addProductToTicket(product, rs.getInt("amount"));
                 ticket.setTotal(ticket.getTotal() + (product.getPrice() * rs.getInt("amount")));
             }
+
+            if (!flagTickets) {
+                throw new NoTicketsFoundException();
+            }
+
             tickets.addAll(ticketMap.values());
         } catch (SQLException e) {
             e.printStackTrace(System.out);
@@ -96,9 +104,9 @@ public class TicketRepositorySQL implements TicketRepository {
     public Ticket getLastTicket() {
         Ticket lastTicket = null;
         try {
-            Connection conn = getMySQLDatabase();
-            PreparedStatement stmt = conn.prepareStatement(QueriesSQL.SQL_SELECT_PRODUCT_TICKET);
-            ResultSet rs = stmt.executeQuery();
+            Connection connection = getMySQLDatabase();
+            PreparedStatement statement = connection.prepareStatement(QueriesSQL.SQL_SELECT_PRODUCT_TICKET);
+            ResultSet rs = statement.executeQuery();
 
             Map<Product, Integer> ticketProductsMap = new HashMap<>();
             int lastTicketId = -1;
@@ -108,7 +116,7 @@ public class TicketRepositorySQL implements TicketRepository {
                 int ticketId = rs.getInt("ticket_idticket");
                 if (lastTicketId != -1 && lastTicketId != ticketId) {
                     lastTicketDate = null;
-                    PreparedStatement lastTicketStmt = conn.prepareStatement(QueriesSQL.SQL_SELECT_LAST_TICKET);
+                    PreparedStatement lastTicketStmt = connection.prepareStatement(QueriesSQL.SQL_SELECT_LAST_TICKET);
                     ResultSet lastTicketRs = lastTicketStmt.executeQuery();
                     if (lastTicketRs.next()) {
                         lastTicketDate = lastTicketRs.getDate("date");
@@ -131,7 +139,7 @@ public class TicketRepositorySQL implements TicketRepository {
 
             if (lastTicketId != -1) {
                 lastTicketDate = null;
-                PreparedStatement lastTicketStmt = conn.prepareStatement(QueriesSQL.SQL_SELECT_LAST_TICKET);
+                PreparedStatement lastTicketStmt = connection.prepareStatement(QueriesSQL.SQL_SELECT_LAST_TICKET);
                 ResultSet lastTicketRs = lastTicketStmt.executeQuery();
                 if (lastTicketRs.next()) {
                     lastTicketDate = lastTicketRs.getDate("date");

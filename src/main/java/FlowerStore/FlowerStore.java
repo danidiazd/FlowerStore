@@ -67,7 +67,7 @@ public class FlowerStore {
             managerTickets.shopBenefits();
         } catch (NoTicketsFoundException e) {
             System.out.println(e);
-            logger.error("A error in addProdcutsToTicket" + e);
+            logger.error("A error in addProductsToTicket" + e);
         }
     }
 

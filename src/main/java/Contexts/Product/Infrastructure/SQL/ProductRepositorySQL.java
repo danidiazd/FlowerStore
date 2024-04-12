@@ -26,14 +26,18 @@ public class ProductRepositorySQL implements ProductsRepository {
     @Override
     public void initialize() {
         try {
-            Connection conn = getMySQLDatabase();
-            PreparedStatement statement = conn.prepareStatement(QueriesSQL.SQL_RESET);
-            String[] queries = QueriesSQL.SQL_RESET.split(";");
-            for (String query : queries) {
-                statement.addBatch(query.trim());
+            Connection connection = getMySQLDatabase();
+
+            PreparedStatement useDbStatement = connection.prepareStatement(QueriesSQL.SQL_USE_DATABASE);
+            useDbStatement.execute();
+
+            PreparedStatement statement = connection.prepareStatement(QueriesSQL.SQL_NO_PRODUCTS);
+            ResultSet rs = statement.executeQuery();
+            rs.next();
+            int exists = rs.getInt(1);
+            if (exists == 0) {
+                addPrimaryStock();
             }
-            statement.executeBatch();
-            addPrimaryStock();
         } catch (SQLException e) {
             e.printStackTrace(System.out);
         }
@@ -43,8 +47,8 @@ public class ProductRepositorySQL implements ProductsRepository {
     public Product getProduct(int id) {
         Product product = null;
         try {
-            Connection conn = getMySQLDatabase();
-            PreparedStatement statement = conn.prepareStatement(QueriesSQL.SQL_SELECT_PRODUCT);
+            Connection connection = getMySQLDatabase();
+            PreparedStatement statement = connection.prepareStatement(QueriesSQL.SQL_SELECT_PRODUCT);
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
@@ -66,8 +70,8 @@ public class ProductRepositorySQL implements ProductsRepository {
     public Product getLastProduct() {
         Product lastProduct = null;
         try {
-            Connection conn = getMySQLDatabase();
-            PreparedStatement statement = conn.prepareStatement(QueriesSQL.SQL_SELECT_LAST_PRODUCT);
+            Connection connection = getMySQLDatabase();
+            PreparedStatement statement = connection.prepareStatement(QueriesSQL.SQL_SELECT_LAST_PRODUCT);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 lastProduct = new Product(rs.getInt("idproduct"),
@@ -88,9 +92,9 @@ public class ProductRepositorySQL implements ProductsRepository {
         List<Product> products = new ArrayList<>();
 
         try {
-            Connection conn = getMySQLDatabase();
-            PreparedStatement stmt = conn.prepareStatement(QueriesSQL.SQL_SELECT);
-            ResultSet rs = stmt.executeQuery();
+            Connection connection = getMySQLDatabase();
+            PreparedStatement statement = connection.prepareStatement(QueriesSQL.SQL_SELECT);
+            ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 Product product = new Product(
                         rs.getInt("idproduct"),
@@ -135,15 +139,15 @@ public class ProductRepositorySQL implements ProductsRepository {
     @Override
     public void addPrimaryStock() {
         Object[][] allData = {
+                {"manzano", 1.5, 50, 20.5, ProductType.TREE},
+                {"olivo", 2.0, 50, 11.99, ProductType.TREE},
+                {"pino", 3.0, 50, 8.50, ProductType.TREE},
+                {"rosal", 0.5, 50, 6.50, ProductType.TREE},
                 {"rosa", "roja", 50, 4.0, ProductType.FLOWER},
                 {"girasol", "blanca", 50, 3.50, ProductType.FLOWER},
                 {"amapola", "roja", 50, 2.75, ProductType.FLOWER},
                 {"lirio", "aaranja", 50, 1.5, ProductType.FLOWER},
                 {"clavel", "amarillo", 50, 9.50, ProductType.FLOWER},
-                {"manzano", 1.5, 50, 20.5, ProductType.TREE},
-                {"olivo", 2.0, 50, 11.99, ProductType.TREE},
-                {"pino", 3.0, 50, 8.50, ProductType.TREE},
-                {"rosal", 0.5, 50, 6.50, ProductType.TREE},
                 {"jarron", "madera", 50, 20.50, ProductType.DECORATION},
                 {"tiesto", "plastico", 50, 13.50, ProductType.DECORATION},
                 {"jarron", "plastico", 50, 9.99, ProductType.DECORATION},
@@ -193,14 +197,14 @@ public class ProductRepositorySQL implements ProductsRepository {
     @Override
     public void updateProduct(Product product) {
         try {
-            Connection conn = getMySQLDatabase();
-            PreparedStatement stmt = conn.prepareStatement(QueriesSQL.SQL_UPDATE);
-            stmt.setString(1, product.getName());
-            stmt.setInt(2, product.getQuantity());
-            stmt.setDouble(3, product.getPrice());
-            stmt.setString(4, product.getType().toString());
-            stmt.setInt(5, product.getProductId());
-            stmt.executeUpdate();
+            Connection connection = getMySQLDatabase();
+            PreparedStatement statement = connection.prepareStatement(QueriesSQL.SQL_UPDATE);
+            statement.setString(1, product.getName());
+            statement.setInt(2, product.getQuantity());
+            statement.setDouble(3, product.getPrice());
+            statement.setString(4, product.getType().toString());
+            statement.setInt(5, product.getProductId());
+            statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace(System.out);
         }
@@ -209,10 +213,10 @@ public class ProductRepositorySQL implements ProductsRepository {
     @Override
     public void deleteProduct(Product product) {
         try {
-            Connection conn = getMySQLDatabase();
-            PreparedStatement stmt = conn.prepareStatement(QueriesSQL.SQL_DELETE);
-            stmt.setInt(1, product.getProductId());
-            stmt.executeUpdate();
+            Connection connection = getMySQLDatabase();
+            PreparedStatement statement = connection.prepareStatement(QueriesSQL.SQL_DELETE);
+            statement.setInt(1, product.getProductId());
+            statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace(System.out);
         }
