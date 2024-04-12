@@ -3,44 +3,99 @@ package Contexts.Product.Infrastructure.SQL;
 import Contexts.Product.Domain.Product;
 import Contexts.Product.Domain.ProductType;
 import Contexts.Product.Domain.ProductsRepository;
-import Contexts.Ticket.Domain.Ticket;
-
-import java.util.List;
-
 import Infrastructure.Connections.MySQLConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static Infrastructure.Connections.MySQLConnection.getMySQLDatabase;
 
 public class ProductRepositorySQL implements ProductsRepository {
     private MySQLConnection mySQLConnection;
+    private String dataBaseName;
 
-    public ProductRepositorySQL(MySQLConnection mySQLConnection) {
+    public ProductRepositorySQL(MySQLConnection mySQLConnection, String dataBaseName) {
         this.mySQLConnection = mySQLConnection;
+        this.dataBaseName = dataBaseName;
     }
+
 
     @Override
     public void initialize() {
         try {
             Connection connection = getMySQLDatabase();
 
-            PreparedStatement useDbStatement = connection.prepareStatement(QueriesSQL.SQL_USE_DATABASE);
-            useDbStatement.execute();
+            QueriesSQL2.setDatabaseName(dataBaseName);
+            // Crear la base de datos si no existe
+            String createDatabaseQuery = QueriesSQL2.createDatabaseQuery();
+            try (PreparedStatement createDBStatement = connection.prepareStatement(createDatabaseQuery)) {
+                createDBStatement.executeUpdate();
+            }
 
-            PreparedStatement statement = connection.prepareStatement(QueriesSQL.SQL_NO_PRODUCTS);
-            ResultSet rs = statement.executeQuery();
-            rs.next();
-            int exists = rs.getInt(1);
-            if (exists == 0) {
+            String useDatabaseQuery = QueriesSQL2.useDatabaseQuery();
+            try (PreparedStatement useDbStatement = connection.prepareStatement(useDatabaseQuery)) {
+                useDbStatement.executeUpdate();
+            }
+
+            createTables(connection);
+
+            if (!productsExist(connection)) {
                 addPrimaryStock();
             }
+
         } catch (SQLException e) {
             e.printStackTrace(System.out);
         }
+    }
+
+    private void createTables(Connection connection) {
+        try {
+            String createProductTableQuery = QueriesSQL2.createProductTableQuery();
+            try (PreparedStatement createProductTableStatement = connection.prepareStatement(createProductTableQuery)) {
+                createProductTableStatement.executeUpdate();
+            }
+
+            String createDecorationTableQuery = QueriesSQL2.createDecorationTableQuery();
+            try (PreparedStatement createDecorationTableStatement = connection.prepareStatement(createDecorationTableQuery)) {
+                createDecorationTableStatement.executeUpdate();
+            }
+
+            String createFlowerTableQuery = QueriesSQL2.createFlowerTableQuery();
+            try (PreparedStatement createFlowerTableStatement = connection.prepareStatement(createFlowerTableQuery)) {
+                createFlowerTableStatement.executeUpdate();
+            }
+
+            String createTicketTableQuery = QueriesSQL2.createTicketTableQuery();
+            try (PreparedStatement createTicketTableStatement = connection.prepareStatement(createTicketTableQuery)) {
+                createTicketTableStatement.executeUpdate();
+            }
+
+            String createProductTicketTableQuery = QueriesSQL2.createProductTicketTableQuery();
+            try (PreparedStatement createProductTicketTableStatement = connection.prepareStatement(createProductTicketTableQuery)) {
+                createProductTicketTableStatement.executeUpdate();
+            }
+
+            String createTreeTableQuery = QueriesSQL2.createTreeTableQuery();
+            try (PreparedStatement createTreeTableStatement = connection.prepareStatement(createTreeTableQuery)) {
+                createTreeTableStatement.executeUpdate();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace(System.out);
+        }
+    }
+    private boolean productsExist(Connection connection) throws SQLException {
+        String selectQuery = QueriesSQL2.COUNT_PRODUCTS;
+        try (PreparedStatement statement = connection.prepareStatement(selectQuery)) {
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                int productCount = resultSet.getInt(1);
+                return productCount > 0;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -155,7 +210,7 @@ public class ProductRepositorySQL implements ProductsRepository {
         };
 
         try {
-            Connection connection = mySQLConnection.getMySQLDatabase();
+            Connection connection = getMySQLDatabase();
             PreparedStatement productStatement = connection.prepareStatement(QueriesSQL.SQL_INSERT, Statement.RETURN_GENERATED_KEYS);
 
             for (Object[] rowData : allData) {
@@ -225,7 +280,7 @@ public class ProductRepositorySQL implements ProductsRepository {
     @Override
     public void addProduct(Product product) {
         try {
-            Connection connection = mySQLConnection.getMySQLDatabase();
+            Connection connection = getMySQLDatabase();
             PreparedStatement productStatement = connection.prepareStatement(QueriesSQL.SQL_INSERT, Statement.RETURN_GENERATED_KEYS);
 
             productStatement.setString(1, product.getName());

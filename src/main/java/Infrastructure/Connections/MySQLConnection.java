@@ -16,16 +16,17 @@ public class MySQLConnection {
     private String username;
     private String password;
 
-    public MySQLConnection(String databaseName) {
+    public MySQLConnection(String nameStore) {
 
         MySQLConfig annotation = MySQLConnection.class.getAnnotation(MySQLConfig.class);
         String configFileName = annotation.config();
         Properties properties = loadProperties(configFileName);
 
 
-        url = properties.getProperty("mysql.url") + "/" + databaseName;
+        url = properties.getProperty("mysql.url");
         username = properties.getProperty("mysql.username");
         password = properties.getProperty("mysql.password");
+
         try {
             mySQLDatabase = DriverManager.getConnection(url, username, password);
         } catch (SQLException e) {
