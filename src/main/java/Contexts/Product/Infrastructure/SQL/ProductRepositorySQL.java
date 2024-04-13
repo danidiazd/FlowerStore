@@ -86,6 +86,7 @@ public class ProductRepositorySQL implements ProductsRepository {
             e.printStackTrace(System.out);
         }
     }
+
     private boolean productsExist(Connection connection) throws SQLException {
         String selectQuery = QueriesSQL2.COUNT_PRODUCTS;
         try (PreparedStatement statement = connection.prepareStatement(selectQuery)) {

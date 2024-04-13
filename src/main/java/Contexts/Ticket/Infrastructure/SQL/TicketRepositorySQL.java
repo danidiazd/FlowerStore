@@ -90,7 +90,7 @@ public class TicketRepositorySQL implements TicketRepository {
             }
 
             if (!flagTickets) {
-                throw new NoTicketsFoundException();
+                throw new NoTicketsFoundException("No tickets found in the database.");
             }
 
             tickets.addAll(ticketMap.values());
