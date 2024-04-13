@@ -1,6 +1,6 @@
 package Contexts.Product.Infrastructure.SQL;
 
-public class QueriesSQL2 {
+public class QueriesSQLDB {
 
     private static String DATABASE_NAME;
 

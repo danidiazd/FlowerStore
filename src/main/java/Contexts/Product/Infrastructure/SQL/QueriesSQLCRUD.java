@@ -1,6 +1,6 @@
 package Contexts.Product.Infrastructure.SQL;
 
-public class QueriesSQL {
+public class QueriesSQLCRUD {
 
     public static final String SQL_SELECT =
             "SELECT p.idproduct, p.name, p.quantity, p.price, p.type, " +
