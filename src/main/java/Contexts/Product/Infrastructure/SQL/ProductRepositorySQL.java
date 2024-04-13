@@ -25,10 +25,10 @@ public class ProductRepositorySQL implements ProductsRepository {
 
     @Override
     public void initialize() {
-        try{
-        Connection connection = getMySQLDatabase();
+        try {
+            Connection connection = getMySQLDatabase();
 
-            DBLoader.createAndUseDB(dataBaseName,connection);
+            DBLoader.createAndUseDB(dataBaseName, connection);
             DBLoader.createTables(connection);
 
             if (!productsExist(connection)) {

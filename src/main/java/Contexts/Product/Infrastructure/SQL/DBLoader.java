@@ -12,7 +12,7 @@ public class DBLoader {
     public static void createAndUseDB(String dataBaseName, Connection connection) {
         try {
             QueriesSQLDB.setDatabaseName(dataBaseName);
-            // Crear la base de datos si no existe
+            // Creamos la base de datos si no existe
             String createDatabaseQuery = QueriesSQLDB.createDatabaseQuery();
             try (PreparedStatement createDBStatement = connection.prepareStatement(createDatabaseQuery)) {
                 createDBStatement.executeUpdate();
