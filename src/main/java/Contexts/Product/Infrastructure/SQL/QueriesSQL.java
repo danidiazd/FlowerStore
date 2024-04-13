@@ -9,7 +9,7 @@ public class QueriesSQL {
                     "LEFT JOIN flower f ON p.idproduct = f.product_idproduct " +
                     "LEFT JOIN decoration d ON p.idproduct = d.product_idproduct " +
                     "LEFT JOIN tree t ON p.idproduct = t.product_idproduct " +
-                    "ORDER BY p.idproduct ,p.type";
+                    "ORDER BY FIELD(p.type, 'TREE', 'FLOWER', 'DECORATION'), p.idproduct ASC;";
 
     public static final String SQL_SELECT_LAST_PRODUCT = "SELECT p.idproduct, p.name, p.quantity, p.price, p.type, " +
             "COALESCE(f.color, t.height, d.material) AS attribute " +
@@ -37,9 +37,5 @@ public class QueriesSQL {
             "LEFT JOIN decoration ON product.idproduct = decoration.product_idproduct " +
             "LEFT JOIN tree ON product.idproduct = tree.product_idproduct " +
             "WHERE product.idproduct = ?";
-
-    public static final String SQL_NO_PRODUCTS = "SELECT EXISTS (SELECT 1 FROM product);";
-
-    //public static final String SQL_USE_DATABASE = "USE `floresPaquitaSL`;";
 
 }
