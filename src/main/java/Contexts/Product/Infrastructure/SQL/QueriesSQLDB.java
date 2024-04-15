@@ -50,7 +50,7 @@ public class QueriesSQLDB {
     public static String createTicketTableQuery() {
         return "CREATE TABLE IF NOT EXISTS `" + DATABASE_NAME + "`.`ticket` ("
                 + "`idticket` INT NOT NULL AUTO_INCREMENT, "
-                + "`date` DATE NULL, "
+                + "`date` DATETIME NULL, "
                 + "`totalPrice` FLOAT NULL, "
                 + "PRIMARY KEY (`idticket`)) ENGINE = InnoDB "
                 + "DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci";

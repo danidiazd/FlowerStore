@@ -15,12 +15,12 @@ public class Ticket {
     private double total;
 
     public Ticket(Date date) {
-        this.date = new Date();
+        this.date = date;
         this.products = new HashMap<>();
     }
 
     public Ticket(Date date, Map<Product, Integer> products, double total) {
-        this.date = new Date();
+        this.date = date;
         this.products = products;
         this.total = total;
     }
@@ -84,9 +84,8 @@ public class Ticket {
             int quantity = entry.getValue();
             System.out.printf("%-" + nameWidth + "s %-" + quantityWidth + "d%n",
                     product.getName(), quantity);
-            price += product.getPrice() * quantity;
         }
         System.out.printf("%-" + nameWidth + "s %-" + quantityWidth + ".2f€%n",
-                "TOTAL:", price);
+                "TOTAL:", getTotal());
     }
 }

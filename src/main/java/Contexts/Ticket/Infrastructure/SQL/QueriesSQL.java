@@ -11,7 +11,7 @@ public class QueriesSQL {
             "LEFT JOIN decoration d ON p.idproduct = d.product_idproduct " +
             "LEFT JOIN tree tr ON p.idproduct = tr.product_idproduct ";
 
-    public static final String SQL_INSERT_TICKET = "INSERT INTO ticket(date) VALUES(?)";
+    public static final String SQL_INSERT_TICKET = "INSERT INTO ticket(date, totalPrice) VALUES(?, ?)";
 
     public static final String SQL_INSERT_PRODUCT_TICKET = "INSERT INTO product_ticket(ticket_idticket, product_idproduct, amount) VALUES (?, ?, ?)";
 

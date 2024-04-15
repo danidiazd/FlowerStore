@@ -27,10 +27,12 @@ public class TicketRepositorySQL implements TicketRepository {
 
     @Override
     public void newTicket(Ticket newTicket) {
+        //TODO utilizar el total del ticket y la fecha, introducirlo asi
         try {
             Connection connection = getMySQLDatabase();
             PreparedStatement statement = connection.prepareStatement(QueriesSQL.SQL_INSERT_TICKET, Statement.RETURN_GENERATED_KEYS);
-            statement.setDate(1, java.sql.Date.valueOf(java.time.LocalDate.now()));
+            statement.setDate(1, new Date(newTicket.getDate().getTime()));
+            statement.setDouble(2, newTicket.getTotal());
             statement.executeUpdate();
             ResultSet generateKey = statement.getGeneratedKeys();
 
@@ -111,6 +113,7 @@ public class TicketRepositorySQL implements TicketRepository {
             Map<Product, Integer> ticketProductsMap = new HashMap<>();
             int lastTicketId = -1;
             Date lastTicketDate = null;
+            double total = 0;
 
             while (rs.next()) {
                 int ticketId = rs.getInt("ticket_idticket");
@@ -121,7 +124,7 @@ public class TicketRepositorySQL implements TicketRepository {
                     if (lastTicketRs.next()) {
                         lastTicketDate = lastTicketRs.getDate("date");
                     }
-                    lastTicket = new Ticket(lastTicketId, lastTicketDate, new HashMap<>(ticketProductsMap), 0);
+                    lastTicket = new Ticket(lastTicketId, lastTicketDate, new HashMap<>(ticketProductsMap), total);
                     ticketProductsMap.clear();
                 }
                 lastTicketId = ticketId;
