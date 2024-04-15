@@ -2,8 +2,10 @@ package Contexts.Ticket.Domain;
 
 import Contexts.Product.Domain.Product;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class Ticket {
@@ -72,10 +74,11 @@ public class Ticket {
     public void showTicket() {
 
         int nameWidth = 20, quantityWidth = 10;
-        System.out.println("\n\t TICKET  #" + getTicketID());
+        System.out.println("\n\t     TICKET  #" + getTicketID());
         double price = 0;
-        System.out.println(getDate() + "\n");
-        System.out.printf("%-" + nameWidth + "s %-" + quantityWidth + "s%n",
+        SimpleDateFormat dateFormat = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+        String formattedDate = dateFormat.format(getDate());
+        System.out.println(formattedDate + "\n");        System.out.printf("%-" + nameWidth + "s %-" + quantityWidth + "s%n",
                 "PRODUCT", "QUANTITY");
         for (int i = 0; i < nameWidth + quantityWidth + 4; i++) {
             System.out.print("-");

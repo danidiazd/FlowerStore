@@ -103,6 +103,8 @@ public class TicketRepositorySQL implements TicketRepository {
         try {
             int ticketID = resultSet.getInt("idticket");
             Timestamp timestamp = resultSet.getTimestamp("date");
+            Date date = new Date(timestamp.getTime());
+
             double total = resultSet.getDouble("totalPrice");
             Map<Product, Integer> products = new HashMap<>();
 
@@ -124,7 +126,6 @@ public class TicketRepositorySQL implements TicketRepository {
 
             }
 
-            Date date = new Date(timestamp.getTime());
             ticket = new Ticket(ticketID, date, products, total);
         } catch (SQLException e) {
             e.printStackTrace(System.out);
