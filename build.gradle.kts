@@ -12,7 +12,7 @@ repositories {
 dependencies {
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
-    testImplementation("org.mockito:mockito-core:4.2.0") // Agrega la dependencia de Mockito
+    testImplementation("org.mockito:mockito-core:4.2.0")
     implementation("mysql:mysql-connector-java:8.0.28")
     implementation("org.mongodb:mongodb-driver-sync:4.11.1")
     implementation("org.slf4j:slf4j-api:1.7.32")

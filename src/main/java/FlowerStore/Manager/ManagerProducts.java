@@ -190,16 +190,13 @@ public class ManagerProducts {
         int idWidth = 5, nameWidth = 15, quantityWidth = 10, priceWidth = 10,
                 typeWidth = 15, attributeWidth = 15;
 
-        // Print table headers
         System.out.printf("%-" + idWidth + "s %-" + nameWidth + "s %-" + quantityWidth
                         + "s %-" + priceWidth + "s %-" + typeWidth + "s %-" + attributeWidth + "s%n",
                 "ID", "Name", "Quantity", "Price", "Type", "Attributes");
 
-        // Print a line under the header
         System.out.printf("%-" + (idWidth + nameWidth + quantityWidth + priceWidth + typeWidth
                 + attributeWidth + 10) + "s%n", "");
 
-        // Print each product as a row in the table
         for (Product product : products) {
             System.out.printf("%-" + idWidth + "d %-" + nameWidth + "s %-" + quantityWidth
                             + "d %-" + priceWidth + ".2f %-" + typeWidth + "s %-" + attributeWidth + "s%n",

@@ -17,9 +17,6 @@ public class InputControl {
         scanner.nextLine();
     }
 
-    public static void cleanBufer() {
-        scanner.nextLine();
-    }
 
     public static byte readByte(String mensaje) {
 

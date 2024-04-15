@@ -150,7 +150,7 @@ public class ProductRepositoryMongoDB<T> implements ProductsRepository {
         } else if (type == ProductType.TREE) {
             product = new Tree<>(productId, name, quantity, price, (Double) attribute);
         } else {
-            throw new IllegalArgumentException("Tipo de atributo no válido para un producto tipo TREE");
+            throw new IllegalArgumentException("Invalid attribute type for product type TREE");
         }
         return product;
     }

@@ -21,20 +21,6 @@ public class TicketRepositoryMongoDB implements TicketRepository {
         this.flowerStore = flowerStore;
     }
 
-    public int getNextTicketId() {
-        Document query = new Document("_id", "ticketID");
-        Document update = new Document("$inc", new Document("sequence", 1));
-        Document result = ticketCollection.findOneAndUpdate(query, update);
-
-        if (result == null) {
-            // Si no hay un documento existente para el contador, lo creamos
-            ticketCollection.insertOne(new Document("_id", "ticketID").append("sequence", 1));
-            return 1;
-        } else {
-            return result.getInteger("sequence");
-        }
-    }
-
     @Override
     public Ticket getLastTicket() {
         Document document = ticketCollection.find().sort(new Document("ticketID", -1)).first();
@@ -129,7 +115,7 @@ public class TicketRepositoryMongoDB implements TicketRepository {
         }
 
         if (!flagTickets) {
-            throw new NoTicketsFoundException();
+            throw new NoTicketsFoundException("No tickets found in the database.");
         }
         return tickets;
     }

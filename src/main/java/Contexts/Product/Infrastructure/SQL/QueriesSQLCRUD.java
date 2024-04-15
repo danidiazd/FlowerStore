@@ -1,6 +1,6 @@
 package Contexts.Product.Infrastructure.SQL;
 
-public class QueriesSQL {
+public class QueriesSQLCRUD {
 
     public static final String SQL_SELECT =
             "SELECT p.idproduct, p.name, p.quantity, p.price, p.type, " +
@@ -8,7 +8,8 @@ public class QueriesSQL {
                     "FROM product p " +
                     "LEFT JOIN flower f ON p.idproduct = f.product_idproduct " +
                     "LEFT JOIN decoration d ON p.idproduct = d.product_idproduct " +
-                    "LEFT JOIN tree t ON p.idproduct = t.product_idproduct";
+                    "LEFT JOIN tree t ON p.idproduct = t.product_idproduct " +
+                    "ORDER BY FIELD(p.type, 'TREE', 'FLOWER', 'DECORATION'), p.idproduct ASC;";
 
     public static final String SQL_SELECT_LAST_PRODUCT = "SELECT p.idproduct, p.name, p.quantity, p.price, p.type, " +
             "COALESCE(f.color, t.height, d.material) AS attribute " +
@@ -36,16 +37,5 @@ public class QueriesSQL {
             "LEFT JOIN decoration ON product.idproduct = decoration.product_idproduct " +
             "LEFT JOIN tree ON product.idproduct = tree.product_idproduct " +
             "WHERE product.idproduct = ?";
-
-    public static final String SQL_RESET = "USE floresPaquitaSL;" +
-            "DELETE FROM product;" +
-            "DELETE FROM ticket;" +
-            "DELETE FROM tree;" +
-            "DELETE FROM flower;" +
-            "DELETE FROM decoration;" +
-            "DELETE FROM product_ticket;" +
-            "ALTER TABLE product AUTO_INCREMENT = 1;" +
-            "ALTER TABLE ticket AUTO_INCREMENT = 1;" +
-            "ALTER TABLE product_ticket AUTO_INCREMENT = 1;";
 
 }

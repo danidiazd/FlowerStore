@@ -3,58 +3,65 @@ package Contexts.Product.Infrastructure.SQL;
 import Contexts.Product.Domain.Product;
 import Contexts.Product.Domain.ProductType;
 import Contexts.Product.Domain.ProductsRepository;
-import Contexts.Ticket.Domain.Ticket;
-
-import java.util.List;
-
 import Infrastructure.Connections.MySQLConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.List;
 import java.util.stream.Collectors;
 
+import static Contexts.Product.Infrastructure.SQL.DBLoader.createTables;
 import static Infrastructure.Connections.MySQLConnection.getMySQLDatabase;
 
 public class ProductRepositorySQL implements ProductsRepository {
     private MySQLConnection mySQLConnection;
+    private String dataBaseName;
 
-    public ProductRepositorySQL(MySQLConnection mySQLConnection) {
+    public ProductRepositorySQL(MySQLConnection mySQLConnection, String dataBaseName) {
         this.mySQLConnection = mySQLConnection;
+        this.dataBaseName = dataBaseName;
     }
+
 
     @Override
     public void initialize() {
         try {
-            Connection conn = getMySQLDatabase();
-            PreparedStatement statement = conn.prepareStatement(QueriesSQL.SQL_RESET);
-            String[] queries = QueriesSQL.SQL_RESET.split(";");
-            for (String query : queries) {
-                statement.addBatch(query.trim());
+            Connection connection = getMySQLDatabase();
+
+            DBLoader.createAndUseDB(dataBaseName, connection);
+            DBLoader.createTables(connection);
+
+            if (!productsExist(connection)) {
+                addPrimaryStock();
             }
-            statement.executeBatch();
-            addPrimaryStock();
+
         } catch (SQLException e) {
             e.printStackTrace(System.out);
         }
+    }
+
+    private boolean productsExist(Connection connection) throws SQLException {
+        String selectQuery = QueriesSQLDB.COUNT_PRODUCTS;
+        try (PreparedStatement statement = connection.prepareStatement(selectQuery)) {
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                int productCount = resultSet.getInt(1);
+                return productCount > 0;
+            }
+        }
+        return false;
     }
 
     @Override
     public Product getProduct(int id) {
         Product product = null;
         try {
-            Connection conn = getMySQLDatabase();
-            PreparedStatement statement = conn.prepareStatement(QueriesSQL.SQL_SELECT_PRODUCT);
+            Connection connection = getMySQLDatabase();
+            PreparedStatement statement = connection.prepareStatement(QueriesSQLCRUD.SQL_SELECT_PRODUCT);
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                product = new Product(
-                        rs.getInt("idproduct"),
-                        rs.getString("name"),
-                        rs.getInt("quantity"),
-                        rs.getDouble("price"),
-                        ProductType.valueOf(rs.getString("type")),
-                        rs.getString("attribute"));
+                product = resultSetToProduct(rs);
             }
         } catch (SQLException e) {
             e.printStackTrace(System.out);
@@ -66,16 +73,11 @@ public class ProductRepositorySQL implements ProductsRepository {
     public Product getLastProduct() {
         Product lastProduct = null;
         try {
-            Connection conn = getMySQLDatabase();
-            PreparedStatement statement = conn.prepareStatement(QueriesSQL.SQL_SELECT_LAST_PRODUCT);
+            Connection connection = getMySQLDatabase();
+            PreparedStatement statement = connection.prepareStatement(QueriesSQLCRUD.SQL_SELECT_LAST_PRODUCT);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                lastProduct = new Product(rs.getInt("idproduct"),
-                        rs.getString("name"),
-                        rs.getInt("quantity"),
-                        rs.getDouble("price"),
-                        ProductType.valueOf(rs.getString("type")),
-                        rs.getString("attribute"));
+                lastProduct = resultSetToProduct(rs);
             }
         } catch (SQLException e) {
             e.printStackTrace(System.out);
@@ -83,22 +85,26 @@ public class ProductRepositorySQL implements ProductsRepository {
         return lastProduct;
     }
 
+    private Product resultSetToProduct(ResultSet rs) throws SQLException {
+        return new Product(
+                rs.getInt("idproduct"),
+                rs.getString("name"),
+                rs.getInt("quantity"),
+                rs.getDouble("price"),
+                ProductType.valueOf(rs.getString("type")),
+                rs.getString("attribute"));
+    }
+
     @Override
     public List<Product> getAllProducts() {
         List<Product> products = new ArrayList<>();
 
         try {
-            Connection conn = getMySQLDatabase();
-            PreparedStatement stmt = conn.prepareStatement(QueriesSQL.SQL_SELECT);
-            ResultSet rs = stmt.executeQuery();
+            Connection connection = getMySQLDatabase();
+            PreparedStatement statement = connection.prepareStatement(QueriesSQLCRUD.SQL_SELECT);
+            ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                Product product = new Product(
-                        rs.getInt("idproduct"),
-                        rs.getString("name"),
-                        rs.getInt("quantity"),
-                        rs.getDouble("price"),
-                        ProductType.valueOf(rs.getString("type")),
-                        rs.getString("attribute"));
+                Product product = resultSetToProduct(rs);
                 products.add(product);
             }
         } catch (SQLException e) {
@@ -135,15 +141,15 @@ public class ProductRepositorySQL implements ProductsRepository {
     @Override
     public void addPrimaryStock() {
         Object[][] allData = {
+                {"manzano", 1.5, 50, 20.5, ProductType.TREE},
+                {"olivo", 2.0, 50, 11.99, ProductType.TREE},
+                {"pino", 3.0, 50, 8.50, ProductType.TREE},
+                {"rosal", 0.5, 50, 6.50, ProductType.TREE},
                 {"rosa", "roja", 50, 4.0, ProductType.FLOWER},
                 {"girasol", "blanca", 50, 3.50, ProductType.FLOWER},
                 {"amapola", "roja", 50, 2.75, ProductType.FLOWER},
                 {"lirio", "aaranja", 50, 1.5, ProductType.FLOWER},
                 {"clavel", "amarillo", 50, 9.50, ProductType.FLOWER},
-                {"manzano", 1.5, 50, 20.5, ProductType.TREE},
-                {"olivo", 2.0, 50, 11.99, ProductType.TREE},
-                {"pino", 3.0, 50, 8.50, ProductType.TREE},
-                {"rosal", 0.5, 50, 6.50, ProductType.TREE},
                 {"jarron", "madera", 50, 20.50, ProductType.DECORATION},
                 {"tiesto", "plastico", 50, 13.50, ProductType.DECORATION},
                 {"jarron", "plastico", 50, 9.99, ProductType.DECORATION},
@@ -151,8 +157,8 @@ public class ProductRepositorySQL implements ProductsRepository {
         };
 
         try {
-            Connection connection = mySQLConnection.getMySQLDatabase();
-            PreparedStatement productStatement = connection.prepareStatement(QueriesSQL.SQL_INSERT, Statement.RETURN_GENERATED_KEYS);
+            Connection connection = getMySQLDatabase();
+            PreparedStatement productStatement = connection.prepareStatement(QueriesSQLCRUD.SQL_INSERT, Statement.RETURN_GENERATED_KEYS);
 
             for (Object[] rowData : allData) {
                 String name = (String) rowData[0];
@@ -172,7 +178,7 @@ public class ProductRepositorySQL implements ProductsRepository {
                     String specificAttribute = (productType == ProductType.TREE) ? "height" :
                             ((productType == ProductType.FLOWER) ? "color" : "material");
 
-                    String formattedQuery = String.format(QueriesSQL.SQL_INSERT_ATTRIBUTE, productType.name().toLowerCase(), specificAttribute);
+                    String formattedQuery = String.format(QueriesSQLCRUD.SQL_INSERT_ATTRIBUTE, productType.name().toLowerCase(), specificAttribute);
                     try (PreparedStatement specificDataStatement = connection.prepareStatement(formattedQuery)) {
                         specificDataStatement.setInt(1, productId);
                         if (rowData[1] instanceof Double) {
@@ -193,14 +199,14 @@ public class ProductRepositorySQL implements ProductsRepository {
     @Override
     public void updateProduct(Product product) {
         try {
-            Connection conn = getMySQLDatabase();
-            PreparedStatement stmt = conn.prepareStatement(QueriesSQL.SQL_UPDATE);
-            stmt.setString(1, product.getName());
-            stmt.setInt(2, product.getQuantity());
-            stmt.setDouble(3, product.getPrice());
-            stmt.setString(4, product.getType().toString());
-            stmt.setInt(5, product.getProductId());
-            stmt.executeUpdate();
+            Connection connection = getMySQLDatabase();
+            PreparedStatement statement = connection.prepareStatement(QueriesSQLCRUD.SQL_UPDATE);
+            statement.setString(1, product.getName());
+            statement.setInt(2, product.getQuantity());
+            statement.setDouble(3, product.getPrice());
+            statement.setString(4, product.getType().toString());
+            statement.setInt(5, product.getProductId());
+            statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace(System.out);
         }
@@ -209,10 +215,10 @@ public class ProductRepositorySQL implements ProductsRepository {
     @Override
     public void deleteProduct(Product product) {
         try {
-            Connection conn = getMySQLDatabase();
-            PreparedStatement stmt = conn.prepareStatement(QueriesSQL.SQL_DELETE);
-            stmt.setInt(1, product.getProductId());
-            stmt.executeUpdate();
+            Connection connection = getMySQLDatabase();
+            PreparedStatement statement = connection.prepareStatement(QueriesSQLCRUD.SQL_DELETE);
+            statement.setInt(1, product.getProductId());
+            statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace(System.out);
         }
@@ -221,8 +227,8 @@ public class ProductRepositorySQL implements ProductsRepository {
     @Override
     public void addProduct(Product product) {
         try {
-            Connection connection = mySQLConnection.getMySQLDatabase();
-            PreparedStatement productStatement = connection.prepareStatement(QueriesSQL.SQL_INSERT, Statement.RETURN_GENERATED_KEYS);
+            Connection connection = getMySQLDatabase();
+            PreparedStatement productStatement = connection.prepareStatement(QueriesSQLCRUD.SQL_INSERT, Statement.RETURN_GENERATED_KEYS);
 
             productStatement.setString(1, product.getName());
             productStatement.setInt(2, product.getQuantity());
@@ -239,7 +245,7 @@ public class ProductRepositorySQL implements ProductsRepository {
             String specificAttribute = (product.getType() == ProductType.TREE) ? "height" :
                     ((product.getType() == ProductType.FLOWER) ? "color" : "material");
 
-            String formattedQuery = String.format(QueriesSQL.SQL_INSERT_ATTRIBUTE, product.getType().name().toLowerCase(), specificAttribute);
+            String formattedQuery = String.format(QueriesSQLCRUD.SQL_INSERT_ATTRIBUTE, product.getType().name().toLowerCase(), specificAttribute);
             try (PreparedStatement specificDataStatement = connection.prepareStatement(formattedQuery)) {
                 specificDataStatement.setInt(1, productId);
                 specificDataStatement.setString(2, product.getAttributes().toString());

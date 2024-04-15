@@ -2,8 +2,10 @@ package Contexts.Ticket.Domain;
 
 import Contexts.Product.Domain.Product;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class Ticket {
@@ -15,12 +17,12 @@ public class Ticket {
     private double total;
 
     public Ticket(Date date) {
-        this.date = new Date();
+        this.date = date;
         this.products = new HashMap<>();
     }
 
     public Ticket(Date date, Map<Product, Integer> products, double total) {
-        this.date = new Date();
+        this.date = date;
         this.products = products;
         this.total = total;
     }
@@ -56,6 +58,9 @@ public class Ticket {
         this.ticketID = id;
     }
 
+    public void setProducts(Map<Product, Integer> products) {
+        this.products = products;
+    }
 
     public void addProductToTicket(Product product, int quantity) {
         products.put(product, quantity);
@@ -69,10 +74,11 @@ public class Ticket {
     public void showTicket() {
 
         int nameWidth = 20, quantityWidth = 10;
-        System.out.println("\n\t TICKET  #" + getTicketID());
+        System.out.println("\n\t     TICKET  #" + getTicketID());
         double price = 0;
-        System.out.println(getDate() + "\n");
-        System.out.printf("%-" + nameWidth + "s %-" + quantityWidth + "s%n",
+        SimpleDateFormat dateFormat = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+        String formattedDate = dateFormat.format(getDate());
+        System.out.println(formattedDate + "\n");        System.out.printf("%-" + nameWidth + "s %-" + quantityWidth + "s%n",
                 "PRODUCT", "QUANTITY");
         for (int i = 0; i < nameWidth + quantityWidth + 4; i++) {
             System.out.print("-");
@@ -84,9 +90,8 @@ public class Ticket {
             int quantity = entry.getValue();
             System.out.printf("%-" + nameWidth + "s %-" + quantityWidth + "d%n",
                     product.getName(), quantity);
-            price += product.getPrice() * quantity;
         }
         System.out.printf("%-" + nameWidth + "s %-" + quantityWidth + ".2f€%n",
-                "TOTAL:", price);
+                "TOTAL:", getTotal());
     }
 }
