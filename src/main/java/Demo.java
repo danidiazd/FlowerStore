@@ -72,7 +72,7 @@ public class Demo implements Runnable {
                         "2. Show all products.\n" +
                         "3. Update stock. \n" +
                         "4. Remove a product.\n" +
-                        "5. Show for product stock. \n" +
+                        "5. Show per product stock. \n" +
                         "6. Show flower shop value. \n" +
                         "7. Create ticket. \n" +
                         "8. Show all tickets. \n" +

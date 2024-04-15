@@ -95,7 +95,6 @@ public class ProductRepositorySQL implements ProductsRepository {
                 rs.getString("attribute"));
     }
 
-
     @Override
     public List<Product> getAllProducts() {
         List<Product> products = new ArrayList<>();
@@ -105,13 +104,7 @@ public class ProductRepositorySQL implements ProductsRepository {
             PreparedStatement statement = connection.prepareStatement(QueriesSQLCRUD.SQL_SELECT);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                Product product = new Product(
-                        rs.getInt("idproduct"),
-                        rs.getString("name"),
-                        rs.getInt("quantity"),
-                        rs.getDouble("price"),
-                        ProductType.valueOf(rs.getString("type")),
-                        rs.getString("attribute"));
+                Product product = resultSetToProduct(rs);
                 products.add(product);
             }
         } catch (SQLException e) {
