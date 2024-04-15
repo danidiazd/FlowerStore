@@ -56,6 +56,9 @@ public class Ticket {
         this.ticketID = id;
     }
 
+    public void setProducts(Map<Product, Integer> products) {
+        this.products = products;
+    }
 
     public void addProductToTicket(Product product, int quantity) {
         products.put(product, quantity);

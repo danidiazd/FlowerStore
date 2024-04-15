@@ -9,10 +9,9 @@ import FlowerStore.FlowerStore;
 import Infrastructure.Connections.MySQLConnection;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static Infrastructure.Connections.MySQLConnection.getMySQLDatabase;
 
@@ -27,11 +26,12 @@ public class TicketRepositorySQL implements TicketRepository {
 
     @Override
     public void newTicket(Ticket newTicket) {
-        //TODO utilizar el total del ticket y la fecha, introducirlo asi
         try {
             Connection connection = getMySQLDatabase();
             PreparedStatement statement = connection.prepareStatement(QueriesSQL.SQL_INSERT_TICKET, Statement.RETURN_GENERATED_KEYS);
-            statement.setDate(1, new Date(newTicket.getDate().getTime()));
+            java.util.Date utilDate = newTicket.getDate();
+
+            statement.setTimestamp(1, new java.sql.Timestamp(utilDate.getTime()));
             statement.setDouble(2, newTicket.getTotal());
             statement.executeUpdate();
             ResultSet generateKey = statement.getGeneratedKeys();
@@ -45,11 +45,11 @@ public class TicketRepositorySQL implements TicketRepository {
                     Product product = entry.getKey();
                     Integer quantity = entry.getValue();
 
-                    PreparedStatement stmtProductTicket = connection.prepareStatement(QueriesSQL.SQL_INSERT_PRODUCT_TICKET);
-                    stmtProductTicket.setInt(1, ticketId);
-                    stmtProductTicket.setInt(2, product.getProductId());
-                    stmtProductTicket.setInt(3, quantity);
-                    stmtProductTicket.executeUpdate();
+                    PreparedStatement statementProductTicket = connection.prepareStatement(QueriesSQL.SQL_INSERT_PRODUCT_TICKET);
+                    statementProductTicket.setInt(1, ticketId);
+                    statementProductTicket.setInt(2, product.getProductId());
+                    statementProductTicket.setInt(3, quantity);
+                    statementProductTicket.executeUpdate();
                 }
             } else {
                 throw new SQLException("The creation of the ticket failed, failed to obtain the generated ID.");
@@ -62,40 +62,20 @@ public class TicketRepositorySQL implements TicketRepository {
     @Override
     public List<Ticket> getAllTickets() throws NoTicketsFoundException {
         List<Ticket> tickets = new ArrayList<>();
-
         try {
             Connection connection = getMySQLDatabase();
-            PreparedStatement statement = connection.prepareStatement(QueriesSQL.SQL_SELECT_TICKET);
-            ResultSet rs = statement.executeQuery();
-            Map<Integer, Ticket> ticketMap = new HashMap<>();
+            PreparedStatement statement = connection.prepareStatement(QueriesSQL.SQL_SELECT_DISTINCT_TICKETS);
+            ResultSet resultSet = statement.executeQuery();
             boolean flagTickets = false;
 
-            while (rs.next()) {
+            while (resultSet.next()) {
+                Ticket ticket = resultSetToTicket(resultSet);
+                tickets.add(ticket);
                 flagTickets = true;
-                int ticketId = rs.getInt("idticket");
-                Date date = rs.getDate("date");
-
-                Ticket ticket = ticketMap.getOrDefault(ticketId, new Ticket(date));
-                ticket.setTicketID(ticketId);
-                if (!ticketMap.containsKey(ticketId)) {
-                    ticketMap.put(ticketId, ticket);
-                }
-                Product product = new Product(
-                        rs.getInt("idproduct"),
-                        rs.getString("name"),
-                        rs.getInt("quantity"),
-                        rs.getDouble("price"),
-                        ProductType.valueOf(rs.getString("type")),
-                        rs.getString("attribute"));
-                ticket.addProductToTicket(product, rs.getInt("amount"));
-                ticket.setTotal(ticket.getTotal() + (product.getPrice() * rs.getInt("amount")));
             }
-
             if (!flagTickets) {
                 throw new NoTicketsFoundException("No tickets found in the database.");
             }
-
-            tickets.addAll(ticketMap.values());
         } catch (SQLException e) {
             e.printStackTrace(System.out);
         }
@@ -107,52 +87,49 @@ public class TicketRepositorySQL implements TicketRepository {
         Ticket lastTicket = null;
         try {
             Connection connection = getMySQLDatabase();
-            PreparedStatement statement = connection.prepareStatement(QueriesSQL.SQL_SELECT_PRODUCT_TICKET);
-            ResultSet rs = statement.executeQuery();
-
-            Map<Product, Integer> ticketProductsMap = new HashMap<>();
-            int lastTicketId = -1;
-            Date lastTicketDate = null;
-            double total = 0;
-
-            while (rs.next()) {
-                int ticketId = rs.getInt("ticket_idticket");
-                if (lastTicketId != -1 && lastTicketId != ticketId) {
-                    lastTicketDate = null;
-                    PreparedStatement lastTicketStmt = connection.prepareStatement(QueriesSQL.SQL_SELECT_LAST_TICKET);
-                    ResultSet lastTicketRs = lastTicketStmt.executeQuery();
-                    if (lastTicketRs.next()) {
-                        lastTicketDate = lastTicketRs.getDate("date");
-                    }
-                    lastTicket = new Ticket(lastTicketId, lastTicketDate, new HashMap<>(ticketProductsMap), total);
-                    ticketProductsMap.clear();
-                }
-                lastTicketId = ticketId;
-
-                Product product = new Product(
-                        rs.getInt("idproduct"),
-                        rs.getString("name"),
-                        rs.getInt("quantity"),
-                        rs.getDouble("price"),
-                        ProductType.valueOf(rs.getString("type")),
-                        rs.getString("attribute"));
-                int quantity = rs.getInt("amount");
-                ticketProductsMap.put(product, quantity);
-            }
-
-            if (lastTicketId != -1) {
-                lastTicketDate = null;
-                PreparedStatement lastTicketStmt = connection.prepareStatement(QueriesSQL.SQL_SELECT_LAST_TICKET);
-                ResultSet lastTicketRs = lastTicketStmt.executeQuery();
-                if (lastTicketRs.next()) {
-                    lastTicketDate = lastTicketRs.getDate("date");
-                }
-                lastTicket = new Ticket(lastTicketId, lastTicketDate, new HashMap<>(ticketProductsMap), 0);
+            PreparedStatement statement = connection.prepareStatement(QueriesSQL.SQL_SELECT_LAST_TICKET);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                lastTicket = resultSetToTicket(resultSet);
             }
         } catch (SQLException e) {
             e.printStackTrace(System.out);
         }
         return lastTicket;
+    }
+
+    private Ticket resultSetToTicket(ResultSet resultSet) {
+        Ticket ticket = null;
+        try {
+            int ticketID = resultSet.getInt("idticket");
+            Timestamp timestamp = resultSet.getTimestamp("date");
+            double total = resultSet.getDouble("totalPrice");
+            Map<Product, Integer> products = new HashMap<>();
+
+            Connection connection = getMySQLDatabase();
+            PreparedStatement productStatement = connection.prepareStatement(QueriesSQL.SQL_SELECT_PRODUCT_TICKET);
+            productStatement.setInt(1, ticketID);
+            ResultSet productRs = productStatement.executeQuery();
+
+            while (productRs.next()) {
+                Product product = new Product(
+                        productRs.getInt("idproduct"),
+                        productRs.getString("name"),
+                        productRs.getInt("quantity"),
+                        productRs.getDouble("price"),
+                        ProductType.valueOf(productRs.getString("type")),
+                        productRs.getString("attribute"));
+                int quantity = productRs.getInt("amount");
+                products.put(product, quantity);
+
+            }
+
+            Date date = new Date(timestamp.getTime());
+            ticket = new Ticket(ticketID, date, products, total);
+        } catch (SQLException e) {
+            e.printStackTrace(System.out);
+        }
+        return ticket;
     }
 
     @Override

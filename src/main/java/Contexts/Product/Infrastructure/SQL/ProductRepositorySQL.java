@@ -61,13 +61,7 @@ public class ProductRepositorySQL implements ProductsRepository {
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                product = new Product(
-                        rs.getInt("idproduct"),
-                        rs.getString("name"),
-                        rs.getInt("quantity"),
-                        rs.getDouble("price"),
-                        ProductType.valueOf(rs.getString("type")),
-                        rs.getString("attribute"));
+                product = resultSetToProduct(rs);
             }
         } catch (SQLException e) {
             e.printStackTrace(System.out);
@@ -83,18 +77,24 @@ public class ProductRepositorySQL implements ProductsRepository {
             PreparedStatement statement = connection.prepareStatement(QueriesSQLCRUD.SQL_SELECT_LAST_PRODUCT);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                lastProduct = new Product(rs.getInt("idproduct"),
-                        rs.getString("name"),
-                        rs.getInt("quantity"),
-                        rs.getDouble("price"),
-                        ProductType.valueOf(rs.getString("type")),
-                        rs.getString("attribute"));
+                lastProduct = resultSetToProduct(rs);
             }
         } catch (SQLException e) {
             e.printStackTrace(System.out);
         }
         return lastProduct;
     }
+
+    private Product resultSetToProduct(ResultSet rs) throws SQLException {
+        return new Product(
+                rs.getInt("idproduct"),
+                rs.getString("name"),
+                rs.getInt("quantity"),
+                rs.getDouble("price"),
+                ProductType.valueOf(rs.getString("type")),
+                rs.getString("attribute"));
+    }
+
 
     @Override
     public List<Product> getAllProducts() {
