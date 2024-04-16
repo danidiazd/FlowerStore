@@ -42,13 +42,16 @@ public class ManagerTickets {
             if (productToTicket.getQuantity() < quantity) {
                 throw new InsufficientStockException("Insufficient stock for product: " + productToTicket.getName());
             }
-            ticketWithProducts.put(productToTicket, quantity);
-            productToTicket = Ticket.updateStockStore(productToTicket, quantity);
-            productsRepository.updateProduct(productToTicket);
-            System.out.println(productToTicket.getName() + " added to buy.");
+            if (!(quantity <= 0)) {
+                ticketWithProducts.put(productToTicket, quantity);
+                productToTicket = Ticket.updateStockStore(productToTicket, quantity);
+                productsRepository.updateProduct(productToTicket);
+                System.out.println(productToTicket.getName() + " added to buy.");
+            } else {
+                System.out.println("You have to select at least one " + managerProducts.getProduct().getType());
+            }
 
-
-            addMore = InputControl.readBoolean("Want add more? (yes or not) ");
+            addMore = InputControl.readBoolean("Would you like to add any other product? (yes or not) ");
         } while (addMore);
 
         return ticketWithProducts;

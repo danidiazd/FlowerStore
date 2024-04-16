@@ -31,14 +31,15 @@ public class ManagerProducts {
         Product product = getProduct();
 
         int stockToAdd = InputControl.readInt("You selected " + product.getName() + "\n" +
-                "How many stock do you want to add?");
+                "Please enter new stock for the product:");
         if (stockToAdd > 0) {
             product.setQuantity(stockToAdd);
             double price = InputControl.readDouble("Choose a price for " + product.getName());
             product.setPrice(price);
             productsRepository.updateProduct(product);
+            System.out.println(product.getName() + " updated.");
         } else {
-            System.err.println("Cant add under 0");
+            System.err.println("Can't add under 0");
         }
     }
 
