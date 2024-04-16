@@ -35,15 +35,19 @@ public class InputControl {
             System.out.println(mensaje);
             try {
                 int input = scanner.nextInt();
-                scanner.nextLine();
-                return input;
+                if(!(input <= 0)) {
+                    scanner.nextLine();
+                    return input;
+                } else{
+                    System.out.println("You can't choose a value under 1");
+                }
             } catch (InputMismatchException e) {
                 inputMismatchException(e);
             }
         }
     }
 
-    public static int readIntinRange(String mensaje, int max) {
+    public static int readIntInRange(String mensaje, int max) {
         while (true) {
             System.out.println(mensaje);
             try {
@@ -79,7 +83,13 @@ public class InputControl {
         while (true) {
             System.out.println(mensaje);
             try {
-                return scanner.nextDouble();
+                double input = scanner.nextDouble();
+                if(!(input <= 0)) {
+                    scanner.nextLine();
+                    return input;
+                } else{
+                    System.out.println("You can't choose a value under or equal to 0");
+                }
             } catch (InputMismatchException e) {
                 inputMismatchException(e);
             } finally {

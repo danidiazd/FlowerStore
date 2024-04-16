@@ -1,4 +1,3 @@
-import Contexts.Product.Domain.Product;
 import Contexts.Product.Domain.ProductsRepository;
 import Contexts.Product.Infrastructure.MongoDB.ProductRepositoryMongoDB;
 import Contexts.Product.Infrastructure.SQL.ProductRepositorySQL;
@@ -6,13 +5,10 @@ import Contexts.Ticket.Domain.TicketRepository;
 import Contexts.Ticket.Infrastructure.MongoDB.TicketRepositoryMongoDB;
 import Contexts.Ticket.Infrastructure.SQL.TicketRepositorySQL;
 import FlowerStore.FlowerStore;
-import FlowerStore.Manager.Exceptions.InsufficientStockException;
 import Infrastructure.Connections.MongoDBConnection;
 import Infrastructure.Connections.MySQLConnection;
 import Utils.InputControl.InputControl;
 import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.List;
 
 public class Demo implements Runnable {
 
@@ -66,7 +62,7 @@ public class Demo implements Runnable {
     private int showMenu() {
         final int MAX_OPTIONS = 10;
 
-        int selectAction = InputControl.readIntinRange(
+        int selectAction = InputControl.readIntInRange(
                 "\nType of action \n" +
                         "1. Create a product. \n" +
                         "2. Show all products.\n" +

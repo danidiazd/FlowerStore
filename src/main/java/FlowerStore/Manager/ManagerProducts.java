@@ -51,7 +51,7 @@ public class ManagerProducts {
 
     public void addProduct() {
         final int MAX_OPTION = 3;
-        int type = InputControl.readIntinRange("\nType\n" +
+        int type = InputControl.readIntInRange("\nType\n" +
                 "1 for Tree.\n" +
                 "2 for Flower.\n" +
                 "3 for Decoration", MAX_OPTION);
@@ -168,7 +168,7 @@ public class ManagerProducts {
         List<Product> products = new ArrayList<>();
 
         final int MAX_OPTION = 3;
-        int option = InputControl.readIntinRange("What you want?\n" +
+        int option = InputControl.readIntInRange("What you want?\n" +
                 "1. TREE.\n" +
                 "2. FLOWER.\n" +
                 "3. DECORATION.\n", MAX_OPTION);

@@ -146,7 +146,7 @@ public class TicketRepositorySQL implements TicketRepository {
         }
 
         System.out.println("The total sales of the FlowerShop "
-                + FlowerStore.getNameStore() + " is the: " + totalSales + "€.");
+                + FlowerStore.getNameStore() + " have a value of: " + totalSales + "€.");
     }
 
 }
