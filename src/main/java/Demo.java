@@ -119,7 +119,7 @@ public class Demo implements Runnable {
         } while (true);
     }
     private void exit() {
-        System.out.println("GoodBye!");
+        System.out.println("\n** GoodBye! **\n");
         System.exit(0);
         mongoDBConnection.disconnectMongo();
         mySQLConnection.disconnectMySQL();
