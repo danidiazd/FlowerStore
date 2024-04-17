@@ -10,7 +10,6 @@ import Infrastructure.Connections.MySQLConnection;
 
 import java.sql.*;
 import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static Infrastructure.Connections.MySQLConnection.getMySQLDatabase;
@@ -18,7 +17,6 @@ import static Infrastructure.Connections.MySQLConnection.getMySQLDatabase;
 public class TicketRepositorySQL implements TicketRepository {
 
     private MySQLConnection mySQLConnection;
-    ;
 
     public TicketRepositorySQL(MySQLConnection mySQLConnection) {
         this.mySQLConnection = mySQLConnection;

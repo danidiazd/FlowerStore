@@ -11,8 +11,6 @@ public class ManagerProducts {
 
     private static ManagerProducts instance;
     private ProductsRepository productsRepository;
-    private FlowerStore flowerStore;
-
 
     private ManagerProducts(ProductsRepository productsRepository) {
         this.productsRepository = productsRepository;

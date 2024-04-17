@@ -105,7 +105,6 @@ public class TicketRepositoryMongoDB implements TicketRepository {
     public List<Ticket> getAllTickets() throws NoTicketsFoundException {
         List<Ticket> tickets = new ArrayList<>();
         FindIterable<Document> cursor = ticketCollection.find();
-        double totalSales = 0;
         boolean flagTickets = false;
 
         for (Document document : cursor) {

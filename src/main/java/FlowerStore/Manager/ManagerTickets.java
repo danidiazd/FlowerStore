@@ -88,6 +88,4 @@ public class ManagerTickets {
         }
         return total;
     }
-
-
 }

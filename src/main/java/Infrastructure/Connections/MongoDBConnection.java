@@ -17,7 +17,6 @@ public class MongoDBConnection {
 
     public final MongoClient mongoClient;
     public MongoDatabase mongoDatabase;
-    public String mongoClientURI;
 
 
     public MongoDBConnection(String databaseName) {

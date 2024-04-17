@@ -115,9 +115,6 @@ public class Demo implements Runnable {
                 case 10:
                     exit();
                     break;
-                default:
-                    System.out.println("Please, introduce a valid option");
-                    break;
             }
         } while (true);
     }
