@@ -49,7 +49,7 @@ public class Ticket {
     public double getTotal() {
         return total;
     }
-    
+
     public void setTicketID(int id) {
         this.ticketID = id;
     }
