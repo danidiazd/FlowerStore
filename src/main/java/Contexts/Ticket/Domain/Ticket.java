@@ -16,6 +16,10 @@ public class Ticket {
     private Map<Product, Integer> products;
     private double total;
 
+    public Ticket(Date date) {
+        this.date = date;
+        this.products = new HashMap<>();
+    }
 
     public Ticket(Date date, Map<Product, Integer> products, double total) {
         this.date = date;
@@ -44,6 +48,10 @@ public class Ticket {
 
     public double getTotal() {
         return total;
+    }
+    
+    public void setTicketID(int id) {
+        this.ticketID = id;
     }
 
     public static Product updateStockStore(Product product, int quantity) {
