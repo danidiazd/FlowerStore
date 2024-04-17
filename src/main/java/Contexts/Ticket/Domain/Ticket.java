@@ -16,10 +16,6 @@ public class Ticket {
     private Map<Product, Integer> products;
     private double total;
 
-    public Ticket(Date date) {
-        this.date = date;
-        this.products = new HashMap<>();
-    }
 
     public Ticket(Date date, Map<Product, Integer> products, double total) {
         this.date = date;
@@ -50,22 +46,6 @@ public class Ticket {
         return total;
     }
 
-    public void setTotal(double total) {
-        this.total = total;
-    }
-
-    public void setTicketID(int id) {
-        this.ticketID = id;
-    }
-
-    public void setProducts(Map<Product, Integer> products) {
-        this.products = products;
-    }
-
-    public void addProductToTicket(Product product, int quantity) {
-        products.put(product, quantity);
-    }
-
     public static Product updateStockStore(Product product, int quantity) {
         product.setQuantity(product.getQuantity() - quantity);
         return product;
@@ -75,7 +55,6 @@ public class Ticket {
 
         int nameWidth = 20, quantityWidth = 10;
         System.out.println("\n\t     TICKET  #" + getTicketID());
-        double price = 0;
         SimpleDateFormat dateFormat = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
         String formattedDate = dateFormat.format(getDate());
         System.out.println(formattedDate + "\n");        System.out.printf("%-" + nameWidth + "s %-" + quantityWidth + "s%n",

@@ -16,7 +16,6 @@ public class ProductRepositoryMongoDB<T> implements ProductsRepository {
 
     private MongoDBConnection mongoDBConnection;
     private MongoCollection<Document> collection;
-    private MongoCollection<Document> initialize;
 
     public ProductRepositoryMongoDB(MongoDBConnection mongoDBConnection) {
         this.mongoDBConnection = mongoDBConnection;
