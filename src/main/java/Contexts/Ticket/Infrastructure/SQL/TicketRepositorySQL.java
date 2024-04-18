@@ -99,37 +99,48 @@ public class TicketRepositorySQL implements TicketRepository {
     private Ticket resultSetToTicket(ResultSet resultSet) {
         Ticket ticket = null;
         try {
-            int ticketID = resultSet.getInt("idticket");
-            Timestamp timestamp = resultSet.getTimestamp("date");
-            Date date = new Date(timestamp.getTime());
-
-            double total = resultSet.getDouble("totalPrice");
-            Map<Product, Integer> products = new HashMap<>();
-
-            Connection connection = getMySQLDatabase();
-            PreparedStatement productStatement = connection.prepareStatement(QueriesSQL.SQL_SELECT_PRODUCT_TICKET);
-            productStatement.setInt(1, ticketID);
-            ResultSet productRs = productStatement.executeQuery();
-
-            while (productRs.next()) {
-                Product product = new Product(
-                        productRs.getInt("idproduct"),
-                        productRs.getString("name"),
-                        productRs.getInt("quantity"),
-                        productRs.getDouble("price"),
-                        ProductType.valueOf(productRs.getString("type")),
-                        productRs.getString("attribute"));
-                int quantity = productRs.getInt("amount");
-                products.put(product, quantity);
-
-            }
-
-            ticket = new Ticket(ticketID, date, products, total);
+            ticket = createTicketFromResultSet(resultSet);
         } catch (SQLException e) {
             e.printStackTrace(System.out);
         }
         return ticket;
     }
+
+    private Ticket createTicketFromResultSet(ResultSet resultSet) throws SQLException {
+        int ticketID = resultSet.getInt("idticket");
+        Timestamp timestamp = resultSet.getTimestamp("date");
+        Date date = new Date(timestamp.getTime());
+        double total = resultSet.getDouble("totalPrice");
+        Map<Product, Integer> products = getProductsFromResultSet(ticketID);
+        return new Ticket(ticketID, date, products, total);
+    }
+
+    private Map<Product, Integer> getProductsFromResultSet(int ticketID) throws SQLException {
+        Map<Product, Integer> products = new HashMap<>();
+        try (Connection connection = getMySQLDatabase();
+             PreparedStatement productStatement = connection.prepareStatement(QueriesSQL.SQL_SELECT_PRODUCT_TICKET)) {
+            productStatement.setInt(1, ticketID);
+            try (ResultSet productRs = productStatement.executeQuery()) {
+                while (productRs.next()) {
+                    Product product = createProductFromResultSet(productRs);
+                    int quantity = productRs.getInt("amount");
+                    products.put(product, quantity);
+                }
+            }
+        }
+        return products;
+    }
+
+    private Product createProductFromResultSet(ResultSet productRs) throws SQLException {
+        return new Product(
+                productRs.getInt("idproduct"),
+                productRs.getString("name"),
+                productRs.getInt("quantity"),
+                productRs.getDouble("price"),
+                ProductType.valueOf(productRs.getString("type")),
+                productRs.getString("attribute"));
+    }
+
 
     @Override
     public int nextTicketID() {
