@@ -31,6 +31,7 @@ public class ManagerTickets {
     }
 
     public Map<Product, Integer> addProductsToTicket() throws InsufficientStockException {
+
         ManagerProducts managerProducts = ManagerProducts.getInstance(productsRepository);
         Map<Product, Integer> ticketWithProducts = new HashMap<>();
         boolean addMore = false;

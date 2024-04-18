@@ -49,7 +49,6 @@ public class FlowerStore {
             System.out.println(e);
             logger.error("An error in addProductsToTicket" + e);
         }
-
     }
 
     public void showAllTickets() {

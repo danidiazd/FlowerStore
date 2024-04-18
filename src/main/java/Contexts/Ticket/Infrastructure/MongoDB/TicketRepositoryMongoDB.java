@@ -98,7 +98,6 @@ public class TicketRepositoryMongoDB implements TicketRepository {
                 .append("totalPrice", ticket.getTotal());
 
         ticketCollection.insertOne(newTicket);
-
     }
 
     @Override
