@@ -136,22 +136,21 @@ public class ProductRepositoryMongoDB<T> implements ProductsRepository {
         int quantity = document.getInteger("quantity");
         double price = document.getDouble("price");
         ProductType type = ProductType.valueOf(document.getString("type").toUpperCase());
-
         Object attribute = document.get("attribute");
+        return createProduct(productId, name, quantity, price, type, attribute);
+    }
 
-
-        Product product;
-
-        if (type == ProductType.FLOWER) {
-            product = new Flower<>(productId, name, quantity, price, attribute);
-        } else if (type == ProductType.DECORATION) {
-            product = new Decoration<>(productId, name, quantity, price, attribute);
-        } else if (type == ProductType.TREE) {
-            product = new Tree<>(productId, name, quantity, price, (Double) attribute);
-        } else {
-            throw new IllegalArgumentException("Invalid attribute type for product type TREE");
+    private Product createProduct(int productId, String name, int quantity, double price, ProductType type, Object attribute) {
+        switch (type) {
+            case FLOWER:
+                return new Flower<>(productId, name, quantity, price, attribute);
+            case DECORATION:
+                return new Decoration<>(productId, name, quantity, price, attribute);
+            case TREE:
+                return new Tree<>(productId, name, quantity, price, (Double) attribute);
+            default:
+                throw new IllegalArgumentException("Invalid attribute type for product type " + type);
         }
-        return product;
     }
 }
 
