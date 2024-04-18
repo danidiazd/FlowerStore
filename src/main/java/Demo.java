@@ -19,7 +19,6 @@ public class Demo implements Runnable {
     private static TicketRepository ticketRepository;
 
 
-
     public Demo() {
         String flowerName = nameStore();
         Pair<ProductsRepository, TicketRepository> repositories = configureRepository(flowerName);
