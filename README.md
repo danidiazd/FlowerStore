@@ -1,22 +1,19 @@
-Hem de crear un programa per a gestionar el catàleg de productes d'una floristeria. Gestiona la persistència en MySql i MongoDB.
+This is a program to manage the product stock of a flower shop. It includes persistence management in both MySql and MongoDB.
 
-Aquest programa ha de complir els següents requisits:
+This program meets the following requirements:
 
-En una floristeria, que té un nom, tenim arbres, flors i decoració. Cada arbre té una alçada. Les flors tenen un color. 
-La decoració té un tipus de material: fusta o plàstic. Tots tenen un preu. Una floristeria ha de tenir un stock de cada un dels productes (arbres, flors i decoració). 
-La floristeria té un registre del valor total de l'stock que té. S’ha de crear una classe ticket, on poder registrar les compres en UNA sola llista. 
-Quant a les funcionalitats del Main, com a mínim, ha d’incloure les següents:
+The flower shop, has a name, has trees, flowers and decoration. Each tree has a height. Flowers have a color. The decoration has one type of material: wood or plastic. They all have a price. A flower shop must have a stock of each of the products (trees, flowers and decoration). The flower shop has a record of the total value of the stocks it has. A class ticket must be created, where purchases can be registered in ONE single list. The functionalities, at least, include the following:
 
-Crear Floristeria. 
-Afegir Arbre. 
-Afegir Flor. 
-Afegir Decoració. 
-Stock: Imprimeix per pantalla tots els arbres, flors i decoració que té la floristeria. 
-Retirar arbre. 
-Retirar flor. 
-Retirar decoració. 
-Printar per pantalla stock amb quantitats. 
-Printar per pantalla valor total de la floristeria. 
-Crear tickets de compra amb múltiples objectes. 
-Mostrar una llista de compres antigues. 
-Visualitzar el total de diners guanyats amb totes les vendes.
+Create Flower shop. 
+Add Tree 
+Add Flower 
+Add Decoration. 
+Stock: Screen print all the trees, flowers and decorations that the flower shop has. 
+Remove tree 
+Remove flower 
+Remove decoration 
+Show by stock screen with quantities. 
+Show by screen total value of the flower shop. 
+Create purchase tickets with multiple products. 
+Show a list of old purchases. 
+View the total number of guests earned with all sales.
