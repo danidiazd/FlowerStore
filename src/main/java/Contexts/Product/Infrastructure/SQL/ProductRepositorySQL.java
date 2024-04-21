@@ -1,8 +1,6 @@
 package Contexts.Product.Infrastructure.SQL;
 
-import Contexts.Product.Domain.Product;
-import Contexts.Product.Domain.ProductType;
-import Contexts.Product.Domain.ProductsRepository;
+import Contexts.Product.Domain.*;
 import Infrastructure.Connections.MySQLConnection;
 
 import java.sql.*;
@@ -85,14 +83,28 @@ public class ProductRepositorySQL implements ProductsRepository {
         return lastProduct;
     }
 
-    private Product resultSetToProduct(ResultSet rs) throws SQLException {
-        return new Product(
-                rs.getInt("idproduct"),
-                rs.getString("name"),
-                rs.getInt("quantity"),
-                rs.getDouble("price"),
-                ProductType.valueOf(rs.getString("type")),
-                rs.getString("attribute"));
+    private Product resultSetToProduct(ResultSet productRs) throws SQLException {
+        int productId = productRs.getInt("idproduct");
+        String name = productRs.getString("name");
+        int quantity = productRs.getInt("quantity");
+        double price = productRs.getDouble("price");
+        String typeString = productRs.getString("type");
+        String attribute = productRs.getString("attribute");
+
+        ProductType type = ProductType.valueOf(typeString);
+
+        Product product;
+        if (type == ProductType.FLOWER) {
+            product = new Flower<>(productId, name, quantity, price, attribute);
+        } else if (type == ProductType.DECORATION) {
+            product = new Decoration<>(productId, name, quantity, price, attribute);
+        } else if (type == ProductType.TREE) {
+            product = new Tree<>(productId, name, quantity, price, Double.parseDouble(attribute));
+        } else {
+            throw new IllegalArgumentException("Invalid product type : " + typeString);
+        }
+
+        return product;
     }
 
     @Override

@@ -1,6 +1,6 @@
 package Contexts.Product.Domain;
 
-public class Product<T> {
+public abstract class Product<T> {
 
     private int productId;
     private String name;

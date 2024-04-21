@@ -1,7 +1,6 @@
 package Contexts.Ticket.Infrastructure.SQL;
 
-import Contexts.Product.Domain.Product;
-import Contexts.Product.Domain.ProductType;
+import Contexts.Product.Domain.*;
 import Contexts.Ticket.Domain.Ticket;
 import Contexts.Ticket.Domain.TicketRepository;
 import Contexts.Ticket.Infrastructure.Exceptions.NoTicketsFoundException;
@@ -132,13 +131,27 @@ public class TicketRepositorySQL implements TicketRepository {
     }
 
     private Product createProductFromResultSet(ResultSet productRs) throws SQLException {
-        return new Product(
-                productRs.getInt("idproduct"),
-                productRs.getString("name"),
-                productRs.getInt("quantity"),
-                productRs.getDouble("price"),
-                ProductType.valueOf(productRs.getString("type")),
-                productRs.getString("attribute"));
+        int productId = productRs.getInt("idproduct");
+        String name = productRs.getString("name");
+        int quantity = productRs.getInt("quantity");
+        double price = productRs.getDouble("price");
+        String typeString = productRs.getString("type");
+        String attribute = productRs.getString("attribute");
+
+        ProductType type = ProductType.valueOf(typeString);
+
+        Product product;
+        if (type == ProductType.FLOWER) {
+            product = new Flower<>(productId, name, quantity, price, attribute);
+        } else if (type == ProductType.DECORATION) {
+            product = new Decoration<>(productId, name, quantity, price, attribute);
+        } else if (type == ProductType.TREE) {
+            product = new Tree<>(productId, name, quantity, price, Double.parseDouble(attribute));
+        } else {
+            throw new IllegalArgumentException("Invalid product type : " + typeString);
+        }
+
+        return product;
     }
 
 
